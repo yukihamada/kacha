@@ -12,6 +12,7 @@ extension Notification.Name {
 struct HomePagerView: View {
     @Query(sort: \Home.sortOrder) private var homes: [Home]
     @AppStorage("activeHomeId") private var activeHomeId = ""
+    @AppStorage("minpakuModeEnabled") private var minpakuModeEnabled = false
     @State private var currentPage = 1  // 0=Dashboard, 1+=Homes
 
     private var pageCount: Int { homes.count + 1 } // +1 for dashboard
@@ -37,6 +38,8 @@ struct HomePagerView: View {
                                     activeHomeId = home.id
                                     home.syncToAppStorage()
                                 }
+                                // Sync business mode per-home
+                                minpakuModeEnabled = (home.businessType != "none")
                             }
                     }
                 }

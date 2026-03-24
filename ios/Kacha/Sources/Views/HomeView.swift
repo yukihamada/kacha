@@ -150,6 +150,7 @@ struct HomeView: View {
                     Button {
                         activeHomeId = home.id
                         home.syncToAppStorage()
+                        minpakuModeEnabled = (home.businessType != "none")
                     } label: {
                         Label(home.name, systemImage: home.id == activeHomeId ? "house.fill" : "house")
                     }

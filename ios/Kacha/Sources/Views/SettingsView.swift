@@ -227,6 +227,7 @@ struct SettingsView: View {
     private func switchHome(_ home: Home) {
         activeHomeId = home.id
         home.syncToAppStorage()
+        minpakuModeEnabled = (home.businessType != "none")
     }
 
     private func addHome() {
