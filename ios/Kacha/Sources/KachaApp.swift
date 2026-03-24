@@ -93,6 +93,12 @@ struct KachaApp: App {
         home.qrioDeviceIds     = shareData.qrioDeviceIds
         home.doorCode          = shareData.doorCode
         home.wifiPassword      = shareData.wifiPassword
+        // Admin-only: Beds24 credentials
+        if shareData.role == "admin" {
+            home.beds24ApiKey  = shareData.beds24ApiKey ?? ""
+            home.beds24ICalURL = shareData.beds24RefreshToken ?? ""
+            home.businessType  = "minpaku"
+        }
         context.insert(home)
         try? context.save()
 

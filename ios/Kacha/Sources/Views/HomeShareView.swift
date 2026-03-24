@@ -12,25 +12,30 @@ struct HomeShareView: View {
     @State private var endDate = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
     @State private var noExpiry = false
     @State private var recipientName = ""
+    @State private var selectedRole = "guest"
     @State private var isCreating = false
     @State private var createdLink: String?
     @State private var showCopied = false
     @State private var errorMessage: String?
 
     private var sharePayload: HomeShareData {
-        HomeShareData(
+        let isAdmin = selectedRole == "admin"
+        return HomeShareData(
             name: home.name,
             address: home.address,
-            switchBotToken: home.switchBotToken,
-            switchBotSecret: home.switchBotSecret,
-            hueBridgeIP: home.hueBridgeIP,
-            hueUsername: home.hueUsername,
-            sesameApiKey: home.sesameApiKey,
-            sesameDeviceUUIDs: home.sesameDeviceUUIDs,
-            qrioApiKey: home.qrioApiKey,
-            qrioDeviceIds: home.qrioDeviceIds,
+            role: selectedRole,
+            switchBotToken: isAdmin ? home.switchBotToken : "",
+            switchBotSecret: isAdmin ? home.switchBotSecret : "",
+            hueBridgeIP: isAdmin ? home.hueBridgeIP : "",
+            hueUsername: isAdmin ? home.hueUsername : "",
+            sesameApiKey: isAdmin ? home.sesameApiKey : "",
+            sesameDeviceUUIDs: isAdmin ? home.sesameDeviceUUIDs : "",
+            qrioApiKey: isAdmin ? home.qrioApiKey : "",
+            qrioDeviceIds: isAdmin ? home.qrioDeviceIds : "",
             doorCode: home.doorCode,
-            wifiPassword: home.wifiPassword
+            wifiPassword: home.wifiPassword,
+            beds24ApiKey: isAdmin ? home.beds24ApiKey : nil,
+            beds24RefreshToken: isAdmin ? home.beds24ICalURL : nil
         )
     }
 
@@ -72,6 +77,48 @@ struct HomeShareView: View {
                                     .background(Color.kachaCard)
                                     .clipShape(RoundedRectangle(cornerRadius: 10))
                                     .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.kachaCardBorder))
+                            }
+                            .padding(16)
+                        }
+
+                        // Role picker
+                        KachaCard {
+                            VStack(alignment: .leading, spacing: 10) {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "person.badge.shield.checkmark").foregroundColor(.kacha)
+                                    Text("権限").font(.subheadline).bold().foregroundColor(.white)
+                                }
+                                ForEach([
+                                    ("guest", "ゲスト", "WiFi・ドアコードの閲覧のみ", "person.fill"),
+                                    ("admin", "管理者", "デバイス操作・予約管理・Beds24連携など全機能", "person.badge.key.fill"),
+                                ], id: \.0) { key, title, desc, icon in
+                                    Button {
+                                        withAnimation { selectedRole = key }
+                                    } label: {
+                                        HStack(spacing: 12) {
+                                            Image(systemName: selectedRole == key ? "checkmark.circle.fill" : "circle")
+                                                .foregroundColor(selectedRole == key ? .kacha : .secondary)
+                                            Image(systemName: icon)
+                                                .foregroundColor(selectedRole == key ? .kacha : .secondary)
+                                                .frame(width: 20)
+                                            VStack(alignment: .leading, spacing: 2) {
+                                                Text(title).font(.subheadline).foregroundColor(.white)
+                                                Text(desc).font(.caption2).foregroundColor(.secondary)
+                                            }
+                                            Spacer()
+                                        }
+                                        .padding(10)
+                                        .background(selectedRole == key ? Color.kacha.opacity(0.06) : Color.clear)
+                                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    }
+                                }
+                                if selectedRole == "admin" {
+                                    HStack(spacing: 6) {
+                                        Image(systemName: "exclamationmark.triangle.fill").foregroundColor(.kachaWarn)
+                                        Text("管理者にはデバイスのAPIキーやBeds24認証情報も共有されます")
+                                            .font(.caption2).foregroundColor(.kachaWarn)
+                                    }
+                                }
                             }
                             .padding(16)
                         }
@@ -285,7 +332,8 @@ struct HomeShareView: View {
             let record = ShareRecord(
                 homeId: home.id,
                 homeName: home.name,
-                recipientName: name.isEmpty ? "ゲスト" : name,
+                recipientName: name.isEmpty ? (selectedRole == "admin" ? "管理者" : "ゲスト") : name,
+                role: selectedRole,
                 token: result.token,
                 ownerToken: ownerToken,
                 validFrom: validFrom ?? Date.distantPast,
@@ -346,6 +394,7 @@ struct HomeShareView: View {
 struct HomeShareData: Codable {
     let name: String
     let address: String
+    let role: String           // "guest" or "admin"
     let switchBotToken: String
     let switchBotSecret: String
     let hueBridgeIP: String
@@ -356,6 +405,9 @@ struct HomeShareData: Codable {
     let qrioDeviceIds: String
     let doorCode: String
     let wifiPassword: String
+    // Admin-only fields
+    let beds24ApiKey: String?
+    let beds24RefreshToken: String?
 }
 
 // MARK: - Key Rotation View

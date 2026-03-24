@@ -7,6 +7,7 @@ final class ShareRecord {
     var homeId: String
     var homeName: String
     var recipientName: String  // who it was shared with
+    var role: String           // "guest" or "admin"
     var token: String          // server-side token
     var ownerToken: String     // secret — needed to revoke
     var validFrom: Date
@@ -29,11 +30,15 @@ final class ShareRecord {
         return "有効"
     }
 
-    init(homeId: String, homeName: String, recipientName: String = "", token: String, ownerToken: String, validFrom: Date, expiresAt: Date) {
+    var isAdmin: Bool { role == "admin" }
+    var roleLabel: String { role == "admin" ? "管理者" : "ゲスト" }
+
+    init(homeId: String, homeName: String, recipientName: String = "", role: String = "guest", token: String, ownerToken: String, validFrom: Date, expiresAt: Date) {
         self.id = UUID().uuidString
         self.homeId = homeId
         self.homeName = homeName
         self.recipientName = recipientName
+        self.role = role
         self.token = token
         self.ownerToken = ownerToken
         self.validFrom = validFrom

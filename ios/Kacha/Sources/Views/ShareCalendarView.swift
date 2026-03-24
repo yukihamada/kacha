@@ -199,8 +199,16 @@ struct ShareCalendarView: View {
                     .frame(width: 4, height: 40)
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(record.recipientName.isEmpty ? "ゲスト" : record.recipientName)
-                        .font(.subheadline).bold().foregroundColor(.white)
+                    HStack(spacing: 6) {
+                        Text(record.recipientName.isEmpty ? "ゲスト" : record.recipientName)
+                            .font(.subheadline).bold().foregroundColor(.white)
+                        Text(record.roleLabel)
+                            .font(.caption2).bold()
+                            .padding(.horizontal, 5).padding(.vertical, 1)
+                            .background(record.isAdmin ? Color.kachaWarn.opacity(0.2) : Color.kachaAccent.opacity(0.2))
+                            .foregroundColor(record.isAdmin ? .kachaWarn : .kachaAccent)
+                            .clipShape(Capsule())
+                    }
                     Text("\(formatted(record.validFrom)) 〜 \(formatted(record.expiresAt))")
                         .font(.caption).foregroundColor(.secondary)
                     Text(record.statusLabel)
