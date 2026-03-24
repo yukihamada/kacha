@@ -1,0 +1,19 @@
+app = 'kacha-server'
+primary_region = 'nrt'
+
+[build]
+
+[env]
+DATABASE_PATH = '/data/kacha.db'
+PORT = '8080'
+
+[http_service]
+internal_port = 8080
+force_https = true
+auto_stop_machines = 'stop'
+auto_start_machines = true
+min_machines_running = 0
+
+[mounts]
+source = 'kacha_data'
+destination = '/data'

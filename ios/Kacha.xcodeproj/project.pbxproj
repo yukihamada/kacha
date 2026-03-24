@@ -9,8 +9,11 @@
 /* Begin PBXBuildFile section */
 		0033D8EEEB856B463139A9FD /* SoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB70FC0B2FFC1F7B5F1B6BB1 /* SoundPlayer.swift */; };
 		05890CC3EA735DB3F0561CDA /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBCEDB37B2D0B9345ABDE94A /* SettingsView.swift */; };
+		0690CA823F9DBDECC448BBBD /* ShareClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DAC4EBDFF1DF72B996DF36 /* ShareClient.swift */; };
+		132B227AC2F559D68DCF02FA /* ShareCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730BAFCFBC0348F6D8C5123A /* ShareCalendarView.swift */; };
 		3C64CB3B719F2E02D1C9DFDD /* HomeShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDBD2EE216FCCE6C01C4E51 /* HomeShareView.swift */; };
 		55527DFC92282D1114F67AFC /* GuestMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0BCCBB16ABEE301F649AB44 /* GuestMessageView.swift */; };
+		5D698274FD721595DB543F51 /* ShareRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDDCAF1D563A193F10EFB4E /* ShareRecord.swift */; };
 		5D6B635FCCC55DB6DAF0F040 /* NukiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA3CD9872B7A9F7A09558CD /* NukiClient.swift */; };
 		5D8D7971F2359E619036E576 /* HueClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDE620580DAF5BA1260B2AAC /* HueClient.swift */; };
 		68B5FC384F63E9884DE6BA98 /* SeedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 806DDA31D51546E558470EDA /* SeedData.swift */; };
@@ -63,11 +66,13 @@
 		36332B105EE7996D0B6B5197 /* CustomWebhookClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomWebhookClient.swift; sourceTree = "<group>"; };
 		3760F8B3DCFBD7037F9DB342 /* AddBookingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBookingView.swift; sourceTree = "<group>"; };
 		3DE616B87BEC7294C763936F /* SwitchBotClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchBotClient.swift; sourceTree = "<group>"; };
+		50DAC4EBDFF1DF72B996DF36 /* ShareClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareClient.swift; sourceTree = "<group>"; };
 		5BFFA1E3C067B393326D1572 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		659D2214496DFC118E1583E2 /* SmartDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartDevice.swift; sourceTree = "<group>"; };
 		6C4BBE4E37974636B760169C /* KachaWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = KachaWidget.entitlements; sourceTree = "<group>"; };
 		6D6CA3BE71B9C6388662314E /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		7272FF7B92B5399F5143EE9E /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		730BAFCFBC0348F6D8C5123A /* ShareCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareCalendarView.swift; sourceTree = "<group>"; };
 		74FBCAA143B2049F923F029B /* KachaWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = KachaWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		78950F541AE80850218E2252 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7C897E53B48E2B6F63413241 /* KachaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KachaApp.swift; sourceTree = "<group>"; };
@@ -80,6 +85,7 @@
 		9D1AB6E38DE556A80A4FDACF /* CelebrationEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CelebrationEffect.swift; sourceTree = "<group>"; };
 		A252235D4A96185B03167092 /* Booking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Booking.swift; sourceTree = "<group>"; };
 		AB70FC0B2FFC1F7B5F1B6BB1 /* SoundPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundPlayer.swift; sourceTree = "<group>"; };
+		ADDDCAF1D563A193F10EFB4E /* ShareRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareRecord.swift; sourceTree = "<group>"; };
 		B0BCCBB16ABEE301F649AB44 /* GuestMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestMessageView.swift; sourceTree = "<group>"; };
 		D47FA2A1E0C7359B3C3025F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D483303E5E06E7219BE5C056 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
@@ -107,6 +113,7 @@
 				A252235D4A96185B03167092 /* Booking.swift */,
 				8A26AF7341A07F152DAA60F3 /* DeviceIntegration.swift */,
 				6D6CA3BE71B9C6388662314E /* Home.swift */,
+				ADDDCAF1D563A193F10EFB4E /* ShareRecord.swift */,
 				659D2214496DFC118E1583E2 /* SmartDevice.swift */,
 			);
 			path = Models;
@@ -144,6 +151,7 @@
 				1797C59E8718E09C95867CEA /* HomeView.swift */,
 				7272FF7B92B5399F5143EE9E /* OnboardingView.swift */,
 				EBCEDB37B2D0B9345ABDE94A /* SettingsView.swift */,
+				730BAFCFBC0348F6D8C5123A /* ShareCalendarView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -167,6 +175,7 @@
 				256031C69587A8CA93CA2918 /* NatureRemoClient.swift */,
 				7FA3CD9872B7A9F7A09558CD /* NukiClient.swift */,
 				1213C23623556FBA096EAE19 /* SesameClient.swift */,
+				50DAC4EBDFF1DF72B996DF36 /* ShareClient.swift */,
 				3DE616B87BEC7294C763936F /* SwitchBotClient.swift */,
 			);
 			path = Services;
@@ -320,6 +329,9 @@
 				68B5FC384F63E9884DE6BA98 /* SeedData.swift in Sources */,
 				BB5B1C14CB42E28322BBC306 /* SesameClient.swift in Sources */,
 				05890CC3EA735DB3F0561CDA /* SettingsView.swift in Sources */,
+				132B227AC2F559D68DCF02FA /* ShareCalendarView.swift in Sources */,
+				0690CA823F9DBDECC448BBBD /* ShareClient.swift in Sources */,
+				5D698274FD721595DB543F51 /* ShareRecord.swift in Sources */,
 				ACCB4AE33D0A427E06434595 /* SmartDevice.swift in Sources */,
 				0033D8EEEB856B463139A9FD /* SoundPlayer.swift in Sources */,
 				B2615DCF0B22DF1E3AB77911 /* SwitchBotClient.swift in Sources */,

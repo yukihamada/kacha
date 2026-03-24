@@ -24,6 +24,7 @@ struct HomeView: View {
     @State private var showCelebration = false
     @State private var celebrationBookingName = ""
     @State private var showShare = false
+    @State private var showKeyRotation = false
     @State private var isRunningScene = false
 
     private var activeHome: Home? { homes.first { $0.id == activeHomeId } }
@@ -85,7 +86,10 @@ struct HomeView: View {
                 }
             }
             .sheet(isPresented: $showShare) {
-                if let home = activeHome { HomeShareView(home: home) }
+                if let home = activeHome { ShareCalendarView(home: home) }
+            }
+            .sheet(isPresented: $showKeyRotation) {
+                if let home = activeHome { KeyRotationView(home: home) }
             }
         }
     }
@@ -102,6 +106,11 @@ struct HomeView: View {
             }
             Spacer()
             HStack(spacing: 14) {
+                Button { showKeyRotation = true } label: {
+                    Image(systemName: "key.rotate")
+                        .font(.system(size: 20))
+                        .foregroundColor(.kacha.opacity(0.7))
+                }
                 Button { showShare = true } label: {
                     Image(systemName: "person.badge.plus")
                         .font(.system(size: 22))

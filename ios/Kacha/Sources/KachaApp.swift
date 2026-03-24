@@ -8,7 +8,7 @@ struct KachaApp: App {
     init() {
         do {
             container = try ModelContainer(
-                for: Home.self, Booking.self, SmartDevice.self, DeviceIntegration.self,
+                for: Home.self, Booking.self, SmartDevice.self, DeviceIntegration.self, ShareRecord.self,
                 configurations: ModelConfiguration()
             )
         } catch {
@@ -34,38 +34,57 @@ struct KachaApp: App {
         }
     }
 
-    // MARK: - Deep Link (kacha://join?d=BASE64)
+    // MARK: - Deep Link
+    // New E2E format: kacha://join?t=TOKEN#ENCRYPTION_KEY
+    // Legacy format:  kacha://join?d=BASE64
 
     private func handleDeepLink(_ url: URL) {
-        guard url.scheme == "kacha", url.host == "join",
-              let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
-              let dParam = components.queryItems?.first(where: { $0.name == "d" })?.value,
-              let decoded = dParam.removingPercentEncoding,
-              let data = Data(base64Encoded: decoded),
-              let shareData = try? JSONDecoder().decode(HomeShareData.self, from: data)
-        else { return }
+        guard url.scheme == "kacha", url.host == "join" else { return }
+        let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
 
+        // New E2E format
+        if let token = components?.queryItems?.first(where: { $0.name == "t" })?.value,
+           let fragment = url.fragment?.removingPercentEncoding, !fragment.isEmpty {
+            Task {
+                do {
+                    let shareData = try await ShareClient.fetchShare(token: token, encryptionKey: fragment)
+                    await MainActor.run { importHome(from: shareData) }
+                } catch {
+                    print("Share fetch failed: \(error)")
+                }
+            }
+            return
+        }
+
+        // Legacy inline format (backward compat)
+        if let dParam = components?.queryItems?.first(where: { $0.name == "d" })?.value,
+           let decoded = dParam.removingPercentEncoding,
+           let data = Data(base64Encoded: decoded),
+           let shareData = try? JSONDecoder().decode(HomeShareData.self, from: data) {
+            importHome(from: shareData)
+        }
+    }
+
+    private func importHome(from shareData: HomeShareData) {
         let context = container.mainContext
         let existing = (try? context.fetch(FetchDescriptor<Home>())) ?? []
-        // 同名ホームが既にあればスキップ
         guard !existing.contains(where: { $0.name == shareData.name }) else { return }
 
         let home = Home(name: shareData.name, sortOrder: existing.count)
-        home.address          = shareData.address
-        home.switchBotToken   = shareData.switchBotToken
-        home.switchBotSecret  = shareData.switchBotSecret
-        home.hueBridgeIP      = shareData.hueBridgeIP
-        home.hueUsername      = shareData.hueUsername
-        home.sesameApiKey     = shareData.sesameApiKey
+        home.address           = shareData.address
+        home.switchBotToken    = shareData.switchBotToken
+        home.switchBotSecret   = shareData.switchBotSecret
+        home.hueBridgeIP       = shareData.hueBridgeIP
+        home.hueUsername       = shareData.hueUsername
+        home.sesameApiKey      = shareData.sesameApiKey
         home.sesameDeviceUUIDs = shareData.sesameDeviceUUIDs
-        home.qrioApiKey       = shareData.qrioApiKey
-        home.qrioDeviceIds    = shareData.qrioDeviceIds
-        home.doorCode         = shareData.doorCode
-        home.wifiPassword     = shareData.wifiPassword
+        home.qrioApiKey        = shareData.qrioApiKey
+        home.qrioDeviceIds     = shareData.qrioDeviceIds
+        home.doorCode          = shareData.doorCode
+        home.wifiPassword      = shareData.wifiPassword
         context.insert(home)
         try? context.save()
 
-        // アクティブホームに設定
         UserDefaults.standard.set(home.id, forKey: "activeHomeId")
         UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
         home.syncToAppStorage()
