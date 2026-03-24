@@ -1247,9 +1247,10 @@ struct HomeSettingsSections: View {
         isConnectingBeds24 = true
         beds24Error = nil
         do {
-            let token = try await Beds24Client.shared.exchangeInviteCode(home.beds24ApiKey)
-            // Store token in beds24ICalURL field (repurposed as token storage)
-            home.beds24ICalURL = token
+            // Invite Code → refreshToken → token
+            let result = try await Beds24Client.shared.authenticate(inviteCode: home.beds24ApiKey)
+            // Store refreshToken (beds24ICalURL repurposed) for re-authentication
+            home.beds24ICalURL = result.refreshToken
             showAlertMsg(title: "接続成功", message: "Beds24に接続しました")
         } catch {
             beds24Error = error.localizedDescription
@@ -1260,28 +1261,28 @@ struct HomeSettingsSections: View {
     private func fetchBeds24Properties() async {
         isFetchingBeds24Props = true
         defer { isFetchingBeds24Props = false }
-        let token = home.beds24ICalURL // repurposed as token
-        beds24Properties = (try? await Beds24Client.shared.fetchProperties(apiKey: token)) ?? []
+        let refreshToken = home.beds24ICalURL
+        guard let token = try? await Beds24Client.shared.getToken(refreshToken: refreshToken) else { return }
+        beds24Properties = (try? await Beds24Client.shared.fetchProperties(token: token)) ?? []
     }
 
     private func syncBeds24() async {
         isSyncingBeds24 = true
         defer { isSyncingBeds24 = false }
-        var imported = 0
-        let existingExtIDs = Set(bookings.map { $0.externalId })
-        if !home.beds24ICalURL.isEmpty, let url = URL(string: home.beds24ICalURL),
-           let data = try? await URLSession.shared.data(from: url).0,
-           let content = String(data: data, encoding: .utf8) {
-            let events = ICalImporter.parse(icsContent: content, platform: "beds24")
-            let newBookings = ICalImporter.importToBookings(events, platform: "beds24")
-            for booking in newBookings where !existingExtIDs.contains(booking.externalId) {
-                booking.homeId = home.id
-                modelContext.insert(booking)
-                imported += 1
-            }
+
+        // refreshToken → token → fetch bookings
+        let refreshToken = home.beds24ICalURL // repurposed as refreshToken storage
+        guard !refreshToken.isEmpty else {
+            showAlertMsg(title: "エラー", message: "先にInvite Codeで接続してください")
+            return
         }
-        if !home.beds24ApiKey.isEmpty {
-            let b24Bookings = (try? await Beds24Client.shared.fetchBookings(apiKey: home.beds24ApiKey)) ?? []
+
+        do {
+            let token = try await Beds24Client.shared.getToken(refreshToken: refreshToken)
+            let b24Bookings = try await Beds24Client.shared.fetchBookings(token: token)
+
+            var imported = 0
+            let existingExtIDs = Set(bookings.map { $0.externalId })
             let df = DateFormatter(); df.dateFormat = "yyyy-MM-dd"
             for b24 in b24Bookings {
                 let extId = "beds24-\(b24.bookId ?? 0)"
@@ -1302,8 +1303,10 @@ struct HomeSettingsSections: View {
                 modelContext.insert(booking)
                 imported += 1
             }
+            showAlertMsg(title: "同期完了", message: "\(imported)件インポート")
+        } catch {
+            showAlertMsg(title: "同期エラー", message: error.localizedDescription)
         }
-        showAlertMsg(title: "同期完了", message: "\(imported)件インポート")
     }
 
     private func importICalFile(url: URL) async {
