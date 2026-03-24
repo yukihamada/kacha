@@ -57,6 +57,31 @@ struct SecurityInfoView: View {
                             ]
                         )
 
+                        // Role-based access
+                        infoCard(
+                            icon: "person.badge.shield.checkmark",
+                            title: "4段階の権限管理",
+                            color: .kacha,
+                            items: [
+                                ("ゲスト", "WiFi・ドアコードの閲覧のみ。APIキーは共有されません。"),
+                                ("清掃スタッフ", "チェックリストの確認・完了報告のみ。WiFi/ドアコードも共有されません。"),
+                                ("マネージャー", "デバイス操作と予約管理が可能。APIキーは共有されますがBeds24認証は共有されません。"),
+                                ("オーナー代理", "全機能にアクセス可能。APIキー・Beds24認証情報も共有されます。"),
+                            ]
+                        )
+
+                        // Backup & Recovery
+                        infoCard(
+                            icon: "arrow.clockwise.circle.fill",
+                            title: "バックアップと復元",
+                            color: .kachaSuccess,
+                            items: [
+                                ("Keychainバックアップ", "全ホーム設定がiOS Keychainに自動保存されます。アプリを削除しても残り、再インストール後に自動復元されます。"),
+                                ("バックグラウンド同期", "アプリを閉じていても定期的にBeds24をチェックし、新規予約があればプッシュ通知でお知らせします。"),
+                                ("位置情報の利用", "ジオフェンス機能を有効にした場合のみ使用。位置データは端末内でのみ処理され、外部に送信されません。"),
+                            ]
+                        )
+
                         // What we don't do
                         infoCard(
                             icon: "xmark.shield.fill",

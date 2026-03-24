@@ -254,6 +254,44 @@ a.btn:hover{opacity:.9}
 </html>"#.to_string())
 }
 
+async fn privacy_page() -> Html<String> {
+    Html(r#"<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>カチャ プライバシーポリシー</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;background:#0A0A12;color:#eaeaf2;padding:24px;max-width:700px;margin:0 auto;line-height:1.8}h1{font-size:22px;margin-bottom:16px;color:#E8A838}h2{font-size:16px;margin:20px 0 8px;color:#3B9FE8}p,li{font-size:14px;color:#aaa;margin-bottom:8px}ul{padding-left:20px}</style></head><body>
+<h1>カチャ プライバシーポリシー</h1>
+<p>最終更新日: 2026年3月24日</p>
+<h2>1. 収集するデータ</h2>
+<p>カチャはユーザーの個人データを外部サーバーに収集・送信しません。すべてのデータ（デバイス設定、APIキー、予約情報等）はiPhoneのローカルストレージに保存されます。</p>
+<h2>2. E2Eシェア</h2>
+<p>シェア機能を使用した場合、AES-256-GCMで暗号化されたデータのみがサーバーに保存されます。復号キーはサーバーに送信されません。暗号化データは期限切れ後にアクセス不能になります。</p>
+<h2>3. 外部サービス連携</h2>
+<p>SwitchBot、Sesame、Philips Hue、Nuki、Beds24等の外部サービスとの通信は、各サービスのAPIサーバーと直接行われます。カチャのサーバーを経由しません。</p>
+<h2>4. 位置情報</h2>
+<p>ジオフェンス機能を有効にした場合のみ、位置情報を使用します。位置情報は端末内でのみ処理され、外部に送信されません。</p>
+<h2>5. 広告・トラッキング</h2>
+<p>カチャは広告SDK、アナリティクスSDKを一切使用していません。利用状況の追跡は行いません。</p>
+<h2>6. データの削除</h2>
+<p>アプリを削除すると、ローカルストレージのデータは削除されます。Keychainに保存されたバックアップデータは、iOSの設定からKeychainを削除することで消去できます。</p>
+<h2>7. お問い合わせ</h2>
+<p>プライバシーに関するお問い合わせ: info@enablerdao.com</p>
+<p>運営: Enabler DAO / Yuki Hamada</p>
+</body></html>"#.to_string())
+}
+
+async fn support_page() -> Html<String> {
+    Html(r#"<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>カチャ サポート</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;background:#0A0A12;color:#eaeaf2;padding:24px;max-width:700px;margin:0 auto;line-height:1.8}h1{font-size:22px;margin-bottom:16px;color:#E8A838}h2{font-size:16px;margin:20px 0 8px;color:#3B9FE8}p{font-size:14px;color:#aaa;margin-bottom:8px}a{color:#3B9FE8}</style></head><body>
+<h1>カチャ サポート</h1>
+<h2>よくある質問</h2>
+<p><strong>Q: データはどこに保存されますか？</strong><br>A: すべてのデータはiPhoneのローカルに保存されます。外部サーバーにはE2E暗号化されたシェアデータのみ保存されます。</p>
+<p><strong>Q: アプリを再インストールしてもデータは残りますか？</strong><br>A: はい。Keychainバックアップにより、再インストール後も自動復元されます。</p>
+<p><strong>Q: Beds24の予約が同期されません</strong><br>A: 設定→Beds24で「接続する」を確認してください。Invite CodeはBeds24の設定→API v2から作成できます。</p>
+<p><strong>Q: オートロック解除が動きません</strong><br>A: SwitchBotアプリでBotの動作を確認し、カチャの設定でBotデバイスを選択してください。</p>
+<h2>お問い合わせ</h2>
+<p>メール: <a href="mailto:info@enablerdao.com">info@enablerdao.com</a></p>
+<p>GitHub: <a href="https://github.com/yukihamada/kacha">yukihamada/kacha</a></p>
+</body></html>"#.to_string())
+}
+
 #[tokio::main]
 async fn main() {
     let db_path = std::env::var("DATABASE_PATH").unwrap_or_else(|_| "kacha.db".into());
@@ -273,6 +311,8 @@ async fn main() {
         .route("/api/v1/shares/list", post(list_shares))
         .route("/.well-known/apple-app-site-association", get(aasa))
         .route("/join", get(join_fallback))
+        .route("/privacy", get(privacy_page))
+        .route("/support", get(support_page))
         .route("/health", get(|| async { "ok" }))
         .layer(CorsLayer::permissive())
         .with_state(state);
