@@ -2,13 +2,8 @@ import Foundation
 import Security
 import SwiftData
 
-// MARK: - Keychain Backup
-// アプリ再インストール後もデータを復元するためにKeychainにバックアップ
-
 struct KeychainBackup {
     private static let service = "com.enablerdao.kacha.backup"
-
-    // MARK: - Save/Load
 
     private static func save(key: String, data: Data) {
         let query: [String: Any] = [
@@ -37,8 +32,6 @@ struct KeychainBackup {
         guard status == errSecSuccess else { return nil }
         return result as? Data
     }
-
-    // MARK: - Home Backup
 
     struct HomeBackupData: Codable {
         let id: String
@@ -77,8 +70,6 @@ struct KeychainBackup {
         let backedUpAt: Date
     }
 
-    // MARK: - Backup All Homes
-
     static func backup(context: ModelContext) {
         let homes = (try? context.fetch(FetchDescriptor<Home>())) ?? []
         guard !homes.isEmpty else { return }
@@ -112,22 +103,16 @@ struct KeychainBackup {
 
         if let data = try? JSONEncoder().encode(backup) {
             save(key: "app_backup", data: data)
-            print("[KeychainBackup] Backed up \(homes.count) homes")
         }
     }
 
-    // MARK: - Restore from Keychain
-
     static func restoreIfNeeded(context: ModelContext) -> Bool {
-        // Only restore if SwiftData is empty (fresh install)
         let existingHomes = (try? context.fetch(FetchDescriptor<Home>())) ?? []
         guard existingHomes.isEmpty else { return false }
 
         guard let data = load(key: "app_backup"),
               let backup = try? JSONDecoder().decode(AppBackupData.self, from: data)
         else { return false }
-
-        print("[KeychainBackup] Restoring \(backup.homes.count) homes from backup (backed up at \(backup.backedUpAt))")
 
         for bh in backup.homes {
             let home = Home(name: bh.name, sortOrder: bh.sortOrder)
@@ -159,16 +144,12 @@ struct KeychainBackup {
         }
         try? context.save()
 
-        // Restore settings
         UserDefaults.standard.set(backup.activeHomeId, forKey: "activeHomeId")
         UserDefaults.standard.set(backup.hasCompletedOnboarding, forKey: "hasCompletedOnboarding")
         UserDefaults.standard.set(backup.minpakuModeEnabled, forKey: "minpakuModeEnabled")
 
-        // Sync active home to AppStorage
         if let activeHome = backup.homes.first(where: { $0.id == backup.activeHomeId }) {
             UserDefaults.standard.set(activeHome.name, forKey: "facilityName")
-            UserDefaults.standard.set(activeHome.switchBotToken, forKey: "switchBotToken")
-            UserDefaults.standard.set(activeHome.switchBotSecret, forKey: "switchBotSecret")
         }
 
         return true

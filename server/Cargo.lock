@@ -447,6 +447,7 @@ dependencies = [
  "axum",
  "base64",
  "chrono",
+ "http",
  "rusqlite",
  "serde",
  "serde_json",

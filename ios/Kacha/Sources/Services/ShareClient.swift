@@ -23,7 +23,8 @@ struct ShareClient {
         // 2. Encrypt HomeShareData with AES-256-GCM
         let plaintext = try JSONEncoder().encode(data)
         let sealedBox = try AES.GCM.seal(plaintext, using: symmetricKey)
-        let encryptedBase64 = sealedBox.combined!.base64EncodedString()
+        guard let combined = sealedBox.combined else { throw ShareError.uploadFailed }
+        let encryptedBase64 = combined.base64EncodedString()
 
         // 3. Upload to server
         let url = URL(string: "\(baseURL)/api/v1/shares")!

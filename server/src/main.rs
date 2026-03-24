@@ -314,7 +314,12 @@ async fn main() {
         .route("/privacy", get(privacy_page))
         .route("/support", get(support_page))
         .route("/health", get(|| async { "ok" }))
-        .layer(CorsLayer::permissive())
+        .layer(
+            CorsLayer::new()
+                .allow_origin("https://kacha.pasha.run".parse::<http::HeaderValue>().unwrap())
+                .allow_methods([http::Method::GET, http::Method::POST, http::Method::DELETE])
+                .allow_headers([header::CONTENT_TYPE])
+        )
         .with_state(state);
 
     let port: u16 = std::env::var("PORT")

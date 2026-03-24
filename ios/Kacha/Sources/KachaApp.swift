@@ -30,7 +30,9 @@ struct KachaApp: App {
                 .onAppear {
                     // Restore from Keychain if fresh install
                     let restored = KeychainBackup.restoreIfNeeded(context: container.mainContext)
+                    #if DEBUG
                     if restored { print("[Kacha] Restored from Keychain backup") }
+                    #endif
 
                     #if DEBUG
                     SeedData.insert(into: container.mainContext)
@@ -88,10 +90,9 @@ struct KachaApp: App {
         }
     }
 
-    // MARK: - Deep Link
+    // MARK: - Deep Link (E2E encrypted only)
     // Universal Link: https://kacha.pasha.run/join?t=TOKEN#ENCRYPTION_KEY
     // Custom scheme:  kacha://join?t=TOKEN#ENCRYPTION_KEY
-    // Legacy:         kacha://join?d=BASE64
 
     private func handleDeepLink(_ url: URL) {
         let isUniversalLink = url.scheme == "https" && url.host == "kacha.pasha.run" && url.path == "/join"
@@ -99,26 +100,18 @@ struct KachaApp: App {
         guard isUniversalLink || isCustomScheme else { return }
         let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
 
-        // New E2E format
-        if let token = components?.queryItems?.first(where: { $0.name == "t" })?.value,
-           let fragment = url.fragment?.removingPercentEncoding, !fragment.isEmpty {
-            Task {
-                do {
-                    let shareData = try await ShareClient.fetchShare(token: token, encryptionKey: fragment)
-                    await MainActor.run { importHome(from: shareData) }
-                } catch {
-                    print("Share fetch failed: \(error)")
-                }
-            }
-            return
-        }
+        guard let token = components?.queryItems?.first(where: { $0.name == "t" })?.value,
+              let fragment = url.fragment?.removingPercentEncoding, !fragment.isEmpty else { return }
 
-        // Legacy inline format (backward compat)
-        if let dParam = components?.queryItems?.first(where: { $0.name == "d" })?.value,
-           let decoded = dParam.removingPercentEncoding,
-           let data = Data(base64Encoded: decoded),
-           let shareData = try? JSONDecoder().decode(HomeShareData.self, from: data) {
-            importHome(from: shareData)
+        Task {
+            do {
+                let shareData = try await ShareClient.fetchShare(token: token, encryptionKey: fragment)
+                await MainActor.run { importHome(from: shareData) }
+            } catch {
+                #if DEBUG
+                print("Share fetch failed: \(error)")
+                #endif
+            }
         }
     }
 

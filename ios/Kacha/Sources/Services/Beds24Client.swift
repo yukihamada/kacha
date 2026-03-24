@@ -78,10 +78,11 @@ final class Beds24Client {
         let (data, response) = try await URLSession.shared.data(for: req)
         let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
 
-        // Debug: print raw response
+        #if DEBUG
         if let rawStr = String(data: data, encoding: .utf8) {
-            print("[Beds24] Status: \(statusCode), Response: \(rawStr.prefix(500))")
+            print("[Beds24] Status: \(statusCode), Response: \(rawStr.prefix(200))")
         }
+        #endif
 
         guard statusCode == 200 else {
             throw Beds24Error.apiError(statusCode)
@@ -91,7 +92,9 @@ final class Beds24Client {
         if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
             // Check if data is in "data" key or top level
             if let bookingsArray = json["data"] as? [[String: Any]] {
+                #if DEBUG
                 print("[Beds24] Found \(bookingsArray.count) bookings in 'data' key")
+                #endif
                 let reencoded = try JSONSerialization.data(withJSONObject: bookingsArray)
                 return (try? JSONDecoder().decode([Beds24Booking].self, from: reencoded)) ?? []
             }
