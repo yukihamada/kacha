@@ -891,7 +891,7 @@ struct HomeSettingsSections: View {
                     VStack(alignment: .leading, spacing: 4) {
                         beds24Step("1", "Beds24にログイン")
                         beds24Step("2", "設定 → API v2 を開く")
-                        beds24Step("3", "「Invite Code」を作成")
+                        beds24Step("3", "「Invite Code」を作成（スコープ: bookings, properties）")
                         beds24Step("4", "生成されたコードを下に貼り付け")
                     }
                     Link(destination: URL(string: "https://beds24.com/control3.php?pagetype=apiv2")!) {
@@ -903,6 +903,11 @@ struct HomeSettingsSections: View {
                         .padding(.horizontal, 12).padding(.vertical, 8)
                         .background(Color(hex: "0066CC").opacity(0.1))
                         .clipShape(RoundedRectangle(cornerRadius: 8))
+                    }
+                    HStack(spacing: 6) {
+                        Image(systemName: "info.circle").foregroundColor(.secondary)
+                        Text("Invite Codeは1回限り有効です。管理者を追加する場合は、各管理者ごとにBeds24で新しいInvite Codeを作成してください。")
+                            .font(.caption2).foregroundColor(.secondary)
                     }
                 }
 
