@@ -288,13 +288,16 @@ struct HomeSettingsSections: View {
     var body: some View {
         Group {
             homeInfoSection
+            businessModeSection
+            if minpakuModeEnabled {
+                guestInfoSection
+            }
             autolockSetupSection
             devicesOverviewSection
             deviceIntegrationsSection
             if minpakuModeEnabled {
                 beds24Section
                 icalSection
-                minpakuSection
             }
         }
         .alert(alertTitle, isPresented: $showAlert) {
@@ -318,6 +321,8 @@ struct HomeSettingsSections: View {
 
     // MARK: - Home Info
 
+    @State private var wifiSSID: String = ""
+
     private var homeInfoSection: some View {
         KachaCard {
             VStack(spacing: 14) {
@@ -327,13 +332,6 @@ struct HomeSettingsSections: View {
                 Divider().background(Color.kachaCardBorder)
                 SettingsTextField(label: "住所", placeholder: "東京都渋谷区...", text: $home.address)
                     .onChange(of: home.address) { _, val in UserDefaults.standard.set(val, forKey: "facilityAddress") }
-                Divider().background(Color.kachaCardBorder)
-                // Door code & WiFi — masked
-                MaskedField(label: "ドアコード", value: $home.doorCode, icon: "keypad.rectangle.fill")
-                    .onChange(of: home.doorCode) { _, val in UserDefaults.standard.set(val, forKey: "facilityDoorCode") }
-                Divider().background(Color.kachaCardBorder)
-                MaskedField(label: "Wi-Fi", value: $home.wifiPassword, icon: "wifi")
-                    .onChange(of: home.wifiPassword) { _, val in UserDefaults.standard.set(val, forKey: "facilityWifiPassword") }
             }
             .padding(16)
         }
@@ -822,34 +820,64 @@ struct HomeSettingsSections: View {
 
     // MARK: Minpaku
 
-    private var minpakuSection: some View {
+    // MARK: - Business Mode (top-level toggle)
+
+    private var businessModeSection: some View {
         KachaCard {
             VStack(spacing: 14) {
-                SettingsHeader(icon: "building.2.fill", title: "民泊モード", color: .kachaWarn)
-                Toggle(isOn: $minpakuModeEnabled) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("民泊として貸し出す").font(.subheadline).foregroundColor(.white)
-                        Text("予約管理・泊数管理が使えます").font(.caption).foregroundColor(.secondary)
+                SettingsHeader(icon: "building.2.fill", title: "営業モード", color: .kachaWarn)
+
+                // Type picker
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach([
+                        ("none", "自宅のみ", "宿泊事業を行わない"),
+                        ("minpaku", "民泊（住宅宿泊事業）", "年間180日まで、届出番号が必要"),
+                        ("ryokan", "旅館業", "日数制限なし、旅館業許可が必要"),
+                    ], id: \.0) { key, title, desc in
+                        Button {
+                            home.businessType = key
+                            minpakuModeEnabled = (key != "none")
+                        } label: {
+                            HStack(spacing: 12) {
+                                Image(systemName: home.businessType == key ? "checkmark.circle.fill" : "circle")
+                                    .foregroundColor(home.businessType == key ? .kacha : .secondary)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(title).font(.subheadline).foregroundColor(.white)
+                                    Text(desc).font(.caption2).foregroundColor(.secondary)
+                                }
+                                Spacer()
+                            }
+                            .padding(10)
+                            .background(home.businessType == key ? Color.kacha.opacity(0.06) : Color.clear)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                        }
                     }
                 }
-                .tint(.kacha)
+
                 if minpakuModeEnabled {
                     Divider().background(Color.kachaCardBorder)
-                    SettingsTextField(label: "届出番号", placeholder: "東京都渋谷区01234", text: $home.minpakuNumber)
-                        .onChange(of: home.minpakuNumber) { _, val in UserDefaults.standard.set(val, forKey: "minpakuNumber") }
-                    Divider().background(Color.kachaCardBorder)
-                    HStack {
-                        Text("使用泊数").font(.subheadline).foregroundColor(.white)
-                        Spacer()
-                        Stepper("\(home.minpakuNights)泊", value: $home.minpakuNights, in: 0...180)
-                            .foregroundColor(.white).tint(.kacha)
-                            .onChange(of: home.minpakuNights) { _, val in UserDefaults.standard.set(val, forKey: "minpakuNights") }
-                    }
-                    HStack {
-                        Text("残り").font(.subheadline).foregroundColor(.secondary)
-                        Spacer()
-                        Text("\(max(0, 180 - home.minpakuNights))泊").font(.subheadline).bold()
-                            .foregroundColor(remainingColor)
+                    SettingsTextField(
+                        label: home.businessType == "minpaku" ? "届出番号" : "許可番号",
+                        placeholder: home.businessType == "minpaku" ? "M130xxxxx" : "渋保衛xxxx号",
+                        text: $home.minpakuNumber
+                    )
+                    .onChange(of: home.minpakuNumber) { _, val in UserDefaults.standard.set(val, forKey: "minpakuNumber") }
+
+                    if home.businessType == "minpaku" {
+                        Divider().background(Color.kachaCardBorder)
+                        HStack {
+                            Text("使用泊数").font(.subheadline).foregroundColor(.white)
+                            Spacer()
+                            Stepper("\(home.minpakuNights)泊", value: $home.minpakuNights, in: 0...180)
+                                .foregroundColor(.white).tint(.kacha)
+                                .onChange(of: home.minpakuNights) { _, val in UserDefaults.standard.set(val, forKey: "minpakuNights") }
+                        }
+                        HStack {
+                            Text("残り").font(.subheadline).foregroundColor(.secondary)
+                            Spacer()
+                            Text("\(max(0, 180 - home.minpakuNights))泊").font(.subheadline).bold()
+                                .foregroundColor(remainingColor)
+                        }
                     }
                 }
             }
@@ -862,6 +890,29 @@ struct HomeSettingsSections: View {
         if r > 54 { return .kachaSuccess }
         if r > 18 { return .kachaWarn }
         return .kachaDanger
+    }
+
+    // MARK: - Guest Info (door code, wifi — only in business mode)
+
+    private var guestInfoSection: some View {
+        KachaCard {
+            VStack(spacing: 14) {
+                SettingsHeader(icon: "person.badge.key.fill", title: "ゲスト情報", color: .kachaSuccess)
+                Text("ゲストに共有する情報を設定").font(.caption).foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                Divider().background(Color.kachaCardBorder)
+                MaskedField(label: "ドアコード", value: $home.doorCode, icon: "keypad.rectangle.fill")
+                    .onChange(of: home.doorCode) { _, val in UserDefaults.standard.set(val, forKey: "facilityDoorCode") }
+
+                Divider().background(Color.kachaCardBorder)
+                HStack {
+                    MaskedField(label: "Wi-Fiパスワード", value: $home.wifiPassword, icon: "wifi")
+                        .onChange(of: home.wifiPassword) { _, val in UserDefaults.standard.set(val, forKey: "facilityWifiPassword") }
+                }
+            }
+            .padding(16)
+        }
     }
 
     // MARK: - Actions

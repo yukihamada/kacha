@@ -49,7 +49,8 @@ final class Home {
     var geofenceRadius: Double       // meters, 0 = disabled
     var geofenceEnabled: Bool
 
-    // Minpaku
+    // Business type: "none", "minpaku", "ryokan"
+    var businessType: String
     var minpakuNumber: String
     var minpakuNights: Int
 
@@ -81,6 +82,7 @@ final class Home {
         self.airbnbICalURL = ""
         self.jalanICalURL = ""
         self.icalLastSync = 0
+        self.businessType = "none"
         self.minpakuNumber = ""
         self.minpakuNights = 0
     }
