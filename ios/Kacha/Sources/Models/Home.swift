@@ -39,6 +39,7 @@ final class Home {
     var icalLastSync: Double
 
     // Auto-lock (building entrance)
+    var autolockEnabled: Bool        // master toggle
     var autolockBotDeviceId: String  // SwitchBot Bot device ID for intercom unlock
     var autolockRoomNumber: String   // room number to display in guide
 
@@ -68,6 +69,7 @@ final class Home {
         self.sesameDeviceUUIDs = ""
         self.qrioApiKey = ""
         self.qrioDeviceIds = ""
+        self.autolockEnabled = false
         self.autolockBotDeviceId = ""
         self.autolockRoomNumber = ""
         self.latitude = 0

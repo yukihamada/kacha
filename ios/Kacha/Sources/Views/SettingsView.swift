@@ -346,13 +346,33 @@ struct HomeSettingsSections: View {
             icon: "building.2.fill",
             name: "オートロック解除",
             color: .kachaAccent,
-            isConnected: !home.autolockBotDeviceId.isEmpty,
+            isConnected: home.autolockEnabled && !home.autolockBotDeviceId.isEmpty,
             isExpanded: $expandAutolock
         ) {
             VStack(alignment: .leading, spacing: 14) {
-                // Guide
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("セットアップ手順").font(.caption).bold().foregroundColor(.kacha)
+                Toggle(isOn: $home.autolockEnabled) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("オートロック解除を使う").font(.subheadline).foregroundColor(.white)
+                        Text("マンションのエントランス等のオートロックを遠隔で解除します")
+                            .font(.caption2).foregroundColor(.secondary)
+                    }
+                }
+                .tint(.kacha)
+
+                if !home.autolockEnabled {
+                    HStack(spacing: 6) {
+                        Image(systemName: "info.circle").foregroundColor(.secondary)
+                        Text("オートロックのないお住まいの方はOFFのままで大丈夫です")
+                            .font(.caption2).foregroundColor(.secondary)
+                    }
+                }
+
+                if home.autolockEnabled {
+                    Divider().background(Color.kachaCardBorder)
+
+                    // Guide
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("セットアップ手順").font(.caption).bold().foregroundColor(.kacha)
                     guideStep(1, "SwitchBot Botを用意",
                               "指ロボットタイプのSwitchBot Bot")
                     guideStep(2, "インターホンの解錠ボタンに貼り付け",
@@ -444,6 +464,7 @@ struct HomeSettingsSections: View {
 
                 // Geofence
                 geofenceSection
+                } // end if autolockEnabled
             }
         }
     }

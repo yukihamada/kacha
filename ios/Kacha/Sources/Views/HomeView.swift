@@ -67,7 +67,7 @@ struct HomeView: View {
                 ScrollView {
                     VStack(spacing: 20) {
                         headerSection
-                        if !(activeHome?.autolockBotDeviceId ?? "").isEmpty {
+                        if activeHome?.autolockEnabled == true && !(activeHome?.autolockBotDeviceId ?? "").isEmpty {
                             autolockSection
                         }
                         quickActionsGrid
