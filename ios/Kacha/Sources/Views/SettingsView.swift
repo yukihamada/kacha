@@ -870,6 +870,8 @@ struct HomeSettingsSections: View {
 
     @State private var beds24Properties: [[String: Any]] = []
     @State private var isFetchingBeds24Props = false
+    @State private var isConnectingBeds24 = false
+    @State private var beds24Error: String?
 
     private var beds24Section: some View {
         KachaCard {
@@ -907,10 +909,39 @@ struct HomeSettingsSections: View {
                 Divider().background(Color.kachaCardBorder)
 
                 SecureTokenField(label: "Invite Code", text: $home.beds24ApiKey)
-                SettingsTextField(label: "iCal URL", placeholder: "beds24.com/ical.php?...", text: $home.beds24ICalURL)
+
+                if !home.beds24ApiKey.isEmpty {
+                    // Connect button
+                    Button {
+                        Task { await connectBeds24() }
+                    } label: {
+                        HStack {
+                            if isConnectingBeds24 { ProgressView().tint(.white) }
+                            else { Image(systemName: "link") }
+                            Text(home.beds24ICalURL.isEmpty ? "接続する" : "再接続")
+                        }
+                        .font(.subheadline).bold()
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity).padding(.vertical, 10)
+                        .background(Color(hex: "0066CC"))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    }
+                    .disabled(isConnectingBeds24)
+
+                    if !home.beds24ICalURL.isEmpty {
+                        HStack(spacing: 6) {
+                            Image(systemName: "checkmark.circle.fill").foregroundColor(.kachaSuccess)
+                            Text("接続済み").font(.caption).foregroundColor(.kachaSuccess)
+                        }
+                    }
+
+                    if let err = beds24Error {
+                        Text(err).font(.caption2).foregroundColor(.kachaDanger)
+                    }
+                }
 
                 // Property linking
-                if !home.beds24ApiKey.isEmpty {
+                if !home.beds24ICalURL.isEmpty {
                     Divider().background(Color.kachaCardBorder)
                     HStack {
                         Text("物件の関連付け").font(.caption).bold().foregroundColor(.white)
@@ -962,7 +993,7 @@ struct HomeSettingsSections: View {
                     }
                     .actionButtonStyle(.kacha)
                 }
-                .disabled(isSyncingBeds24 || (home.beds24ApiKey.isEmpty && home.beds24ICalURL.isEmpty))
+                .disabled(isSyncingBeds24 || home.beds24ICalURL.isEmpty)
             }
             .padding(16)
         }
@@ -1212,10 +1243,25 @@ struct HomeSettingsSections: View {
         }
     }
 
+    private func connectBeds24() async {
+        isConnectingBeds24 = true
+        beds24Error = nil
+        do {
+            let token = try await Beds24Client.shared.exchangeInviteCode(home.beds24ApiKey)
+            // Store token in beds24ICalURL field (repurposed as token storage)
+            home.beds24ICalURL = token
+            showAlertMsg(title: "接続成功", message: "Beds24に接続しました")
+        } catch {
+            beds24Error = error.localizedDescription
+        }
+        isConnectingBeds24 = false
+    }
+
     private func fetchBeds24Properties() async {
         isFetchingBeds24Props = true
         defer { isFetchingBeds24Props = false }
-        beds24Properties = (try? await Beds24Client.shared.fetchProperties(apiKey: home.beds24ApiKey)) ?? []
+        let token = home.beds24ICalURL // repurposed as token
+        beds24Properties = (try? await Beds24Client.shared.fetchProperties(apiKey: token)) ?? []
     }
 
     private func syncBeds24() async {

@@ -1,12 +1,39 @@
 import Foundation
 
 // MARK: - Beds24 Client
-// API Key取得: Beds24ダッシュボード → Settings → Account → API Keys
+// Invite Code取得: Beds24 → 設定 → API v2 → Invite Code作成
 // ドキュメント: https://beds24.com/api/v2
+// 認証フロー: Invite Code → POST /authentication/setup → token取得 → 以降tokenで認証
 
 final class Beds24Client {
     static let shared = Beds24Client()
     private let base = "https://api.beds24.com/v2"
+
+    // MARK: - Token Exchange (Invite Code → API Token)
+
+    struct AuthResponse: Codable {
+        let token: String?
+        let expiresAt: String?
+    }
+
+    /// Invite CodeをAPI Tokenに交換
+    func exchangeInviteCode(_ inviteCode: String) async throws -> String {
+        guard !inviteCode.isEmpty else { throw Beds24Error.missingCode }
+        var req = URLRequest(url: URL(string: "\(base)/authentication/setup")!)
+        req.httpMethod = "POST"
+        req.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        req.httpBody = try JSONSerialization.data(withJSONObject: ["code": inviteCode])
+        req.timeoutInterval = 15
+        let (data, resp) = try await URLSession.shared.data(for: req)
+        guard let http = resp as? HTTPURLResponse, http.statusCode == 200 else {
+            throw Beds24Error.apiError((resp as? HTTPURLResponse)?.statusCode ?? 0)
+        }
+        let result = try JSONDecoder().decode(AuthResponse.self, from: data)
+        guard let token = result.token, !token.isEmpty else {
+            throw Beds24Error.invalidCode
+        }
+        return token
+    }
 
     /// Beds24 API v2でこれから60日分の予約を取得
     func fetchBookings(apiKey: String) async throws -> [Beds24Booking] {
@@ -89,8 +116,14 @@ final class Beds24Client {
 
 enum Beds24Error: Error, LocalizedError {
     case apiError(Int)
+    case missingCode
+    case invalidCode
     var errorDescription: String? {
-        switch self { case .apiError(let code): return "Beds24 APIエラー: HTTP \(code)" }
+        switch self {
+        case .apiError(let code): return "Beds24 APIエラー: HTTP \(code)"
+        case .missingCode: return "Invite Codeが入力されていません"
+        case .invalidCode: return "Invite Codeが無効です。Beds24で新しいコードを作成してください"
+        }
     }
 }
 
