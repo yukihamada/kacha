@@ -14,6 +14,7 @@
 		132B227AC2F559D68DCF02FA /* ShareCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730BAFCFBC0348F6D8C5123A /* ShareCalendarView.swift */; };
 		195BDBE6E335330751D4C106 /* PermitGuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53057EE1C5415898AEC8053 /* PermitGuideView.swift */; };
 		26493989640D643F3E3B18D9 /* ChecklistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0223FC6395DC117DBB0CF7D /* ChecklistView.swift */; };
+		2BBAEE09C59F8750EF937110 /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DA0C90D173C9B934F5A1D7 /* ModelTests.swift */; };
 		346B513892A72C7033CED82D /* UtilityRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175549B75AE7B8BFC0C842D5 /* UtilityRecord.swift */; };
 		38B61C754CDAACDC726B6098 /* MaintenanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13DDDD3441AB20CFD7ED91B1 /* MaintenanceView.swift */; };
 		3C64CB3B719F2E02D1C9DFDD /* HomeShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDBD2EE216FCCE6C01C4E51 /* HomeShareView.swift */; };
@@ -31,6 +32,7 @@
 		77A0CBDAF76B9DD0DBB7948F /* MaintenanceTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E694CC782F89977CDFFA6E /* MaintenanceTask.swift */; };
 		7C81B0CFD18586B8462ACCEA /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7272FF7B92B5399F5143EE9E /* OnboardingView.swift */; };
 		7DB90868F78FFE94A8BA9000 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1797C59E8718E09C95867CEA /* HomeView.swift */; };
+		7DBC07BB5A28A3543048CC1D /* KachaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7520FE5B11987221F8DCA88 /* KachaUITests.swift */; };
 		7E01049D64A8C3ADAC50FE33 /* KachaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C897E53B48E2B6F63413241 /* KachaApp.swift */; };
 		88EC00251B02C08D328B74F8 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFFA1E3C067B393326D1572 /* NotificationManager.swift */; };
 		8B62098FD7EDA0DD001A07D9 /* BookingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36164FF9D7E181381FF28D54 /* BookingDetailView.swift */; };
@@ -44,6 +46,7 @@
 		B2615DCF0B22DF1E3AB77911 /* SwitchBotClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE616B87BEC7294C763936F /* SwitchBotClient.swift */; };
 		B580A115D64500E4E9F4F9F0 /* SecurityInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C8DED2BC0B563B3EF3A14BF /* SecurityInfoView.swift */; };
 		BB5B1C14CB42E28322BBC306 /* SesameClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1213C23623556FBA096EAE19 /* SesameClient.swift */; };
+		BCA875C6BB02C9449B00906D /* Beds24Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37052F89E217CD72DDF3EC65 /* Beds24Tests.swift */; };
 		CCB73D8BBD93E1BAF84BAF19 /* ActivityLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 979B7EEC69EB43FDB261BDEA /* ActivityLogView.swift */; };
 		D0356F48AE9412001484208D /* ActivityLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8255B3969C40B1CB0D0F9A2 /* ActivityLog.swift */; };
 		D6D569E9E4F9D1141AC5CBE0 /* KachaWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04135282A86BCECD05783AB8 /* KachaWidget.swift */; };
@@ -51,6 +54,7 @@
 		D94D275F8DBFB4ACEDC1F2C4 /* NatureRemoClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 256031C69587A8CA93CA2918 /* NatureRemoClient.swift */; };
 		DC6D02EB7EADD575DAA48961 /* CelebrationEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1AB6E38DE556A80A4FDACF /* CelebrationEffect.swift */; };
 		E30E21C0CDC4CFFD9EE87D0B /* AddDeviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7AEFDAB378F3AF8D6B1F8B /* AddDeviceView.swift */; };
+		E31349FF232BE850D3B4A8D5 /* ShareTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6787C7F6224E939F853894EB /* ShareTests.swift */; };
 		E668FA855EDC715E21732778 /* ICalImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E6544BCC09C6AE18830B5B /* ICalImporter.swift */; };
 		EB3B18000CB8645C97159CB0 /* AddBookingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3760F8B3DCFBD7037F9DB342 /* AddBookingView.swift */; };
 		F1957CFA622A464A221505AB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D71DD24B3C87D4B368EA8495 /* Assets.xcassets */; };
@@ -60,7 +64,21 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		86D6635834F5614244BEC902 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 30AE9803783797ECAB6A0002 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AD79808636D5B46444DAEE6F;
+			remoteInfo = Kacha;
+		};
 		9151358BCDEEE82279AFB445 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 30AE9803783797ECAB6A0002 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AD79808636D5B46444DAEE6F;
+			remoteInfo = Kacha;
+		};
+		AD9B05159A9280E23BA2E95B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 30AE9803783797ECAB6A0002 /* Project object */;
 			proxyType = 1;
@@ -79,11 +97,13 @@
 		1797C59E8718E09C95867CEA /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		1C8DED2BC0B563B3EF3A14BF /* SecurityInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityInfoView.swift; sourceTree = "<group>"; };
 		22725AD80A7BB9DEF3C3855A /* Beds24Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Beds24Client.swift; sourceTree = "<group>"; };
+		22DA0C90D173C9B934F5A1D7 /* ModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelTests.swift; sourceTree = "<group>"; };
 		256031C69587A8CA93CA2918 /* NatureRemoClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NatureRemoClient.swift; sourceTree = "<group>"; };
 		3274B590E5951F22DF3CFD98 /* HouseManualView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseManualView.swift; sourceTree = "<group>"; };
 		33D65736F4BF2913C2928BD7 /* Kacha.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Kacha.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		36164FF9D7E181381FF28D54 /* BookingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingDetailView.swift; sourceTree = "<group>"; };
 		36332B105EE7996D0B6B5197 /* CustomWebhookClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomWebhookClient.swift; sourceTree = "<group>"; };
+		37052F89E217CD72DDF3EC65 /* Beds24Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Beds24Tests.swift; sourceTree = "<group>"; };
 		3760F8B3DCFBD7037F9DB342 /* AddBookingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBookingView.swift; sourceTree = "<group>"; };
 		3DE616B87BEC7294C763936F /* SwitchBotClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchBotClient.swift; sourceTree = "<group>"; };
 		50DAC4EBDFF1DF72B996DF36 /* ShareClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareClient.swift; sourceTree = "<group>"; };
@@ -91,11 +111,13 @@
 		5BFFA1E3C067B393326D1572 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		601EAE312FF512150A91EA68 /* GuestCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestCardView.swift; sourceTree = "<group>"; };
 		659D2214496DFC118E1583E2 /* SmartDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartDevice.swift; sourceTree = "<group>"; };
+		6787C7F6224E939F853894EB /* ShareTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareTests.swift; sourceTree = "<group>"; };
 		6C4BBE4E37974636B760169C /* KachaWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = KachaWidget.entitlements; sourceTree = "<group>"; };
 		6D6CA3BE71B9C6388662314E /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		7272FF7B92B5399F5143EE9E /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		730BAFCFBC0348F6D8C5123A /* ShareCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareCalendarView.swift; sourceTree = "<group>"; };
 		74FBCAA143B2049F923F029B /* KachaWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = KachaWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		76B9236A6D37B7879EBF4551 /* KachaTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = KachaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		78950F541AE80850218E2252 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7C897E53B48E2B6F63413241 /* KachaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KachaApp.swift; sourceTree = "<group>"; };
 		7FA3CD9872B7A9F7A09558CD /* NukiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NukiClient.swift; sourceTree = "<group>"; };
@@ -122,6 +144,8 @@
 		DD87C22012BFBD2F0CAE6110 /* DeviceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceView.swift; sourceTree = "<group>"; };
 		E0223FC6395DC117DBB0CF7D /* ChecklistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistView.swift; sourceTree = "<group>"; };
 		EBCEDB37B2D0B9345ABDE94A /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		F5E640BBC420365E145EA283 /* KachaUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = KachaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F7520FE5B11987221F8DCA88 /* KachaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KachaUITests.swift; sourceTree = "<group>"; };
 		FA719FEFB13BE9B2634BF757 /* HouseManual.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseManual.swift; sourceTree = "<group>"; };
 		FDE620580DAF5BA1260B2AAC /* HueClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HueClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -154,10 +178,22 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		2DD838A84EB23FA3BCA83821 /* KachaTests */ = {
+			isa = PBXGroup;
+			children = (
+				37052F89E217CD72DDF3EC65 /* Beds24Tests.swift */,
+				22DA0C90D173C9B934F5A1D7 /* ModelTests.swift */,
+				6787C7F6224E939F853894EB /* ShareTests.swift */,
+			);
+			path = KachaTests;
+			sourceTree = "<group>";
+		};
 		446840506659C6C514B9F3DA /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				33D65736F4BF2913C2928BD7 /* Kacha.app */,
+				76B9236A6D37B7879EBF4551 /* KachaTests.xctest */,
+				F5E640BBC420365E145EA283 /* KachaUITests.xctest */,
 				74FBCAA143B2049F923F029B /* KachaWidget.appex */,
 			);
 			name = Products;
@@ -202,6 +238,8 @@
 		6DF6410F82C614F1ACCD0836 = {
 			isa = PBXGroup;
 			children = (
+				2DD838A84EB23FA3BCA83821 /* KachaTests */,
+				D78E8F33893280877A91D6DF /* KachaUITests */,
 				18F2950D350B60BFA4029253 /* KachaWidget */,
 				4DFEDA12935365DA9E3D36A4 /* Resources */,
 				CDA18D938BF6FB381C57C348 /* Sources */,
@@ -245,9 +283,35 @@
 			path = Kacha/Sources;
 			sourceTree = "<group>";
 		};
+		D78E8F33893280877A91D6DF /* KachaUITests */ = {
+			isa = PBXGroup;
+			children = (
+				F7520FE5B11987221F8DCA88 /* KachaUITests.swift */,
+			);
+			path = KachaUITests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		537B89E082FBB31958A1A368 /* KachaUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BCEF9B02922EFDC523189EB8 /* Build configuration list for PBXNativeTarget "KachaUITests" */;
+			buildPhases = (
+				3091437ED32C2D3C861D2512 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				39E1BDF446F369CD8257D2FA /* PBXTargetDependency */,
+			);
+			name = KachaUITests;
+			packageProductDependencies = (
+			);
+			productName = KachaUITests;
+			productReference = F5E640BBC420365E145EA283 /* KachaUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		6E270B78E06971B35A77FA67 /* KachaWidget */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D312067BD27650E32A86AF51 /* Build configuration list for PBXNativeTarget "KachaWidget" */;
@@ -265,6 +329,24 @@
 			productName = KachaWidget;
 			productReference = 74FBCAA143B2049F923F029B /* KachaWidget.appex */;
 			productType = "com.apple.product-type.app-extension";
+		};
+		886DB29D41321BA0369BFAE6 /* KachaTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C99E10C37F8028A027494A8C /* Build configuration list for PBXNativeTarget "KachaTests" */;
+			buildPhases = (
+				38E465BEFFC1A7879B404348 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				74274FF8967261AB8562682F /* PBXTargetDependency */,
+			);
+			name = KachaTests;
+			packageProductDependencies = (
+			);
+			productName = KachaTests;
+			productReference = 76B9236A6D37B7879EBF4551 /* KachaTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		AD79808636D5B46444DAEE6F /* Kacha */ = {
 			isa = PBXNativeTarget;
@@ -293,7 +375,16 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1620;
 				TargetAttributes = {
+					537B89E082FBB31958A1A368 = {
+						DevelopmentTeam = 5BV85JW8US;
+						ProvisioningStyle = Automatic;
+						TestTargetID = AD79808636D5B46444DAEE6F;
+					};
 					6E270B78E06971B35A77FA67 = {
+						DevelopmentTeam = 5BV85JW8US;
+						ProvisioningStyle = Automatic;
+					};
+					886DB29D41321BA0369BFAE6 = {
 						DevelopmentTeam = 5BV85JW8US;
 						ProvisioningStyle = Automatic;
 					};
@@ -318,6 +409,8 @@
 			projectRoot = "";
 			targets = (
 				AD79808636D5B46444DAEE6F /* Kacha */,
+				886DB29D41321BA0369BFAE6 /* KachaTests */,
+				537B89E082FBB31958A1A368 /* KachaUITests */,
 				6E270B78E06971B35A77FA67 /* KachaWidget */,
 			);
 		};
@@ -340,6 +433,24 @@
 			buildActionMask = 2147483647;
 			files = (
 				D6D569E9E4F9D1141AC5CBE0 /* KachaWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3091437ED32C2D3C861D2512 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7DBC07BB5A28A3543048CC1D /* KachaUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		38E465BEFFC1A7879B404348 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCA875C6BB02C9449B00906D /* Beds24Tests.swift in Sources */,
+				2BBAEE09C59F8750EF937110 /* ModelTests.swift in Sources */,
+				E31349FF232BE850D3B4A8D5 /* ShareTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -401,6 +512,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		39E1BDF446F369CD8257D2FA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AD79808636D5B46444DAEE6F /* Kacha */;
+			targetProxy = 86D6635834F5614244BEC902 /* PBXContainerItemProxy */;
+		};
+		74274FF8967261AB8562682F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AD79808636D5B46444DAEE6F /* Kacha */;
+			targetProxy = AD9B05159A9280E23BA2E95B /* PBXContainerItemProxy */;
+		};
 		9E2E4489DA48115DC6CF7CB4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = AD79808636D5B46444DAEE6F /* Kacha */;
@@ -574,6 +695,24 @@
 			};
 			name = Debug;
 		};
+		868D4B244E10FA7A7F58EC70 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 5BV85JW8US;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.enablerdao.kacha.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Kacha;
+			};
+			name = Release;
+		};
 		BC66323E74091CE03DA7AC73 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -591,6 +730,60 @@
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
+		};
+		BFD04971E29F615D1CA0B215 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 5BV85JW8US;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.enablerdao.kacha.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Kacha.app/Kacha";
+			};
+			name = Release;
+		};
+		C5B7EABCA1EA8BF7214493E1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 5BV85JW8US;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.enablerdao.kacha.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Kacha.app/Kacha";
+			};
+			name = Debug;
+		};
+		E5D7471F50D64899E852931A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 5BV85JW8US;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.enablerdao.kacha.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Kacha;
+			};
+			name = Debug;
 		};
 		EB70B86E70B75939398A22A6 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -627,6 +820,24 @@
 			buildConfigurations = (
 				807E199EE7421F20A4FBB3DC /* Debug */,
 				6BD2F911D514B1F0D767A8C1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		BCEF9B02922EFDC523189EB8 /* Build configuration list for PBXNativeTarget "KachaUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E5D7471F50D64899E852931A /* Debug */,
+				868D4B244E10FA7A7F58EC70 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C99E10C37F8028A027494A8C /* Build configuration list for PBXNativeTarget "KachaTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C5B7EABCA1EA8BF7214493E1 /* Debug */,
+				BFD04971E29F615D1CA0B215 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

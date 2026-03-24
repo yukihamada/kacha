@@ -61,19 +61,14 @@ final class Beds24Client {
     // MARK: - Bookings
 
     /// Beds24 API v2で予約を取得
-    /// デフォルトはupcoming bookings。過去も含める場合はarrival/departureを指定。
+    /// パラメータなし = upcoming bookings（最も確実）
     func fetchBookings(token: String, includeGuests: Bool = true) async throws -> [Beds24Booking] {
         guard !token.isEmpty else { return [] }
 
-        // Get bookings from past 30 days to future 90 days
-        let df = DateFormatter()
-        df.dateFormat = "yyyy-MM-dd"
-        let pastDate = Calendar.current.date(byAdding: .day, value: -30, to: Date()) ?? Date()
-        let futureDate = Calendar.current.date(byAdding: .day, value: 90, to: Date()) ?? Date()
-
-        var urlStr = "\(base)/bookings?arrival=\(df.string(from: pastDate))&departure=\(df.string(from: futureDate))"
-        if includeGuests { urlStr += "&includeGuests=true" }
-        urlStr += "&includeInvoiceItems=true"
+        // No date params — API returns upcoming bookings by default
+        var urlStr = "\(base)/bookings?"
+        if includeGuests { urlStr += "includeGuests=true&" }
+        urlStr += "includeInvoiceItems=true"
 
         var req = URLRequest(url: URL(string: urlStr)!)
         req.addValue(token, forHTTPHeaderField: "token")

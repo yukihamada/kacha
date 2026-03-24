@@ -55,6 +55,32 @@ targets:
         com.apple.developer.associated-domains:
           - applinks:kacha.pasha.run
 
+  KachaTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: KachaTests/
+    dependencies:
+      - target: Kacha
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.enablerdao.kacha.tests
+        DEVELOPMENT_TEAM: 5BV85JW8US
+        GENERATE_INFOPLIST_FILE: YES
+
+  KachaUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: KachaUITests/
+    dependencies:
+      - target: Kacha
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.enablerdao.kacha.uitests
+        DEVELOPMENT_TEAM: 5BV85JW8US
+        GENERATE_INFOPLIST_FILE: YES
+
   KachaWidget:
     type: app-extension
     platform: iOS
