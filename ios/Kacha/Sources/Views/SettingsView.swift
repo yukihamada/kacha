@@ -34,6 +34,7 @@ struct SettingsView: View {
                             emptyState
                         }
                         appInfoSection
+                        deviceShopSection
                         Spacer(minLength: 40)
                     }
                     .padding(.horizontal, 16)
@@ -146,6 +147,42 @@ struct SettingsView: View {
                 Text("開いた、ウェルカム。")
                     .font(.caption).foregroundColor(.kacha)
                     .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .padding(16)
+        }
+    }
+
+    // MARK: - Device Shop
+
+    private let shopDevices: [(String, String, String)] = [
+        ("SwitchBot ロック Pro", "lock.fill", "https://www.amazon.co.jp/dp/B0CWL6RMPP?tag=yukihamada-22"),
+        ("SwitchBot ハブ2", "antenna.radiowaves.left.and.right", "https://www.amazon.co.jp/dp/B0BM8VS13P?tag=yukihamada-22"),
+        ("Philips Hue スターターキット", "lightbulb.fill", "https://www.amazon.co.jp/dp/B09MRZ2LPQ?tag=yukihamada-22"),
+        ("Sesame 5 Pro", "key.fill", "https://www.amazon.co.jp/dp/B0D4JRLB63?tag=yukihamada-22"),
+        ("Nature Remo mini 2", "dot.radiowaves.right", "https://www.amazon.co.jp/dp/B09B2N5MKL?tag=yukihamada-22"),
+        ("Nuki Smart Lock 4.0", "lock.rectangle.fill", "https://www.amazon.co.jp/dp/B0CX4YH9VF?tag=yukihamada-22"),
+    ]
+
+    private var deviceShopSection: some View {
+        KachaCard {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(spacing: 6) {
+                    Image(systemName: "cart.fill").foregroundColor(.kacha)
+                    Text("対応デバイスを購入").font(.subheadline).bold().foregroundColor(.white)
+                }
+                ForEach(shopDevices, id: \.0) { name, icon, url in
+                    Link(destination: URL(string: url)!) {
+                        HStack(spacing: 10) {
+                            Image(systemName: icon).font(.caption).foregroundColor(.kacha).frame(width: 20)
+                            Text(name).font(.caption).foregroundColor(.white)
+                            Spacer()
+                            Image(systemName: "arrow.up.right").font(.caption2).foregroundColor(.secondary)
+                        }
+                    }
+                    if name != shopDevices.last?.0 {
+                        Divider().background(Color.kachaCardBorder)
+                    }
+                }
             }
             .padding(16)
         }
