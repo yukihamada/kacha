@@ -7,6 +7,48 @@ import UserNotifications
 
 struct BookingPoller {
 
+    // MARK: - Auto-detect new properties
+
+    /// Beds24の物件を自動チェックし、未登録の物件があればホームを自動作成
+    static func autoDetectProperties(context: ModelContext, home: Home) async -> Int {
+        guard !home.beds24ICalURL.isEmpty else { return 0 }
+        guard let token = try? await Beds24Client.shared.getToken(refreshToken: home.beds24ICalURL) else { return 0 }
+        guard let properties = try? await Beds24Client.shared.fetchProperties(token: token) else { return 0 }
+
+        let allHomes = (try? context.fetch(FetchDescriptor<Home>())) ?? []
+        let existingPropIds = Set(allHomes.compactMap { Int($0.beds24ApiKey) })
+        var created = 0
+
+        for prop in properties {
+            guard let propId = prop["id"] as? Int, !existingPropIds.contains(propId) else { continue }
+            let propName = prop["name"] as? String ?? "物件 \(propId)"
+
+            let newHome = Home(name: propName, sortOrder: allHomes.count + created)
+            newHome.beds24ApiKey = "\(propId)"
+            newHome.beds24ICalURL = home.beds24ICalURL
+            newHome.businessType = home.businessType
+            context.insert(newHome)
+            created += 1
+
+            // Notify
+            let content = UNMutableNotificationContent()
+            content.title = "新しい物件を検出"
+            content.body = "「\(propName)」がBeds24から自動追加されました"
+            content.sound = .default
+            let request = UNNotificationRequest(
+                identifier: "new-property-\(propId)",
+                content: content,
+                trigger: nil
+            )
+            try? await UNUserNotificationCenter.current().add(request)
+        }
+
+        if created > 0 { try? context.save() }
+        return created
+    }
+
+    // MARK: - Poll Bookings
+
     /// Beds24から最新予約を取得し、新規があれば通知
     /// allHomes: propertyIdからhomeIdを解決するために全ホームを渡す
     static func pollAndNotify(context: ModelContext, home: Home, allHomes: [Home] = []) async -> Int {
