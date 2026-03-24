@@ -1406,18 +1406,24 @@ struct HomeSettingsSections: View {
             var imported = 0
             let existingExtIDs = Set(bookings.map { $0.externalId })
             let df = DateFormatter(); df.dateFormat = "yyyy-MM-dd"
+            // Build propertyId→homeId map from all homes
+            let allHomes = (try? modelContext.fetch(FetchDescriptor<Home>())) ?? []
+            let propMap: [Int: String] = Dictionary(uniqueKeysWithValues:
+                allHomes.compactMap { h in Int(h.beds24ApiKey).map { ($0, h.id) } }
+            )
             for b24 in b24Bookings {
                 let extId = "beds24-\(b24.effectiveId)"
                 guard !existingExtIDs.contains(extId) else { continue }
                 guard let cin = b24.arrival.flatMap({ df.date(from: $0) }),
                       let cout = b24.departure.flatMap({ df.date(from: $0) }) else { continue }
+                let resolvedHomeId = b24.propertyId.flatMap { propMap[$0] } ?? home.id
                 let statusMap = ["cancelled": "cancelled", "request": "upcoming", "new": "upcoming"]
                 let booking = Booking(
                     guestName: b24.guestFullName,
                     guestEmail: b24.email ?? "",
                     guestPhone: b24.phone ?? "",
                     platform: b24.platformKey,
-                    homeId: home.id,
+                    homeId: resolvedHomeId,
                     externalId: extId,
                     checkIn: cin, checkOut: cout,
                     totalAmount: Int((b24.price ?? 0) * 100),

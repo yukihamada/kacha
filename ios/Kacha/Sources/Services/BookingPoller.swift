@@ -8,7 +8,8 @@ import UserNotifications
 struct BookingPoller {
 
     /// Beds24から最新予約を取得し、新規があれば通知
-    static func pollAndNotify(context: ModelContext, home: Home) async -> Int {
+    /// allHomes: propertyIdからhomeIdを解決するために全ホームを渡す
+    static func pollAndNotify(context: ModelContext, home: Home, allHomes: [Home] = []) async -> Int {
         guard !home.beds24ICalURL.isEmpty else { return 0 }
         guard let token = try? await Beds24Client.shared.getToken(refreshToken: home.beds24ICalURL) else { return 0 }
         guard let b24Bookings = try? await Beds24Client.shared.fetchBookings(token: token) else { return 0 }
@@ -17,18 +18,33 @@ struct BookingPoller {
         let df = DateFormatter(); df.dateFormat = "yyyy-MM-dd"
         var imported = 0
 
+        // Build propertyId → homeId mapping
+        let propIdToHomeId: [Int: String] = {
+            var map: [Int: String] = [:]
+            let homes = allHomes.isEmpty ? [home] : allHomes
+            for h in homes {
+                if let propId = Int(h.beds24ApiKey) {
+                    map[propId] = h.id
+                }
+            }
+            return map
+        }()
+
         for b24 in b24Bookings {
             let extId = "beds24-\(b24.effectiveId)"
             guard !existingExtIDs.contains(extId) else { continue }
             guard let cin = b24.arrival.flatMap({ df.date(from: $0) }),
                   let cout = b24.departure.flatMap({ df.date(from: $0) }) else { continue }
 
+            // Resolve homeId from propertyId
+            let resolvedHomeId = b24.propertyId.flatMap { propIdToHomeId[$0] } ?? home.id
+
             let booking = Booking(
                 guestName: b24.guestFullName,
                 guestEmail: b24.email ?? "",
                 guestPhone: b24.phone ?? "",
                 platform: b24.platformKey,
-                homeId: home.id,
+                homeId: resolvedHomeId,
                 externalId: extId,
                 checkIn: cin, checkOut: cout,
                 totalAmount: Int((b24.price ?? 0) * 100),
@@ -38,9 +54,11 @@ struct BookingPoller {
             imported += 1
 
             // Push notification for new booking
+            // Find correct home name for notification
+            let homeName = allHomes.first { $0.id == resolvedHomeId }?.name ?? home.name
             sendNewBookingNotification(
                 guestName: b24.guestFullName,
-                homeName: home.name,
+                homeName: homeName,
                 checkIn: b24.arrival ?? "",
                 platform: b24.platformKey
             )

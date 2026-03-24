@@ -26,7 +26,7 @@ struct HomePagerView: View {
             } else {
                 TabView(selection: $currentPage) {
                     // Page 0: Dashboard
-                    DashboardView()
+                    DashboardView(currentPage: $currentPage)
                         .tag(0)
 
                     // Page 1+: Individual homes
@@ -95,11 +95,13 @@ struct HomePagerView: View {
 // MARK: - Dashboard (aggregate view of all homes)
 
 struct DashboardView: View {
+    @Binding var currentPage: Int
+    @AppStorage("activeHomeId") private var activeHomeId = ""
+    @AppStorage("minpakuModeEnabled") private var minpakuModeEnabled = false
     @Query(sort: \Home.sortOrder) private var homes: [Home]
     @Query(sort: \Booking.checkIn) private var bookings: [Booking]
     @Query(sort: \ShareRecord.validFrom) private var shares: [ShareRecord]
     @Query(sort: \ActivityLog.timestamp, order: .reverse) private var logs: [ActivityLog]
-    @AppStorage("minpakuModeEnabled") private var minpakuModeEnabled = false
 
     private var upcomingBookings: [Booking] {
         bookings.filter { $0.status == "upcoming" || $0.status == "active" }
@@ -154,7 +156,13 @@ struct DashboardView: View {
                                     Image(systemName: "house.fill").foregroundColor(.kacha)
                                     Text("物件一覧").font(.subheadline).bold().foregroundColor(.white)
                                 }
-                                ForEach(homes) { home in
+                                ForEach(Array(homes.enumerated()), id: \.element.id) { index, home in
+                                    Button {
+                                        activeHomeId = home.id
+                                        home.syncToAppStorage()
+                                        minpakuModeEnabled = (home.businessType != "none")
+                                        withAnimation { currentPage = index + 1 }
+                                    } label: {
                                     HStack(spacing: 12) {
                                         ZStack {
                                             Circle().fill(Color.kacha.opacity(0.15)).frame(width: 36, height: 36)
@@ -175,7 +183,9 @@ struct DashboardView: View {
                                                 .background(Color.kachaAccent.opacity(0.15))
                                                 .clipShape(Capsule())
                                         }
+                                        Image(systemName: "chevron.right").font(.caption2).foregroundColor(.secondary)
                                     }
+                                    } // end button label
                                     if home.id != homes.last?.id {
                                         Divider().background(Color.kachaCardBorder)
                                     }
@@ -193,24 +203,38 @@ struct DashboardView: View {
                                         Text("最近入った予約").font(.subheadline).bold().foregroundColor(.white)
                                     }
                                     ForEach(recentNewBookings.prefix(5)) { booking in
-                                        let homeName = homes.first { $0.id == booking.homeId }?.name ?? ""
-                                        HStack(spacing: 10) {
-                                            VStack(alignment: .leading, spacing: 2) {
-                                                HStack(spacing: 6) {
-                                                    Text(booking.guestName).font(.subheadline).bold().foregroundColor(.white)
-                                                    Text(booking.platformLabel).font(.system(size: 9))
-                                                        .padding(.horizontal, 5).padding(.vertical, 1)
-                                                        .background(Color(hex: booking.platformColor).opacity(0.2))
-                                                        .foregroundColor(Color(hex: booking.platformColor))
-                                                        .clipShape(Capsule())
+                                        let matchedHome = homes.first { $0.id == booking.homeId }
+                                        let homeName = matchedHome?.name ?? "不明"
+                                        Button {
+                                            // Switch to this home and go to its page
+                                            if let h = matchedHome {
+                                                activeHomeId = h.id
+                                                h.syncToAppStorage()
+                                                minpakuModeEnabled = (h.businessType != "none")
+                                                if let idx = homes.firstIndex(where: { $0.id == h.id }) {
+                                                    withAnimation { currentPage = idx + 1 }
                                                 }
-                                                Text("\(booking.checkIn.formatted(date: .abbreviated, time: .omitted)) → \(booking.checkOut.formatted(date: .abbreviated, time: .omitted)) · \(homeName)")
-                                                    .font(.caption2).foregroundColor(.secondary)
                                             }
-                                            Spacer()
-                                            if booking.totalAmount > 0 {
-                                                Text("¥\(booking.totalAmount / 100)")
-                                                    .font(.caption).bold().foregroundColor(.kacha)
+                                        } label: {
+                                            HStack(spacing: 10) {
+                                                VStack(alignment: .leading, spacing: 2) {
+                                                    HStack(spacing: 6) {
+                                                        Text(booking.guestName).font(.subheadline).bold().foregroundColor(.white)
+                                                        Text(booking.platformLabel).font(.system(size: 9))
+                                                            .padding(.horizontal, 5).padding(.vertical, 1)
+                                                            .background(Color(hex: booking.platformColor).opacity(0.2))
+                                                            .foregroundColor(Color(hex: booking.platformColor))
+                                                            .clipShape(Capsule())
+                                                    }
+                                                    Text("\(booking.checkIn.formatted(date: .abbreviated, time: .omitted)) → \(booking.checkOut.formatted(date: .abbreviated, time: .omitted)) · \(homeName)")
+                                                        .font(.caption2).foregroundColor(.secondary)
+                                                }
+                                                Spacer()
+                                                if booking.totalAmount > 0 {
+                                                    Text("¥\(booking.totalAmount / 100)")
+                                                        .font(.caption).bold().foregroundColor(.kacha)
+                                                }
+                                                Image(systemName: "chevron.right").font(.caption2).foregroundColor(.secondary)
                                             }
                                         }
                                         if booking.id != recentNewBookings.prefix(5).last?.id {

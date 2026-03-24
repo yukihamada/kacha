@@ -43,8 +43,13 @@ struct KachaApp: App {
                     // Poll Beds24 for new bookings + schedule notifications
                     Task {
                         let homes = (try? container.mainContext.fetch(FetchDescriptor<Home>())) ?? []
+                        // Poll Beds24 once per unique refreshToken (avoid duplicate fetches)
+                        var polledTokens = Set<String>()
                         for home in homes {
-                            let _ = await BookingPoller.pollAndNotify(context: container.mainContext, home: home)
+                            if !home.beds24ICalURL.isEmpty && !polledTokens.contains(home.beds24ICalURL) {
+                                polledTokens.insert(home.beds24ICalURL)
+                                let _ = await BookingPoller.pollAndNotify(context: container.mainContext, home: home, allHomes: homes)
+                            }
                             GuestMessenger.scheduleMessages(context: container.mainContext, home: home)
                             CleanerNotifier.scheduleCleaningNotifications(context: container.mainContext, home: home)
                         }
