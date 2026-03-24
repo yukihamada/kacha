@@ -164,8 +164,14 @@ struct RootView: View {
     @Query private var homes: [Home]
 
     var body: some View {
-        if hasCompletedOnboarding && !homes.isEmpty {
+        if hasCompletedOnboarding || !homes.isEmpty {
             ContentView()
+                .onAppear {
+                    // Auto-complete onboarding if homes exist (e.g. restored from Keychain)
+                    if !homes.isEmpty && !hasCompletedOnboarding {
+                        hasCompletedOnboarding = true
+                    }
+                }
         } else {
             OnboardingView()
         }

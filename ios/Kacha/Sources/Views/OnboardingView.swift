@@ -8,8 +8,11 @@ struct OnboardingView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
+    @Query private var homes: [Home]
     @State private var currentPage = 0
     @State private var facilityInput = ""
+
+    private var hasExistingHomes: Bool { !homes.isEmpty }
 
     private let pages: [(icon: String, title: String, subtitle: String, features: [(String, String)], color: Color)] = [
         (
@@ -82,12 +85,15 @@ struct OnboardingView: View {
                             withAnimation { currentPage += 1 }
                         } else if isReview {
                             dismiss()
+                        } else if hasExistingHomes && facilityInput.isEmpty {
+                            // Skip — use existing homes
+                            hasCompletedOnboarding = true
                         } else {
                             completeOnboarding()
                         }
                     } label: {
                         HStack(spacing: 6) {
-                            let lastLabel = isReview ? "閉じる" : "はじめる"
+                            let lastLabel = isReview ? "閉じる" : (hasExistingHomes && facilityInput.isEmpty ? "スキップ" : "はじめる")
                             Text(currentPage == pages.count - 1 ? lastLabel : "次へ").bold()
                             Image(systemName: currentPage == pages.count - 1
                                   ? (isReview ? "xmark.circle" : "door.left.hand.open")
@@ -101,7 +107,7 @@ struct OnboardingView: View {
                         )
                         .clipShape(Capsule())
                     }
-                    .disabled(!isReview && currentPage == pages.count - 1 && facilityInput.isEmpty)
+                    .disabled(!isReview && !hasExistingHomes && currentPage == pages.count - 1 && facilityInput.isEmpty)
                     Spacer().frame(width: 80)
                 }
                 .padding(.horizontal, 24)
