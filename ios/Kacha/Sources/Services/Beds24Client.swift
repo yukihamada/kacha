@@ -60,24 +60,49 @@ final class Beds24Client {
 
     // MARK: - Bookings
 
-    /// Beds24 API v2でこれから60日分の予約を取得
-    func fetchBookings(token: String) async throws -> [Beds24Booking] {
+    /// Beds24 API v2で予約を取得
+    /// デフォルトはupcoming bookings。過去も含める場合はarrival/departureを指定。
+    func fetchBookings(token: String, includeGuests: Bool = true) async throws -> [Beds24Booking] {
         guard !token.isEmpty else { return [] }
+
+        // Get bookings from past 30 days to future 90 days
         let df = DateFormatter()
         df.dateFormat = "yyyy-MM-dd"
-        let start = df.string(from: Date())
-        let endDate = Calendar.current.date(byAdding: .day, value: 60, to: Date()) ?? Date()
-        let end = df.string(from: endDate)
+        let pastDate = Calendar.current.date(byAdding: .day, value: -30, to: Date()) ?? Date()
+        let futureDate = Calendar.current.date(byAdding: .day, value: 90, to: Date()) ?? Date()
 
-        var req = URLRequest(url: URL(string: "\(base)/bookings?arrival=\(start)&departure=\(end)&includeInvoiceItems=true")!)
+        var urlStr = "\(base)/bookings?arrival=\(df.string(from: pastDate))&departure=\(df.string(from: futureDate))"
+        if includeGuests { urlStr += "&includeGuests=true" }
+        urlStr += "&includeInvoiceItems=true"
+
+        var req = URLRequest(url: URL(string: urlStr)!)
         req.addValue(token, forHTTPHeaderField: "token")
         req.addValue("application/json", forHTTPHeaderField: "Accept")
         req.timeoutInterval = 15
 
         let (data, response) = try await URLSession.shared.data(for: req)
-        guard let http = response as? HTTPURLResponse, http.statusCode == 200 else {
-            throw Beds24Error.apiError((response as? HTTPURLResponse)?.statusCode ?? 0)
+        let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
+
+        // Debug: print raw response
+        if let rawStr = String(data: data, encoding: .utf8) {
+            print("[Beds24] Status: \(statusCode), Response: \(rawStr.prefix(500))")
         }
+
+        guard statusCode == 200 else {
+            throw Beds24Error.apiError(statusCode)
+        }
+
+        // Try decoding with flexible structure
+        if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+            // Check if data is in "data" key or top level
+            if let bookingsArray = json["data"] as? [[String: Any]] {
+                print("[Beds24] Found \(bookingsArray.count) bookings in 'data' key")
+                let reencoded = try JSONSerialization.data(withJSONObject: bookingsArray)
+                return (try? JSONDecoder().decode([Beds24Booking].self, from: reencoded)) ?? []
+            }
+        }
+
+        // Try direct decode
         let decoded = try JSONDecoder().decode(Beds24Response.self, from: data)
         return decoded.data ?? []
     }
@@ -144,31 +169,39 @@ struct Beds24Response: Codable {
 }
 
 struct Beds24Booking: Codable {
-    let bookId: Int?
-    let guestFirstName: String?
-    let guestLastName: String?
-    let guestEmail: String?
-    let guestPhone: String?
-    let checkIn: String?    // "YYYY-MM-DD"
-    let checkOut: String?
+    let id: Int?
+    let propertyId: Int?
+    let roomId: Int?
+    let status: String?          // "new", "confirmed", "request", "cancelled"
+    let arrival: String?         // "2026-05-05"
+    let departure: String?       // "2026-05-06"
+    let firstName: String?       // API v2 uses firstName, not guestFirstName
+    let lastName: String?
+    let email: String?
+    let phone: String?
     let numAdult: Int?
+    let numChild: Int?
     let price: Double?
-    let status: String?     // "1"=confirmed, "0"=tentative, "-1"=cancelled
-    let referer: String?    // booking platform
+    let commission: Double?
+    let referer: String?
+    let channel: String?
+    let apiReference: String?
+    let comments: String?
+    let notes: String?
+
+    var effectiveId: Int { id ?? 0 }
 
     var guestFullName: String {
-        [guestFirstName, guestLastName].compactMap { $0 }.filter { !$0.isEmpty }
-            .joined(separator: " ")
-            .trimmingCharacters(in: .whitespaces)
-            .isEmpty ? "ゲスト" :
-        [guestFirstName, guestLastName].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: " ")
+        let parts = [lastName, firstName].compactMap { $0 }.filter { !$0.isEmpty }
+        return parts.isEmpty ? "ゲスト" : parts.joined(separator: " ")
     }
 
     var platformKey: String {
-        let r = referer?.lowercased() ?? ""
-        if r.contains("airbnb") { return "airbnb" }
-        if r.contains("booking") { return "booking" }
-        if r.contains("expedia") { return "expedia" }
+        let ch = (channel ?? referer ?? "").lowercased()
+        if ch.contains("airbnb") { return "airbnb" }
+        if ch.contains("booking") { return "booking" }
+        if ch.contains("expedia") { return "expedia" }
+        if ch.contains("jalan") { return "jalan" }
         return "beds24"
     }
 }

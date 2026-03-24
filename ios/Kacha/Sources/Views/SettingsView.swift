@@ -972,44 +972,56 @@ struct HomeSettingsSections: View {
                         let prop = beds24Properties[idx]
                         let propId = prop["id"] as? Int ?? 0
                         let propName = prop["name"] as? String ?? "物件 \(propId)"
+                        let isLinked = home.beds24ApiKey.contains("|\(propId)")
                         VStack(spacing: 8) {
                             HStack(spacing: 10) {
-                                Image(systemName: "building.2")
-                                    .foregroundColor(Color(hex: "0066CC"))
+                                Image(systemName: isLinked ? "checkmark.circle.fill" : "building.2")
+                                    .foregroundColor(isLinked ? .kachaSuccess : Color(hex: "0066CC"))
                                 VStack(alignment: .leading, spacing: 1) {
-                                    Text(propName).font(.caption).bold().foregroundColor(.white)
+                                    HStack(spacing: 6) {
+                                        Text(propName).font(.caption).bold().foregroundColor(.white)
+                                        if isLinked {
+                                            Text("関連付け済み").font(.system(size: 9)).bold()
+                                                .padding(.horizontal, 5).padding(.vertical, 1)
+                                                .background(Color.kachaSuccess.opacity(0.2))
+                                                .foregroundColor(.kachaSuccess)
+                                                .clipShape(Capsule())
+                                        }
+                                    }
                                     Text("ID: \(propId)").font(.caption2).foregroundColor(.secondary)
                                 }
                                 Spacer()
                             }
-                            HStack(spacing: 8) {
-                                Button {
-                                    linkBeds24Property(propId: propId, propName: propName, toCurrentHome: true)
-                                } label: {
-                                    HStack(spacing: 4) {
-                                        Image(systemName: "link")
-                                        Text("このホームに関連付け")
+                            if !isLinked {
+                                HStack(spacing: 8) {
+                                    Button {
+                                        linkBeds24Property(propId: propId, propName: propName, toCurrentHome: true)
+                                    } label: {
+                                        HStack(spacing: 4) {
+                                            Image(systemName: "link")
+                                            Text("このホームに関連付け")
+                                        }
+                                        .font(.caption2).bold()
+                                        .foregroundColor(Color(hex: "0066CC"))
+                                        .frame(maxWidth: .infinity).padding(.vertical, 8)
+                                        .background(Color(hex: "0066CC").opacity(0.1))
+                                        .clipShape(RoundedRectangle(cornerRadius: 8))
                                     }
-                                    .font(.caption2).bold()
-                                    .foregroundColor(Color(hex: "0066CC"))
-                                    .frame(maxWidth: .infinity).padding(.vertical, 8)
-                                    .background(Color(hex: "0066CC").opacity(0.1))
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                                }
-                                Button {
-                                    linkBeds24Property(propId: propId, propName: propName, toCurrentHome: false)
-                                } label: {
-                                    HStack(spacing: 4) {
-                                        Image(systemName: "plus.circle")
-                                        Text("新規ホーム作成")
-                                    }
-                                    .font(.caption2).bold()
-                                    .foregroundColor(.kacha)
+                                    Button {
+                                        linkBeds24Property(propId: propId, propName: propName, toCurrentHome: false)
+                                    } label: {
+                                        HStack(spacing: 4) {
+                                            Image(systemName: "plus.circle")
+                                            Text("新規ホーム作成")
+                                        }
+                                        .font(.caption2).bold()
+                                        .foregroundColor(.kacha)
                                     .frame(maxWidth: .infinity).padding(.vertical, 8)
                                     .background(Color.kacha.opacity(0.1))
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                                 }
                             }
+                            } // end if !isLinked
                         }
                         .padding(10)
                         .background(Color.kachaCard)
@@ -1340,20 +1352,21 @@ struct HomeSettingsSections: View {
             let existingExtIDs = Set(bookings.map { $0.externalId })
             let df = DateFormatter(); df.dateFormat = "yyyy-MM-dd"
             for b24 in b24Bookings {
-                let extId = "beds24-\(b24.bookId ?? 0)"
+                let extId = "beds24-\(b24.effectiveId)"
                 guard !existingExtIDs.contains(extId) else { continue }
-                guard let cin = b24.checkIn.flatMap({ df.date(from: $0) }),
-                      let cout = b24.checkOut.flatMap({ df.date(from: $0) }) else { continue }
+                guard let cin = b24.arrival.flatMap({ df.date(from: $0) }),
+                      let cout = b24.departure.flatMap({ df.date(from: $0) }) else { continue }
+                let statusMap = ["cancelled": "cancelled", "request": "upcoming", "new": "upcoming"]
                 let booking = Booking(
                     guestName: b24.guestFullName,
-                    guestEmail: b24.guestEmail ?? "",
-                    guestPhone: b24.guestPhone ?? "",
+                    guestEmail: b24.email ?? "",
+                    guestPhone: b24.phone ?? "",
                     platform: b24.platformKey,
                     homeId: home.id,
                     externalId: extId,
                     checkIn: cin, checkOut: cout,
                     totalAmount: Int((b24.price ?? 0) * 100),
-                    status: b24.status == "-1" ? "cancelled" : "upcoming"
+                    status: statusMap[b24.status ?? ""] ?? "upcoming"
                 )
                 modelContext.insert(booking)
                 imported += 1
