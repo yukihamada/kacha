@@ -16,6 +16,7 @@
 		26493989640D643F3E3B18D9 /* ChecklistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0223FC6395DC117DBB0CF7D /* ChecklistView.swift */; };
 		2BBAEE09C59F8750EF937110 /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DA0C90D173C9B934F5A1D7 /* ModelTests.swift */; };
 		346B513892A72C7033CED82D /* UtilityRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175549B75AE7B8BFC0C842D5 /* UtilityRecord.swift */; };
+		354C82529E9B6A29FF6C3D74 /* KeychainBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5BAE24A20984028E3277E4 /* KeychainBackup.swift */; };
 		38B61C754CDAACDC726B6098 /* MaintenanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13DDDD3441AB20CFD7ED91B1 /* MaintenanceView.swift */; };
 		3C64CB3B719F2E02D1C9DFDD /* HomeShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDBD2EE216FCCE6C01C4E51 /* HomeShareView.swift */; };
 		5407AFDC53CFA390FD5949A3 /* HouseManual.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA719FEFB13BE9B2634BF757 /* HouseManual.swift */; };
@@ -138,6 +139,7 @@
 		B8255B3969C40B1CB0D0F9A2 /* ActivityLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityLog.swift; sourceTree = "<group>"; };
 		C2CA2DE013566DD3C86D6D42 /* GeofenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeofenceManager.swift; sourceTree = "<group>"; };
 		C7FCA2C0407C3E360D03E0CD /* DeviceLogSyncer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceLogSyncer.swift; sourceTree = "<group>"; };
+		CB5BAE24A20984028E3277E4 /* KeychainBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainBackup.swift; sourceTree = "<group>"; };
 		D47FA2A1E0C7359B3C3025F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D483303E5E06E7219BE5C056 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		D53057EE1C5415898AEC8053 /* PermitGuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermitGuideView.swift; sourceTree = "<group>"; };
@@ -258,6 +260,7 @@
 				C7FCA2C0407C3E360D03E0CD /* DeviceLogSyncer.swift */,
 				C2CA2DE013566DD3C86D6D42 /* GeofenceManager.swift */,
 				FDE620580DAF5BA1260B2AAC /* HueClient.swift */,
+				CB5BAE24A20984028E3277E4 /* KeychainBackup.swift */,
 				256031C69587A8CA93CA2918 /* NatureRemoClient.swift */,
 				7FA3CD9872B7A9F7A09558CD /* NukiClient.swift */,
 				1213C23623556FBA096EAE19 /* SesameClient.swift */,
@@ -491,6 +494,7 @@
 				E668FA855EDC715E21732778 /* ICalImporter.swift in Sources */,
 				7E01049D64A8C3ADAC50FE33 /* KachaApp.swift in Sources */,
 				6AFFA55D4BBB4F04EE086ECA /* KachaIntents.swift in Sources */,
+				354C82529E9B6A29FF6C3D74 /* KeychainBackup.swift in Sources */,
 				77A0CBDAF76B9DD0DBB7948F /* MaintenanceTask.swift in Sources */,
 				38B61C754CDAACDC726B6098 /* MaintenanceView.swift in Sources */,
 				D94D275F8DBFB4ACEDC1F2C4 /* NatureRemoClient.swift in Sources */,

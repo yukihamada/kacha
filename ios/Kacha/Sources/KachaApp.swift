@@ -19,17 +19,26 @@ struct KachaApp: App {
         migrateIfNeeded()
     }
 
+    @Environment(\.scenePhase) private var scenePhase
+
     var body: some Scene {
         WindowGroup {
             RootView()
                 .modelContainer(container)
                 .preferredColorScheme(.dark)
                 .onAppear {
+                    // Restore from Keychain if fresh install
+                    let restored = KeychainBackup.restoreIfNeeded(context: container.mainContext)
+                    if restored { print("[Kacha] Restored from Keychain backup") }
+
                     #if DEBUG
                     SeedData.insert(into: container.mainContext)
                     #endif
                     Task { await NotificationManager.shared.requestPermission() }
                     GeofenceManager.registerNotificationCategory()
+
+                    // Backup to Keychain on every launch
+                    KeychainBackup.backup(context: container.mainContext)
                 }
                 .onOpenURL { url in
                     handleDeepLink(url)
@@ -39,6 +48,11 @@ struct KachaApp: App {
                         handleDeepLink(url)
                     }
                 }
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .background {
+                KeychainBackup.backup(context: container.mainContext)
+            }
         }
     }
 
