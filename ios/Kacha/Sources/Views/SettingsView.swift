@@ -266,7 +266,7 @@ private struct HomeChip: View {
         Button(action: onSelect) {
             HStack(spacing: 6) {
                 Image(systemName: isActive ? "house.fill" : "house").font(.caption)
-                Text(home.name).font(.subheadline).fontWeight(isActive ? .bold : .regular)
+                Text(home.name).font(.subheadline).fontWeight(isActive ? .bold : .regular).lineLimit(2)
                 if isActive {
                     Image(systemName: "checkmark.circle.fill").font(.caption)
                 }
@@ -988,7 +988,7 @@ struct HomeSettingsSections: View {
                                     .foregroundColor(isLinked ? .kachaSuccess : Color(hex: "0066CC"))
                                 VStack(alignment: .leading, spacing: 1) {
                                     HStack(spacing: 6) {
-                                        Text(propName).font(.caption).bold().foregroundColor(.white)
+                                        Text(propName).font(.caption).bold().foregroundColor(.white).lineLimit(2)
                                         if isLinked {
                                             Text("関連付け済み").font(.system(size: 9)).bold()
                                                 .padding(.horizontal, 5).padding(.vertical, 1)

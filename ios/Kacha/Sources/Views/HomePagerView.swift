@@ -161,7 +161,7 @@ struct DashboardView: View {
                                             Image(systemName: "house.fill").font(.caption).foregroundColor(.kacha)
                                         }
                                         VStack(alignment: .leading, spacing: 2) {
-                                            Text(home.name).font(.subheadline).bold().foregroundColor(.white)
+                                            Text(home.name).font(.subheadline).bold().foregroundColor(.white).lineLimit(2)
                                             if !home.address.isEmpty {
                                                 Text(home.address).font(.caption2).foregroundColor(.secondary).lineLimit(1)
                                             }
