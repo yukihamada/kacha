@@ -906,7 +906,7 @@ struct HomeSettingsSections: View {
                     }
                     HStack(spacing: 6) {
                         Image(systemName: "info.circle").foregroundColor(.secondary)
-                        Text("Invite Codeは1回限り有効です。管理者を追加する場合は、各管理者ごとにBeds24で新しいInvite Codeを作成してください。")
+                        Text("Invite Codeは1回限り有効です。接続後のリフレッシュトークンは管理者シェア時に自動で共有されます。")
                             .font(.caption2).foregroundColor(.secondary)
                     }
                 }
