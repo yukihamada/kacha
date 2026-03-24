@@ -872,6 +872,7 @@ struct HomeSettingsSections: View {
     @State private var isFetchingBeds24Props = false
     @State private var isConnectingBeds24 = false
     @State private var beds24Error: String?
+    @State private var beds24InviteInput = ""
 
     private var beds24Section: some View {
         KachaCard {
@@ -913,36 +914,48 @@ struct HomeSettingsSections: View {
 
                 Divider().background(Color.kachaCardBorder)
 
-                SecureTokenField(label: "Invite Code", text: $home.beds24ApiKey)
+                if home.beds24ICalURL.isEmpty {
+                    // Not connected — show invite code input
+                    SecureTokenField(label: "Invite Code", text: $beds24InviteInput)
 
-                if !home.beds24ApiKey.isEmpty {
-                    // Connect button
-                    Button {
-                        Task { await connectBeds24() }
-                    } label: {
-                        HStack {
-                            if isConnectingBeds24 { ProgressView().tint(.white) }
-                            else { Image(systemName: "link") }
-                            Text(home.beds24ICalURL.isEmpty ? "接続する" : "再接続")
+                    if !beds24InviteInput.isEmpty {
+                        Button {
+                            Task { await connectBeds24() }
+                        } label: {
+                            HStack {
+                                if isConnectingBeds24 { ProgressView().tint(.white) }
+                                else { Image(systemName: "link") }
+                                Text("接続する")
+                            }
+                            .font(.subheadline).bold()
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity).padding(.vertical, 10)
+                            .background(Color(hex: "0066CC"))
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
                         }
-                        .font(.subheadline).bold()
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity).padding(.vertical, 10)
-                        .background(Color(hex: "0066CC"))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .disabled(isConnectingBeds24)
                     }
-                    .disabled(isConnectingBeds24)
-
-                    if !home.beds24ICalURL.isEmpty {
-                        HStack(spacing: 6) {
-                            Image(systemName: "checkmark.circle.fill").foregroundColor(.kachaSuccess)
-                            Text("接続済み").font(.caption).foregroundColor(.kachaSuccess)
+                } else {
+                    // Connected — show status
+                    HStack(spacing: 8) {
+                        Image(systemName: "checkmark.circle.fill").foregroundColor(.kachaSuccess)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("接続済み").font(.subheadline).foregroundColor(.kachaSuccess)
+                            Text("リフレッシュトークン保持中（この物件専用）")
+                                .font(.caption2).foregroundColor(.secondary)
+                        }
+                        Spacer()
+                        Button {
+                            home.beds24ICalURL = ""
+                            home.beds24ApiKey = ""
+                        } label: {
+                            Text("切断").font(.caption2).foregroundColor(.kachaDanger)
                         }
                     }
+                }
 
-                    if let err = beds24Error {
-                        Text(err).font(.caption2).foregroundColor(.kachaDanger)
-                    }
+                if let err = beds24Error {
+                    Text(err).font(.caption2).foregroundColor(.kachaDanger)
                 }
 
                 // Property linking
@@ -972,7 +985,7 @@ struct HomeSettingsSections: View {
                         let prop = beds24Properties[idx]
                         let propId = prop["id"] as? Int ?? 0
                         let propName = prop["name"] as? String ?? "物件 \(propId)"
-                        let isLinked = home.beds24ApiKey.contains("|\(propId)")
+                        let isLinked = home.beds24ApiKey.contains("|\(propId)") || home.beds24ApiKey == "\(propId)"
                         VStack(spacing: 8) {
                             HStack(spacing: 10) {
                                 Image(systemName: isLinked ? "checkmark.circle.fill" : "building.2")
@@ -1293,11 +1306,13 @@ struct HomeSettingsSections: View {
         isConnectingBeds24 = true
         beds24Error = nil
         do {
-            // Invite Code → refreshToken → token
-            let result = try await Beds24Client.shared.authenticate(inviteCode: home.beds24ApiKey)
-            // Store refreshToken (beds24ICalURL repurposed) for re-authentication
+            let result = try await Beds24Client.shared.authenticate(inviteCode: beds24InviteInput)
+            // Store refreshToken per-home (beds24ICalURL field)
             home.beds24ICalURL = result.refreshToken
-            showAlertMsg(title: "接続成功", message: "Beds24に接続しました")
+            // Clear invite code (one-time use)
+            beds24InviteInput = ""
+            home.beds24ApiKey = ""
+            showAlertMsg(title: "接続成功", message: "Beds24に接続しました。このリフレッシュトークンはこの物件専用です。")
         } catch {
             beds24Error = error.localizedDescription
         }
@@ -1306,22 +1321,17 @@ struct HomeSettingsSections: View {
 
     private func linkBeds24Property(propId: Int, propName: String, toCurrentHome: Bool) {
         if toCurrentHome {
-            // 現在のホームにBeds24物件IDを関連付け
-            // beds24ApiKeyフィールドにpropIdも保持（invite_code|propId形式）
-            let inviteCode = home.beds24ApiKey.split(separator: "|").first.map(String.init) ?? home.beds24ApiKey
-            home.beds24ApiKey = "\(inviteCode)|\(propId)"
+            home.beds24ApiKey = "\(propId)"
             showAlertMsg(title: "関連付け完了", message: "\(propName)を「\(home.name)」に関連付けました")
         } else {
-            // 新規ホームを作成してBeds24情報をコピー
             let newHome = Home(name: propName, sortOrder: 100)
             newHome.address = home.address
             newHome.businessType = home.businessType
-            let inviteCode = home.beds24ApiKey.split(separator: "|").first.map(String.init) ?? home.beds24ApiKey
-            newHome.beds24ApiKey = "\(inviteCode)|\(propId)"
-            newHome.beds24ICalURL = home.beds24ICalURL // refreshToken共有
+            newHome.beds24ApiKey = "\(propId)"
+            newHome.beds24ICalURL = home.beds24ICalURL  // 同じrefreshToken共有
             modelContext.insert(newHome)
             try? modelContext.save()
-            showAlertMsg(title: "ホーム作成", message: "「\(propName)」を新しいホームとして作成しました。設定タブで切り替えられます")
+            showAlertMsg(title: "ホーム作成", message: "「\(propName)」を新しいホームとして作成しました")
         }
     }
 
