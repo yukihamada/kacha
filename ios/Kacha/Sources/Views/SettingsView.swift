@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import UniformTypeIdentifiers
+import CoreLocation
 
 // MARK: - SettingsView (Home Picker + Active Home Settings)
 
@@ -516,6 +517,7 @@ struct HomeSettingsSections: View {
 
     @ObservedObject private var geofence = GeofenceManager.shared
     @State private var isGeocoding = false
+    @State private var showManualCoords = false
 
     private var geofenceSection: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -523,7 +525,7 @@ struct HomeSettingsSections: View {
                 Image(systemName: "location.circle.fill").foregroundColor(.kachaSuccess)
                 Text("近づいたら通知").font(.caption).bold().foregroundColor(.white)
             }
-            Text("自宅に近づくとオートロック解除の通知が届きます")
+            Text("設定した場所に近づくとオートロック解除の通知が届きます")
                 .font(.caption2).foregroundColor(.secondary)
 
             Toggle(isOn: $home.geofenceEnabled) {
@@ -538,7 +540,7 @@ struct HomeSettingsSections: View {
                             homeId: home.id, latitude: home.latitude,
                             longitude: home.longitude, radius: home.geofenceRadius
                         )
-                    } else {
+                    } else if !home.address.isEmpty {
                         Task { await geocodeAndRegister() }
                     }
                 } else {
@@ -547,24 +549,74 @@ struct HomeSettingsSections: View {
             }
 
             if home.geofenceEnabled {
-                if home.latitude == 0 && !home.address.isEmpty {
+                // Location setting
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("通知する場所").font(.caption).bold().foregroundColor(.white)
+
+                    // Option 1: From address
                     Button {
                         Task { await geocodeAndRegister() }
                     } label: {
                         HStack(spacing: 6) {
                             if isGeocoding { ProgressView().tint(.kachaAccent) }
                             else { Image(systemName: "location.magnifyingglass") }
-                            Text("住所から座標を取得").font(.caption)
+                            Text("住所から設定").font(.caption)
                         }
                         .foregroundColor(.kachaAccent)
                     }
-                    .disabled(isGeocoding)
-                } else if home.latitude != 0 {
+                    .disabled(isGeocoding || home.address.isEmpty)
+
+                    // Option 2: Current location
+                    Button {
+                        Task { await useCurrentLocation() }
+                    } label: {
+                        HStack(spacing: 6) {
+                            Image(systemName: "location.fill")
+                            Text("現在地を使う").font(.caption)
+                        }
+                        .foregroundColor(.kachaAccent)
+                    }
+
+                    // Option 3: Manual input
+                    @State var showManualInput = false
+                    DisclosureGroup("座標を手入力", isExpanded: $showManualCoords) {
+                        HStack(spacing: 8) {
+                            TextField("緯度", value: $home.latitude, format: .number)
+                                .foregroundColor(.white).font(.caption)
+                                .keyboardType(.decimalPad)
+                                .padding(8).background(Color.kachaCard)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                            TextField("経度", value: $home.longitude, format: .number)
+                                .foregroundColor(.white).font(.caption)
+                                .keyboardType(.decimalPad)
+                                .padding(8).background(Color.kachaCard)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                        }
+                        Button("この座標で登録") {
+                            if home.latitude != 0 && home.longitude != 0 {
+                                GeofenceManager.shared.registerGeofence(
+                                    homeId: home.id, latitude: home.latitude,
+                                    longitude: home.longitude, radius: home.geofenceRadius
+                                )
+                            }
+                        }
+                        .font(.caption).foregroundColor(.kacha)
+                    }
+                    .font(.caption).foregroundColor(.secondary)
+                }
+
+                if home.latitude != 0 {
                     HStack {
-                        Text("座標").font(.caption2).foregroundColor(.secondary)
-                        Spacer()
+                        Image(systemName: "mappin.circle.fill").foregroundColor(.kachaSuccess).font(.caption)
                         Text("\(String(format: "%.4f", home.latitude)), \(String(format: "%.4f", home.longitude))")
                             .font(.caption2).foregroundColor(.white)
+                        Spacer()
+                        Button {
+                            home.latitude = 0; home.longitude = 0
+                            GeofenceManager.shared.removeGeofence(homeId: home.id)
+                        } label: {
+                            Text("リセット").font(.caption2).foregroundColor(.kachaDanger)
+                        }
                     }
                 }
 
@@ -603,6 +655,23 @@ struct HomeSettingsSections: View {
                     }
                 }
             }
+        }
+    }
+
+    private func useCurrentLocation() async {
+        GeofenceManager.shared.requestPermission()
+        let manager = CLLocationManager()
+        manager.desiredAccuracy = kCLLocationAccuracyBest
+        manager.requestLocation()
+        // Wait briefly for location
+        try? await Task.sleep(nanoseconds: 2_000_000_000)
+        if let location = manager.location {
+            home.latitude = location.coordinate.latitude
+            home.longitude = location.coordinate.longitude
+            GeofenceManager.shared.registerGeofence(
+                homeId: home.id, latitude: home.latitude,
+                longitude: home.longitude, radius: home.geofenceRadius
+            )
         }
     }
 
@@ -799,6 +868,9 @@ struct HomeSettingsSections: View {
 
     // MARK: Beds24
 
+    @State private var beds24Properties: [[String: Any]] = []
+    @State private var isFetchingBeds24Props = false
+
     private var beds24Section: some View {
         KachaCard {
             VStack(spacing: 14) {
@@ -812,6 +884,52 @@ struct HomeSettingsSections: View {
                 }
                 SecureTokenField(label: "APIキー", text: $home.beds24ApiKey)
                 SettingsTextField(label: "iCal URL", placeholder: "beds24.com/ical.php?...", text: $home.beds24ICalURL)
+
+                // Property linking
+                if !home.beds24ApiKey.isEmpty {
+                    Divider().background(Color.kachaCardBorder)
+                    HStack {
+                        Text("物件の関連付け").font(.caption).bold().foregroundColor(.white)
+                        Spacer()
+                        Button {
+                            Task { await fetchBeds24Properties() }
+                        } label: {
+                            HStack(spacing: 4) {
+                                if isFetchingBeds24Props { ProgressView().tint(.kachaAccent) }
+                                else { Image(systemName: "arrow.clockwise") }
+                                Text("取得").font(.caption)
+                            }
+                            .foregroundColor(.kachaAccent)
+                        }
+                    }
+
+                    if beds24Properties.isEmpty && !isFetchingBeds24Props {
+                        Text("「取得」でBeds24の物件一覧を読み込みます")
+                            .font(.caption2).foregroundColor(.secondary)
+                    }
+
+                    ForEach(0..<beds24Properties.count, id: \.self) { idx in
+                        let prop = beds24Properties[idx]
+                        let propId = prop["id"] as? Int ?? 0
+                        let propName = prop["name"] as? String ?? "物件 \(propId)"
+                        HStack(spacing: 10) {
+                            Image(systemName: "building.2")
+                                .foregroundColor(Color(hex: "0066CC"))
+                            VStack(alignment: .leading, spacing: 1) {
+                                Text(propName).font(.caption).foregroundColor(.white)
+                                Text("ID: \(propId)").font(.caption2).foregroundColor(.secondary)
+                            }
+                            Spacer()
+                            Text("このホームに関連付け")
+                                .font(.caption2).foregroundColor(.kachaAccent)
+                        }
+                        .padding(8)
+                        .background(Color.kachaCard)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                    }
+                }
+
+                Divider().background(Color.kachaCardBorder)
                 Button { Task { await syncBeds24() } } label: {
                     HStack {
                         if isSyncingBeds24 { ProgressView().tint(.kacha) }
@@ -1058,6 +1176,12 @@ struct HomeSettingsSections: View {
         }
         home.icalLastSync = Date().timeIntervalSince1970
         showAlertMsg(title: "同期完了", message: "\(imported)件インポート")
+    }
+
+    private func fetchBeds24Properties() async {
+        isFetchingBeds24Props = true
+        defer { isFetchingBeds24Props = false }
+        beds24Properties = (try? await Beds24Client.shared.fetchProperties(apiKey: home.beds24ApiKey)) ?? []
     }
 
     private func syncBeds24() async {
