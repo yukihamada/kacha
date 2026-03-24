@@ -802,7 +802,14 @@ struct HomeSettingsSections: View {
     private var beds24Section: some View {
         KachaCard {
             VStack(spacing: 14) {
-                SettingsHeader(icon: "calendar.badge.clock", title: "Beds24", color: Color(hex: "0066CC"))
+                HStack {
+                    SettingsHeader(icon: "calendar.badge.clock", title: "Beds24", color: Color(hex: "0066CC"))
+                    Text("Beta").font(.caption2).bold()
+                        .padding(.horizontal, 6).padding(.vertical, 2)
+                        .background(Color.kachaWarn.opacity(0.2))
+                        .foregroundColor(.kachaWarn)
+                        .clipShape(Capsule())
+                }
                 SecureTokenField(label: "APIキー", text: $home.beds24ApiKey)
                 SettingsTextField(label: "iCal URL", placeholder: "beds24.com/ical.php?...", text: $home.beds24ICalURL)
                 Button { Task { await syncBeds24() } } label: {

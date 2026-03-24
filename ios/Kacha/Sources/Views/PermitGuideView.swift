@@ -35,7 +35,13 @@ struct PermitGuideView: View {
                             HStack(spacing: 10) {
                                 Image(systemName: "doc.badge.gearshape.fill").font(.title3)
                                 VStack(alignment: .leading, spacing: 2) {
-                                    Text("申請書類を自動作成").font(.subheadline).bold()
+                                    HStack(spacing: 6) {
+                                        Text("申請書類を自動作成").font(.subheadline).bold()
+                                        Text("Beta").font(.system(size: 9)).bold()
+                                            .padding(.horizontal, 5).padding(.vertical, 1)
+                                            .background(Color.black.opacity(0.2))
+                                            .clipShape(Capsule())
+                                    }
                                     Text("住所・名前等を自動入力したテンプレートを生成")
                                         .font(.caption2).opacity(0.8)
                                 }
@@ -285,7 +291,7 @@ struct DocumentTemplateView: View {
                     .padding(.bottom, 40)
                 }
             }
-            .navigationTitle("書類テンプレート")
+            .navigationTitle("書類テンプレート (Beta)")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
