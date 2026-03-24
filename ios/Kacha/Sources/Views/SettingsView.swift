@@ -912,11 +912,33 @@ struct HomeSettingsSections: View {
                                 .foregroundColor(remainingColor)
                         }
                     }
+
+                    Divider().background(Color.kachaCardBorder)
+
+                    // Permit guide button
+                    Button { showPermitGuide = true } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: "doc.text.fill").foregroundColor(.kachaWarn)
+                            VStack(alignment: .leading, spacing: 1) {
+                                Text(home.businessType == "minpaku" ? "民泊届出の方法" : "旅館業許可の取り方")
+                                    .font(.subheadline).foregroundColor(.white)
+                                Text("申請手順をステップで解説")
+                                    .font(.caption2).foregroundColor(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right").font(.caption).foregroundColor(.secondary)
+                        }
+                    }
                 }
             }
             .padding(16)
         }
+        .sheet(isPresented: $showPermitGuide) {
+            PermitGuideView(businessType: home.businessType)
+        }
     }
+
+    @State private var showPermitGuide = false
 
     private var remainingColor: Color {
         let r = 180 - home.minpakuNights

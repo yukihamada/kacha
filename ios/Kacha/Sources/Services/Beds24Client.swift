@@ -34,6 +34,57 @@ final class Beds24Client {
     func iCalURL(from propKey: String) -> String {
         "https://beds24.com/ical.php?propKey=\(propKey)&roomId=0"
     }
+
+    // MARK: - Booking Operations
+
+    /// 予約ステータスを更新
+    func updateBookingStatus(bookId: Int, status: String, apiKey: String) async throws {
+        var req = URLRequest(url: URL(string: "\(base)/bookings/\(bookId)")!)
+        req.httpMethod = "PUT"
+        req.addValue(apiKey, forHTTPHeaderField: "X-Api-Key")
+        req.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        req.httpBody = try JSONSerialization.data(withJSONObject: ["status": status])
+        let (_, resp) = try await URLSession.shared.data(for: req)
+        guard let http = resp as? HTTPURLResponse, http.statusCode < 300 else {
+            throw Beds24Error.apiError((resp as? HTTPURLResponse)?.statusCode ?? 0)
+        }
+    }
+
+    /// 予約にメモを追加
+    func addBookingNote(bookId: Int, note: String, apiKey: String) async throws {
+        var req = URLRequest(url: URL(string: "\(base)/bookings/\(bookId)")!)
+        req.httpMethod = "PUT"
+        req.addValue(apiKey, forHTTPHeaderField: "X-Api-Key")
+        req.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        req.httpBody = try JSONSerialization.data(withJSONObject: ["notes": note])
+        let (_, resp) = try await URLSession.shared.data(for: req)
+        guard let http = resp as? HTTPURLResponse, http.statusCode < 300 else {
+            throw Beds24Error.apiError((resp as? HTTPURLResponse)?.statusCode ?? 0)
+        }
+    }
+
+    /// ゲストにメッセージ送信（Beds24メッセージング）
+    func sendGuestMessage(bookId: Int, message: String, apiKey: String) async throws {
+        var req = URLRequest(url: URL(string: "\(base)/bookings/\(bookId)/messages")!)
+        req.httpMethod = "POST"
+        req.addValue(apiKey, forHTTPHeaderField: "X-Api-Key")
+        req.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        req.httpBody = try JSONSerialization.data(withJSONObject: ["message": message, "type": "guest"])
+        let (_, resp) = try await URLSession.shared.data(for: req)
+        guard let http = resp as? HTTPURLResponse, http.statusCode < 300 else {
+            throw Beds24Error.apiError((resp as? HTTPURLResponse)?.statusCode ?? 0)
+        }
+    }
+
+    /// 物件情報を取得
+    func fetchProperties(apiKey: String) async throws -> [[String: Any]] {
+        var req = URLRequest(url: URL(string: "\(base)/properties")!)
+        req.addValue(apiKey, forHTTPHeaderField: "X-Api-Key")
+        let (data, _) = try await URLSession.shared.data(for: req)
+        guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let props = json["data"] as? [[String: Any]] else { return [] }
+        return props
+    }
 }
 
 enum Beds24Error: Error, LocalizedError {

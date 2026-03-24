@@ -12,10 +12,12 @@
 		05890CC3EA735DB3F0561CDA /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBCEDB37B2D0B9345ABDE94A /* SettingsView.swift */; };
 		0690CA823F9DBDECC448BBBD /* ShareClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DAC4EBDFF1DF72B996DF36 /* ShareClient.swift */; };
 		132B227AC2F559D68DCF02FA /* ShareCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730BAFCFBC0348F6D8C5123A /* ShareCalendarView.swift */; };
+		195BDBE6E335330751D4C106 /* PermitGuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53057EE1C5415898AEC8053 /* PermitGuideView.swift */; };
 		26493989640D643F3E3B18D9 /* ChecklistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0223FC6395DC117DBB0CF7D /* ChecklistView.swift */; };
 		346B513892A72C7033CED82D /* UtilityRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175549B75AE7B8BFC0C842D5 /* UtilityRecord.swift */; };
 		38B61C754CDAACDC726B6098 /* MaintenanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13DDDD3441AB20CFD7ED91B1 /* MaintenanceView.swift */; };
 		3C64CB3B719F2E02D1C9DFDD /* HomeShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDBD2EE216FCCE6C01C4E51 /* HomeShareView.swift */; };
+		5407AFDC53CFA390FD5949A3 /* HouseManual.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA719FEFB13BE9B2634BF757 /* HouseManual.swift */; };
 		55527DFC92282D1114F67AFC /* GuestMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0BCCBB16ABEE301F649AB44 /* GuestMessageView.swift */; };
 		571F922AA8CDCC9AA29EED11 /* UtilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A24BD7D0D7257316164F996 /* UtilityView.swift */; };
 		5D698274FD721595DB543F51 /* ShareRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDDCAF1D563A193F10EFB4E /* ShareRecord.swift */; };
@@ -32,6 +34,7 @@
 		7E01049D64A8C3ADAC50FE33 /* KachaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C897E53B48E2B6F63413241 /* KachaApp.swift */; };
 		88EC00251B02C08D328B74F8 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFFA1E3C067B393326D1572 /* NotificationManager.swift */; };
 		8B62098FD7EDA0DD001A07D9 /* BookingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36164FF9D7E181381FF28D54 /* BookingDetailView.swift */; };
+		9EB4FD724CFD089208CD1463 /* HouseManualView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3274B590E5951F22DF3CFD98 /* HouseManualView.swift */; };
 		A9D5E3204568B4D2A923BD95 /* GeofenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2CA2DE013566DD3C86D6D42 /* GeofenceManager.swift */; };
 		AB68328061A1EE08766B2CEF /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D6CA3BE71B9C6388662314E /* Home.swift */; };
 		AB9063950B8D9839501C2F04 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D483303E5E06E7219BE5C056 /* CalendarView.swift */; };
@@ -77,6 +80,7 @@
 		1C8DED2BC0B563B3EF3A14BF /* SecurityInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityInfoView.swift; sourceTree = "<group>"; };
 		22725AD80A7BB9DEF3C3855A /* Beds24Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Beds24Client.swift; sourceTree = "<group>"; };
 		256031C69587A8CA93CA2918 /* NatureRemoClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NatureRemoClient.swift; sourceTree = "<group>"; };
+		3274B590E5951F22DF3CFD98 /* HouseManualView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseManualView.swift; sourceTree = "<group>"; };
 		33D65736F4BF2913C2928BD7 /* Kacha.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Kacha.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		36164FF9D7E181381FF28D54 /* BookingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingDetailView.swift; sourceTree = "<group>"; };
 		36332B105EE7996D0B6B5197 /* CustomWebhookClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomWebhookClient.swift; sourceTree = "<group>"; };
@@ -112,11 +116,13 @@
 		C7FCA2C0407C3E360D03E0CD /* DeviceLogSyncer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceLogSyncer.swift; sourceTree = "<group>"; };
 		D47FA2A1E0C7359B3C3025F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D483303E5E06E7219BE5C056 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		D53057EE1C5415898AEC8053 /* PermitGuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermitGuideView.swift; sourceTree = "<group>"; };
 		D71DD24B3C87D4B368EA8495 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DBDBD2EE216FCCE6C01C4E51 /* HomeShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeShareView.swift; sourceTree = "<group>"; };
 		DD87C22012BFBD2F0CAE6110 /* DeviceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceView.swift; sourceTree = "<group>"; };
 		E0223FC6395DC117DBB0CF7D /* ChecklistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistView.swift; sourceTree = "<group>"; };
 		EBCEDB37B2D0B9345ABDE94A /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		FA719FEFB13BE9B2634BF757 /* HouseManual.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseManual.swift; sourceTree = "<group>"; };
 		FDE620580DAF5BA1260B2AAC /* HueClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HueClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -139,6 +145,7 @@
 				566175359870AAEC75CE0235 /* ChecklistItem.swift */,
 				8A26AF7341A07F152DAA60F3 /* DeviceIntegration.swift */,
 				6D6CA3BE71B9C6388662314E /* Home.swift */,
+				FA719FEFB13BE9B2634BF757 /* HouseManual.swift */,
 				85E694CC782F89977CDFFA6E /* MaintenanceTask.swift */,
 				ADDDCAF1D563A193F10EFB4E /* ShareRecord.swift */,
 				659D2214496DFC118E1583E2 /* SmartDevice.swift */,
@@ -180,8 +187,10 @@
 				B0BCCBB16ABEE301F649AB44 /* GuestMessageView.swift */,
 				DBDBD2EE216FCCE6C01C4E51 /* HomeShareView.swift */,
 				1797C59E8718E09C95867CEA /* HomeView.swift */,
+				3274B590E5951F22DF3CFD98 /* HouseManualView.swift */,
 				13DDDD3441AB20CFD7ED91B1 /* MaintenanceView.swift */,
 				7272FF7B92B5399F5143EE9E /* OnboardingView.swift */,
+				D53057EE1C5415898AEC8053 /* PermitGuideView.swift */,
 				1C8DED2BC0B563B3EF3A14BF /* SecurityInfoView.swift */,
 				EBCEDB37B2D0B9345ABDE94A /* SettingsView.swift */,
 				730BAFCFBC0348F6D8C5123A /* ShareCalendarView.swift */,
@@ -361,6 +370,8 @@
 				AB68328061A1EE08766B2CEF /* Home.swift in Sources */,
 				3C64CB3B719F2E02D1C9DFDD /* HomeShareView.swift in Sources */,
 				7DB90868F78FFE94A8BA9000 /* HomeView.swift in Sources */,
+				5407AFDC53CFA390FD5949A3 /* HouseManual.swift in Sources */,
+				9EB4FD724CFD089208CD1463 /* HouseManualView.swift in Sources */,
 				5D8D7971F2359E619036E576 /* HueClient.swift in Sources */,
 				E668FA855EDC715E21732778 /* ICalImporter.swift in Sources */,
 				7E01049D64A8C3ADAC50FE33 /* KachaApp.swift in Sources */,
@@ -371,6 +382,7 @@
 				88EC00251B02C08D328B74F8 /* NotificationManager.swift in Sources */,
 				5D6B635FCCC55DB6DAF0F040 /* NukiClient.swift in Sources */,
 				7C81B0CFD18586B8462ACCEA /* OnboardingView.swift in Sources */,
+				195BDBE6E335330751D4C106 /* PermitGuideView.swift in Sources */,
 				B580A115D64500E4E9F4F9F0 /* SecurityInfoView.swift in Sources */,
 				68B5FC384F63E9884DE6BA98 /* SeedData.swift in Sources */,
 				BB5B1C14CB42E28322BBC306 /* SesameClient.swift in Sources */,

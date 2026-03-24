@@ -30,6 +30,7 @@ struct HomeView: View {
     @State private var showUtility = false
     @State private var showMaintenance = false
     @State private var showActivityLog = false
+    @State private var showHouseManual = false
     @State private var isPressingAutolock = false
     @State private var autolockSuccess = false
     @State private var isRunningScene = false
@@ -116,6 +117,9 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showActivityLog) {
                 if let home = activeHome { ActivityLogView(home: home) }
+            }
+            .sheet(isPresented: $showHouseManual) {
+                if let home = activeHome { HouseManualView(home: home) }
             }
         }
     }
@@ -232,6 +236,7 @@ struct HomeView: View {
         if minpakuModeEnabled {
             actions.insert(("wifi", "ゲストカード", .kachaAccent, { showGuestCard = true }), at: 0)
             actions.insert(("checklist", "チェックリスト", .kachaSuccess, { showChecklist = true }), at: 1)
+            actions.append(("book.fill", "マニュアル", .kachaAccent, { showHouseManual = true }))
         }
         return LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
             ForEach(actions, id: \.1) { icon, label, color, action in
