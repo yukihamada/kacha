@@ -90,10 +90,8 @@ struct SettingsView: View {
         KachaCard {
             VStack(spacing: 12) {
                 Image(systemName: "house.badge.questionmark.fill")
-                    .font(.system(size: 40))
-                    .foregroundColor(.secondary)
-                Text("ホームを追加してください")
-                    .foregroundColor(.secondary)
+                    .font(.system(size: 40)).foregroundColor(.secondary)
+                Text("ホームを追加してください").foregroundColor(.secondary)
                 Button("ホームを追加") { newHomeName = ""; showAddHome = true }
                     .foregroundColor(.kacha)
             }
@@ -108,12 +106,9 @@ struct SettingsView: View {
                 Color.kachaBg.ignoresSafeArea()
                 VStack(spacing: 20) {
                     Image(systemName: "house.fill")
-                        .font(.system(size: 48))
-                        .foregroundColor(.kacha)
-                        .padding(.top, 40)
+                        .font(.system(size: 48)).foregroundColor(.kacha).padding(.top, 40)
                     TextField("家の名前（例: 渋谷の部屋）", text: $newHomeName)
-                        .foregroundColor(.white)
-                        .padding(14)
+                        .foregroundColor(.white).padding(14)
                         .background(Color.kachaCard)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                         .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.kachaCardBorder))
@@ -198,13 +193,10 @@ private struct HomeChip: View {
     var body: some View {
         Button(action: onSelect) {
             HStack(spacing: 6) {
-                Image(systemName: isActive ? "house.fill" : "house")
-                    .font(.caption)
-                Text(home.name)
-                    .font(.subheadline).fontWeight(isActive ? .bold : .regular)
+                Image(systemName: isActive ? "house.fill" : "house").font(.caption)
+                Text(home.name).font(.subheadline).fontWeight(isActive ? .bold : .regular)
                 if isActive {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.caption)
+                    Image(systemName: "checkmark.circle.fill").font(.caption)
                 }
             }
             .foregroundColor(isActive ? .kachaBg : .white)
@@ -245,22 +237,23 @@ struct HomeSettingsSections: View {
     @State private var alertMessage = ""
     @State private var showAddDevice = false
 
+    // Expand state for each section
+    @State private var expandSwitchBot = false
+    @State private var expandHue = false
+    @State private var expandSesame = false
+    @State private var expandQrio = false
+
     private var integrations: [DeviceIntegration] { allIntegrations.filter { $0.homeId == home.id } }
 
     var body: some View {
         Group {
             homeInfoSection
-            doorSection
-            switchBotSection
-            hueSection
-            sesameSection
-            qrioSection
+            devicesOverviewSection
             deviceIntegrationsSection
             if minpakuModeEnabled {
                 beds24Section
                 icalSection
                 minpakuSection
-                sakutsuSection
             }
         }
         .alert(alertTitle, isPresented: $showAlert) {
@@ -282,170 +275,155 @@ struct HomeSettingsSections: View {
         }
     }
 
-    // MARK: - Sections
+    // MARK: - Home Info
 
     private var homeInfoSection: some View {
         KachaCard {
             VStack(spacing: 14) {
                 SettingsHeader(icon: "house.fill", title: "ホーム情報", color: .kacha)
-                SettingsTextField(label: "家の名前", placeholder: "例: 我が家、渋谷の部屋", text: $home.name)
+                SettingsTextField(label: "家の名前", placeholder: "例: 我が家", text: $home.name)
                     .onChange(of: home.name) { _, val in UserDefaults.standard.set(val, forKey: "facilityName") }
                 Divider().background(Color.kachaCardBorder)
                 SettingsTextField(label: "住所", placeholder: "東京都渋谷区...", text: $home.address)
                     .onChange(of: home.address) { _, val in UserDefaults.standard.set(val, forKey: "facilityAddress") }
-            }
-            .padding(16)
-        }
-    }
-
-    private var doorSection: some View {
-        KachaCard {
-            VStack(spacing: 14) {
-                SettingsHeader(icon: "bubble.left.and.bubble.right.fill", title: "ゲスト案内", color: .kachaSuccess)
-                SettingsTextField(label: "ドアコード", placeholder: "例: 1234", text: $home.doorCode)
+                Divider().background(Color.kachaCardBorder)
+                // Door code & WiFi — masked
+                MaskedField(label: "ドアコード", value: $home.doorCode, icon: "keypad.rectangle.fill")
                     .onChange(of: home.doorCode) { _, val in UserDefaults.standard.set(val, forKey: "facilityDoorCode") }
                 Divider().background(Color.kachaCardBorder)
-                SettingsTextField(label: "Wi-Fi", placeholder: "パスワード", text: $home.wifiPassword)
+                MaskedField(label: "Wi-Fi", value: $home.wifiPassword, icon: "wifi")
                     .onChange(of: home.wifiPassword) { _, val in UserDefaults.standard.set(val, forKey: "facilityWifiPassword") }
             }
             .padding(16)
         }
     }
 
-    // MARK: SwitchBot
+    // MARK: - Devices Overview (status cards, no raw keys)
 
-    private var switchBotSection: some View {
-        KachaCard {
-            VStack(spacing: 14) {
-                SettingsHeader(icon: "lock.shield.fill", title: "SwitchBot", color: .kachaAccent)
-                ApiGuideRow(
-                    label: "APIキーの取得",
-                    urlString: "https://support.switch-bot.com/hc/ja/articles/12822710195351",
-                    note: "SwitchBotアプリ → プロフィール → 開発者向けオプション"
-                )
-                Divider().background(Color.kachaCardBorder)
-                SettingsTextField(label: "APIトークン", placeholder: "SwitchBot APIトークン", text: $home.switchBotToken, isSecure: true)
-                    .onChange(of: home.switchBotToken) { _, val in UserDefaults.standard.set(val, forKey: "switchBotToken") }
-                Divider().background(Color.kachaCardBorder)
-                SettingsTextField(label: "シークレット", placeholder: "クライアントシークレット", text: $home.switchBotSecret, isSecure: true)
-                    .onChange(of: home.switchBotSecret) { _, val in UserDefaults.standard.set(val, forKey: "switchBotSecret") }
-                Divider().background(Color.kachaCardBorder)
-                Button { Task { await testSwitchBot() } } label: {
-                    HStack {
-                        if isFetchingSwitchBot { ProgressView().tint(.kachaAccent) }
-                        else { Image(systemName: "arrow.clockwise") }
-                        Text("デバイスを取得")
-                    }
-                    .actionButtonStyle(.kachaAccent)
-                }
-                .disabled(isFetchingSwitchBot || home.switchBotToken.isEmpty)
-            }
-            .padding(16)
-        }
-    }
-
-    // MARK: Philips Hue
-
-    private var hueSection: some View {
-        KachaCard {
-            VStack(spacing: 14) {
-                SettingsHeader(icon: "lightbulb.fill", title: "Philips Hue", color: .kacha)
-                ApiGuideRow(
-                    label: "セットアップ方法",
-                    urlString: "https://developers.meethue.com/develop/get-started-2/",
-                    note: "ブリッジと同じWi-Fiに接続した状態でブリッジ検索"
-                )
-                Divider().background(Color.kachaCardBorder)
-                SettingsTextField(label: "ブリッジIP", placeholder: "192.168.1.100", text: $home.hueBridgeIP)
-                    .onChange(of: home.hueBridgeIP) { _, val in UserDefaults.standard.set(val, forKey: "hueBridgeIP") }
-                Divider().background(Color.kachaCardBorder)
-                SettingsTextField(label: "ユーザー名", placeholder: "ブリッジ登録後に取得", text: $home.hueUsername)
-                    .onChange(of: home.hueUsername) { _, val in UserDefaults.standard.set(val, forKey: "hueUsername") }
-                Divider().background(Color.kachaCardBorder)
-                HStack(spacing: 8) {
-                    Button { Task { await discoverBridge() } } label: {
+    private var devicesOverviewSection: some View {
+        VStack(spacing: 12) {
+            // SwitchBot
+            DeviceStatusCard(
+                icon: "lock.shield.fill",
+                name: "SwitchBot",
+                color: .kachaAccent,
+                isConnected: !home.switchBotToken.isEmpty,
+                isExpanded: $expandSwitchBot
+            ) {
+                VStack(spacing: 12) {
+                    SecureTokenField(label: "APIトークン", text: $home.switchBotToken)
+                        .onChange(of: home.switchBotToken) { _, val in UserDefaults.standard.set(val, forKey: "switchBotToken") }
+                    SecureTokenField(label: "シークレット", text: $home.switchBotSecret)
+                        .onChange(of: home.switchBotSecret) { _, val in UserDefaults.standard.set(val, forKey: "switchBotSecret") }
+                    Button { Task { await testSwitchBot() } } label: {
                         HStack {
-                            if isDiscoveringBridge { ProgressView().tint(.kachaAccent) }
-                            else { Image(systemName: "magnifyingglass") }
-                            Text("ブリッジ検索")
+                            if isFetchingSwitchBot { ProgressView().tint(.kachaAccent) }
+                            else { Image(systemName: "arrow.clockwise") }
+                            Text("接続テスト")
                         }
                         .actionButtonStyle(.kachaAccent)
                     }
-                    .disabled(isDiscoveringBridge)
-                    Button { Task { await registerBridge() } } label: {
-                        HStack {
-                            if isRegisteringBridge { ProgressView().tint(.kacha) }
-                            else { Image(systemName: "link") }
-                            Text("ペアリング")
+                    .disabled(isFetchingSwitchBot || home.switchBotToken.isEmpty)
+                    ApiGuideRow(
+                        label: "APIキーの取得方法",
+                        urlString: "https://support.switch-bot.com/hc/ja/articles/12822710195351",
+                        note: "SwitchBotアプリ → プロフィール → 開発者向けオプション"
+                    )
+                }
+            }
+
+            // Philips Hue
+            DeviceStatusCard(
+                icon: "lightbulb.fill",
+                name: "Philips Hue",
+                color: .kacha,
+                isConnected: !home.hueUsername.isEmpty,
+                isExpanded: $expandHue
+            ) {
+                VStack(spacing: 12) {
+                    HStack(spacing: 8) {
+                        Button { Task { await discoverBridge() } } label: {
+                            HStack {
+                                if isDiscoveringBridge { ProgressView().tint(.kachaAccent) }
+                                else { Image(systemName: "magnifyingglass") }
+                                Text("ブリッジ検索")
+                            }
+                            .actionButtonStyle(.kachaAccent)
                         }
-                        .actionButtonStyle(.kacha)
+                        .disabled(isDiscoveringBridge)
+                        Button { Task { await registerBridge() } } label: {
+                            HStack {
+                                if isRegisteringBridge { ProgressView().tint(.kacha) }
+                                else { Image(systemName: "link") }
+                                Text("ペアリング")
+                            }
+                            .actionButtonStyle(.kacha)
+                        }
+                        .disabled(isRegisteringBridge || home.hueBridgeIP.isEmpty)
                     }
-                    .disabled(isRegisteringBridge || home.hueBridgeIP.isEmpty)
-                }
-                if showHueInstructions {
-                    HStack(spacing: 6) {
-                        Image(systemName: "info.circle.fill").foregroundColor(.kachaWarn)
-                        Text("ブリッジのリンクボタンを押してから「ペアリング」をタップ")
-                            .font(.caption).foregroundColor(.kachaWarn)
+                    if !home.hueBridgeIP.isEmpty {
+                        HStack {
+                            Text("ブリッジIP").font(.caption).foregroundColor(.secondary)
+                            Spacer()
+                            Text(home.hueBridgeIP).font(.caption).foregroundColor(.white)
+                        }
+                    }
+                    if showHueInstructions {
+                        HStack(spacing: 6) {
+                            Image(systemName: "info.circle.fill").foregroundColor(.kachaWarn)
+                            Text("ブリッジのリンクボタンを押してから「ペアリング」をタップ")
+                                .font(.caption).foregroundColor(.kachaWarn)
+                        }
                     }
                 }
             }
-            .padding(16)
-        }
-    }
 
-    // MARK: Sesame
-
-    private var sesameSection: some View {
-        KachaCard {
-            VStack(spacing: 14) {
-                SettingsHeader(icon: "key.fill", title: "Sesame（CANDY HOUSE）", color: .kachaSuccess)
-                ApiGuideRow(
-                    label: "APIキーの取得",
-                    urlString: "https://partners.candyhouse.co/",
-                    note: "Sesameアプリ → デバイス → 歯車 → UUID をコピー / パートナーポータルでAPIキー発行"
-                )
-                Divider().background(Color.kachaCardBorder)
-                SettingsTextField(label: "APIキー", placeholder: "xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", text: $home.sesameApiKey, isSecure: true)
-                Divider().background(Color.kachaCardBorder)
-                SettingsTextField(label: "デバイスUUID", placeholder: "UUIDをカンマ区切りで（複数可）", text: $home.sesameDeviceUUIDs)
-                Divider().background(Color.kachaCardBorder)
-                Button { Task { await testSesame() } } label: {
-                    HStack {
-                        if isTestingSesame { ProgressView().tint(.kachaSuccess) }
-                        else { Image(systemName: "arrow.clockwise") }
-                        Text("接続テスト")
+            // Sesame
+            DeviceStatusCard(
+                icon: "key.fill",
+                name: "Sesame",
+                color: .kachaSuccess,
+                isConnected: !home.sesameApiKey.isEmpty,
+                isExpanded: $expandSesame
+            ) {
+                VStack(spacing: 12) {
+                    SecureTokenField(label: "APIキー", text: $home.sesameApiKey)
+                    SettingsTextField(label: "UUID", placeholder: "UUIDをカンマ区切り", text: $home.sesameDeviceUUIDs)
+                    Button { Task { await testSesame() } } label: {
+                        HStack {
+                            if isTestingSesame { ProgressView().tint(.kachaSuccess) }
+                            else { Image(systemName: "arrow.clockwise") }
+                            Text("接続テスト")
+                        }
+                        .actionButtonStyle(.kachaSuccess)
                     }
-                    .actionButtonStyle(.kachaSuccess)
-                }
-                .disabled(isTestingSesame || home.sesameApiKey.isEmpty || home.sesameDeviceUUIDs.isEmpty)
-            }
-            .padding(16)
-        }
-    }
-
-    // MARK: Qrio
-
-    private var qrioSection: some View {
-        KachaCard {
-            VStack(spacing: 14) {
-                SettingsHeader(icon: "key.horizontal.fill", title: "Qrio Lock", color: .kachaAccent)
-                ApiGuideRow(
-                    label: "開発者プログラムに申請",
-                    urlString: "https://qrio.me/developer/",
-                    note: "Qrioのクラウド連携にはQ-Hubが必要です"
-                )
-                Divider().background(Color.kachaCardBorder)
-                SettingsTextField(label: "APIキー", placeholder: "Qrio APIキー（要申請）", text: $home.qrioApiKey, isSecure: true)
-                Divider().background(Color.kachaCardBorder)
-                SettingsTextField(label: "デバイスID", placeholder: "デバイスIDをカンマ区切りで", text: $home.qrioDeviceIds)
-                HStack(spacing: 6) {
-                    Image(systemName: "info.circle").foregroundColor(.secondary).font(.caption)
-                    Text("Qrio APIは開発者プログラムへの申請が必要です")
-                        .font(.caption).foregroundColor(.secondary)
+                    .disabled(isTestingSesame || home.sesameApiKey.isEmpty || home.sesameDeviceUUIDs.isEmpty)
+                    ApiGuideRow(
+                        label: "APIキーの取得方法",
+                        urlString: "https://partners.candyhouse.co/",
+                        note: "パートナーポータルでAPIキー発行 / アプリでUUID確認"
+                    )
                 }
             }
-            .padding(16)
+
+            // Qrio
+            DeviceStatusCard(
+                icon: "key.horizontal.fill",
+                name: "Qrio Lock",
+                color: .kachaAccent,
+                isConnected: !home.qrioApiKey.isEmpty,
+                isExpanded: $expandQrio
+            ) {
+                VStack(spacing: 12) {
+                    SecureTokenField(label: "APIキー", text: $home.qrioApiKey)
+                    SettingsTextField(label: "デバイスID", placeholder: "カンマ区切り", text: $home.qrioDeviceIds)
+                    ApiGuideRow(
+                        label: "開発者プログラムに申請",
+                        urlString: "https://qrio.me/developer/",
+                        note: "Q-Hubが必要です"
+                    )
+                }
+            }
         }
     }
 
@@ -455,18 +433,15 @@ struct HomeSettingsSections: View {
         KachaCard {
             VStack(spacing: 14) {
                 HStack {
-                    SettingsHeader(icon: "cpu.fill", title: "その他デバイス連携", color: .kachaAccent)
+                    SettingsHeader(icon: "cpu.fill", title: "その他デバイス", color: .kachaAccent)
                     Spacer()
                     Button { showAddDevice = true } label: {
-                        Image(systemName: "plus.circle.fill")
-                            .foregroundColor(.kachaAccent)
-                            .font(.title3)
+                        Image(systemName: "plus.circle.fill").foregroundColor(.kachaAccent).font(.title3)
                     }
                 }
                 if integrations.isEmpty {
                     HStack(spacing: 10) {
-                        Image(systemName: "plus.rectangle.on.folder.fill")
-                            .foregroundColor(.secondary)
+                        Image(systemName: "plus.rectangle.on.folder.fill").foregroundColor(.secondary)
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Nature Remo / Nuki / Tuya など").font(.subheadline).foregroundColor(.white)
                             Text("「＋」をタップしてデバイスを追加").font(.caption).foregroundColor(.secondary)
@@ -480,14 +455,6 @@ struct HomeSettingsSections: View {
                             try? modelContext.save()
                         }
                     }
-                    Divider().background(Color.kachaCardBorder)
-                    Button { showAddDevice = true } label: {
-                        HStack {
-                            Image(systemName: "plus.circle")
-                            Text("デバイスを追加")
-                        }
-                        .font(.subheadline).foregroundColor(.kachaAccent)
-                    }
                 }
             }
             .padding(16)
@@ -500,16 +467,8 @@ struct HomeSettingsSections: View {
         KachaCard {
             VStack(spacing: 14) {
                 SettingsHeader(icon: "calendar.badge.clock", title: "Beds24", color: Color(hex: "0066CC"))
-                ApiGuideRow(
-                    label: "APIキーの取得",
-                    urlString: "https://beds24.com/control2.php?pagetype=account&pagemode=apikeys",
-                    note: "Beds24ダッシュボード → Settings → Account → API Keys"
-                )
-                Divider().background(Color.kachaCardBorder)
-                SettingsTextField(label: "APIキー", placeholder: "Beds24 v2 APIキー", text: $home.beds24ApiKey, isSecure: true)
-                Divider().background(Color.kachaCardBorder)
-                SettingsTextField(label: "iCal URL", placeholder: "beds24.com/ical.php?propKey=...", text: $home.beds24ICalURL)
-                Divider().background(Color.kachaCardBorder)
+                SecureTokenField(label: "APIキー", text: $home.beds24ApiKey)
+                SettingsTextField(label: "iCal URL", placeholder: "beds24.com/ical.php?...", text: $home.beds24ICalURL)
                 Button { Task { await syncBeds24() } } label: {
                     HStack {
                         if isSyncingBeds24 { ProgressView().tint(.kacha) }
@@ -530,10 +489,10 @@ struct HomeSettingsSections: View {
         KachaCard {
             VStack(spacing: 14) {
                 SettingsHeader(icon: "calendar.badge.plus", title: "iCal連携", color: .kachaAccent)
-                SettingsTextField(label: "Airbnb URL", placeholder: "https://www.airbnb.com/calendar/ical/...", text: $home.airbnbICalURL)
+                SettingsTextField(label: "Airbnb", placeholder: "https://www.airbnb.com/calendar/ical/...", text: $home.airbnbICalURL)
                     .onChange(of: home.airbnbICalURL) { _, val in UserDefaults.standard.set(val, forKey: "airbnbICalURL") }
                 Divider().background(Color.kachaCardBorder)
-                SettingsTextField(label: "じゃらん URL", placeholder: "https://calendar.jalan.net/...", text: $home.jalanICalURL)
+                SettingsTextField(label: "じゃらん", placeholder: "https://calendar.jalan.net/...", text: $home.jalanICalURL)
                     .onChange(of: home.jalanICalURL) { _, val in UserDefaults.standard.set(val, forKey: "jalanICalURL") }
                 Divider().background(Color.kachaCardBorder)
                 HStack(spacing: 8) {
@@ -541,7 +500,7 @@ struct HomeSettingsSections: View {
                         HStack {
                             if isSyncingICal { ProgressView().tint(.kachaAccent) }
                             else { Image(systemName: "arrow.clockwise") }
-                            Text("今すぐ同期")
+                            Text("同期")
                         }
                         .actionButtonStyle(.kachaAccent)
                     }
@@ -550,10 +509,6 @@ struct HomeSettingsSections: View {
                         HStack { Image(systemName: "doc.badge.plus"); Text("ファイル") }
                             .actionButtonStyle(.kacha)
                     }
-                }
-                if home.icalLastSync > 0 {
-                    Text("最終同期: \(Date(timeIntervalSince1970: home.icalLastSync).formatted(date: .omitted, time: .shortened))")
-                        .font(.caption).foregroundColor(.secondary)
                 }
             }
             .padding(16)
@@ -569,35 +524,28 @@ struct HomeSettingsSections: View {
                 Toggle(isOn: $minpakuModeEnabled) {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("民泊として貸し出す").font(.subheadline).foregroundColor(.white)
-                        Text("Airbnb・じゃらん連携や泊数管理が使えるようになります")
-                            .font(.caption).foregroundColor(.secondary)
+                        Text("予約管理・泊数管理が使えます").font(.caption).foregroundColor(.secondary)
                     }
                 }
                 .tint(.kacha)
                 if minpakuModeEnabled {
                     Divider().background(Color.kachaCardBorder)
-                    SettingsTextField(label: "民泊届出番号", placeholder: "例: 東京都渋谷区01234", text: $home.minpakuNumber)
+                    SettingsTextField(label: "届出番号", placeholder: "東京都渋谷区01234", text: $home.minpakuNumber)
                         .onChange(of: home.minpakuNumber) { _, val in UserDefaults.standard.set(val, forKey: "minpakuNumber") }
                     Divider().background(Color.kachaCardBorder)
                     HStack {
-                        Text("今年の使用泊数").font(.subheadline).foregroundColor(.white)
+                        Text("使用泊数").font(.subheadline).foregroundColor(.white)
                         Spacer()
                         Stepper("\(home.minpakuNights)泊", value: $home.minpakuNights, in: 0...180)
                             .foregroundColor(.white).tint(.kacha)
                             .onChange(of: home.minpakuNights) { _, val in UserDefaults.standard.set(val, forKey: "minpakuNights") }
                     }
                     HStack {
-                        Text("残り利用可能泊数").font(.subheadline).foregroundColor(.secondary)
+                        Text("残り").font(.subheadline).foregroundColor(.secondary)
                         Spacer()
-                        Text("\(max(0, 180 - home.minpakuNights))泊")
-                            .font(.subheadline).bold().foregroundColor(remainingColor)
+                        Text("\(max(0, 180 - home.minpakuNights))泊").font(.subheadline).bold()
+                            .foregroundColor(remainingColor)
                     }
-                    Button("年次リセット") {
-                        home.minpakuNights = 0
-                        UserDefaults.standard.set(0, forKey: "minpakuNights")
-                        showAlert(title: "リセット完了", message: "民泊泊数カウンターを0にリセットしました")
-                    }
-                    .font(.caption).foregroundColor(.kachaDanger)
                 }
             }
             .padding(16)
@@ -611,23 +559,6 @@ struct HomeSettingsSections: View {
         return .kachaDanger
     }
 
-    // MARK: Sakutsu
-
-    private var sakutsuSection: some View {
-        KachaCard {
-            VStack(spacing: 14) {
-                SettingsHeader(icon: "yensign.circle.fill", title: "サクッと連携", color: .kachaSuccess)
-                Text("売上データをサクッと（確定申告アプリ）に送信できます")
-                    .font(.caption).foregroundColor(.secondary)
-                Button { sendToSakutsu() } label: {
-                    HStack { Image(systemName: "square.and.arrow.up"); Text("売上データを送信") }
-                        .actionButtonStyle(.kachaSuccess)
-                }
-            }
-            .padding(16)
-        }
-    }
-
     // MARK: - Actions
 
     private func testSwitchBot() async {
@@ -636,9 +567,9 @@ struct HomeSettingsSections: View {
         do {
             let devices = try await SwitchBotClient.shared.fetchDevices(
                 token: home.switchBotToken, secret: home.switchBotSecret)
-            showAlert(title: "接続成功", message: "\(devices.count)台のデバイスが見つかりました")
+            showAlertMsg(title: "接続成功", message: "\(devices.count)台のデバイスが見つかりました")
         } catch {
-            showAlert(title: "エラー", message: "接続に失敗しました: \(error.localizedDescription)")
+            showAlertMsg(title: "エラー", message: error.localizedDescription)
         }
     }
 
@@ -647,14 +578,14 @@ struct HomeSettingsSections: View {
         defer { isTestingSesame = false }
         let uuids = home.sesameDeviceUUIDs.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
         guard let uuid = uuids.first else {
-            showAlert(title: "エラー", message: "デバイスUUIDを入力してください"); return
+            showAlertMsg(title: "エラー", message: "UUIDを入力してください"); return
         }
         do {
             let status = try await SesameClient.shared.fetchStatus(uuid: uuid, apiKey: home.sesameApiKey)
             let state = status.isLocked ? "施錠" : "解錠"
-            showAlert(title: "接続成功", message: "ステータス: \(state) / バッテリー: \(status.batteryLevel)%")
+            showAlertMsg(title: "接続成功", message: "\(state) / バッテリー: \(status.batteryLevel)%")
         } catch {
-            showAlert(title: "エラー", message: error.localizedDescription)
+            showAlertMsg(title: "エラー", message: error.localizedDescription)
         }
     }
 
@@ -664,9 +595,9 @@ struct HomeSettingsSections: View {
         if let ip = await HueClient.shared.discoverBridge() {
             home.hueBridgeIP = ip
             UserDefaults.standard.set(ip, forKey: "hueBridgeIP")
-            showAlert(title: "ブリッジ発見", message: "IP: \(ip)")
+            showAlertMsg(title: "発見", message: "IP: \(ip)")
         } else {
-            showAlert(title: "未発見", message: "ブリッジが見つかりませんでした。同じWi-Fiに接続されているか確認してください")
+            showAlertMsg(title: "未発見", message: "同じWi-Fiに接続されているか確認してください")
         }
     }
 
@@ -679,9 +610,9 @@ struct HomeSettingsSections: View {
             home.hueUsername = username
             UserDefaults.standard.set(username, forKey: "hueUsername")
             showHueInstructions = false
-            showAlert(title: "ペアリング成功", message: "Hueブリッジと接続しました")
+            showAlertMsg(title: "ペアリング成功", message: "Hueブリッジと接続しました")
         } catch {
-            showAlert(title: "エラー", message: error.localizedDescription)
+            showAlertMsg(title: "エラー", message: error.localizedDescription)
         }
     }
 
@@ -708,7 +639,7 @@ struct HomeSettingsSections: View {
             }
         }
         home.icalLastSync = Date().timeIntervalSince1970
-        showAlert(title: "同期完了", message: "\(imported)件の予約をインポートしました")
+        showAlertMsg(title: "同期完了", message: "\(imported)件インポート")
     }
 
     private func syncBeds24() async {
@@ -716,8 +647,6 @@ struct HomeSettingsSections: View {
         defer { isSyncingBeds24 = false }
         var imported = 0
         let existingExtIDs = Set(bookings.map { $0.externalId })
-
-        // iCal URL経由（APIキー不要）
         if !home.beds24ICalURL.isEmpty, let url = URL(string: home.beds24ICalURL),
            let data = try? await URLSession.shared.data(from: url).0,
            let content = String(data: data, encoding: .utf8) {
@@ -729,8 +658,6 @@ struct HomeSettingsSections: View {
                 imported += 1
             }
         }
-
-        // API v2経由（より詳細な情報）
         if !home.beds24ApiKey.isEmpty {
             let b24Bookings = (try? await Beds24Client.shared.fetchBookings(apiKey: home.beds24ApiKey)) ?? []
             let df = DateFormatter(); df.dateFormat = "yyyy-MM-dd"
@@ -746,8 +673,7 @@ struct HomeSettingsSections: View {
                     platform: b24.platformKey,
                     homeId: home.id,
                     externalId: extId,
-                    checkIn: cin,
-                    checkOut: cout,
+                    checkIn: cin, checkOut: cout,
                     totalAmount: Int((b24.price ?? 0) * 100),
                     status: b24.status == "-1" ? "cancelled" : "upcoming"
                 )
@@ -755,7 +681,7 @@ struct HomeSettingsSections: View {
                 imported += 1
             }
         }
-        showAlert(title: "同期完了", message: "\(imported)件の予約をインポートしました")
+        showAlertMsg(title: "同期完了", message: "\(imported)件インポート")
     }
 
     private func importICalFile(url: URL) async {
@@ -763,7 +689,7 @@ struct HomeSettingsSections: View {
         defer { if accessed { url.stopAccessingSecurityScopedResource() } }
         guard let data = try? Data(contentsOf: url),
               let content = String(data: data, encoding: .utf8) else {
-            showAlert(title: "エラー", message: "ファイルを読み込めませんでした"); return
+            showAlertMsg(title: "エラー", message: "ファイルを読み込めませんでした"); return
         }
         let existingIDs = Set(bookings.map { $0.id })
         let events = ICalImporter.parse(icsContent: content, platform: "other")
@@ -775,19 +701,132 @@ struct HomeSettingsSections: View {
             imported += 1
         }
         home.icalLastSync = Date().timeIntervalSince1970
-        showAlert(title: "インポート完了", message: "\(imported)件の予約をインポートしました")
+        showAlertMsg(title: "完了", message: "\(imported)件インポート")
     }
 
-    private func sendToSakutsu() {
-        if let url = URL(string: "sakutsu://import"), UIApplication.shared.canOpenURL(url) {
-            UIApplication.shared.open(url)
-        } else {
-            showAlert(title: "サクッとが見つかりません", message: "App Storeからサクッとをインストールしてください")
+    private func showAlertMsg(title: String, message: String) {
+        alertTitle = title; alertMessage = message; showAlert = true
+    }
+}
+
+// MARK: - Device Status Card (collapsible, hides keys)
+
+struct DeviceStatusCard<Content: View>: View {
+    let icon: String
+    let name: String
+    let color: Color
+    let isConnected: Bool
+    @Binding var isExpanded: Bool
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        KachaCard {
+            VStack(spacing: 0) {
+                // Header — always visible
+                Button { withAnimation(.easeInOut(duration: 0.2)) { isExpanded.toggle() } } label: {
+                    HStack(spacing: 12) {
+                        ZStack {
+                            Circle().fill(color.opacity(0.15)).frame(width: 40, height: 40)
+                            Image(systemName: icon).font(.system(size: 18)).foregroundColor(color)
+                        }
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(name).font(.subheadline).bold().foregroundColor(.white)
+                            HStack(spacing: 4) {
+                                Circle().fill(isConnected ? Color.kachaSuccess : Color.secondary.opacity(0.5))
+                                    .frame(width: 6, height: 6)
+                                Text(isConnected ? "接続済み" : "未設定")
+                                    .font(.caption).foregroundColor(isConnected ? .kachaSuccess : .secondary)
+                            }
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption).foregroundColor(.secondary)
+                            .rotationEffect(.degrees(isExpanded ? 90 : 0))
+                    }
+                    .padding(16)
+                }
+
+                // Expandable content
+                if isExpanded {
+                    Divider().background(Color.kachaCardBorder)
+                    VStack(spacing: 12) {
+                        content
+                    }
+                    .padding(16)
+                }
+            }
         }
     }
+}
 
-    private func showAlert(title: String, message: String) {
-        alertTitle = title; alertMessage = message; showAlert = true
+// MARK: - Masked Field (shows dots, tap to reveal)
+
+struct MaskedField: View {
+    let label: String
+    @Binding var value: String
+    let icon: String
+    @State private var isEditing = false
+
+    var body: some View {
+        HStack(spacing: 10) {
+            Image(systemName: icon).font(.caption).foregroundColor(.kacha).frame(width: 20)
+            Text(label).font(.caption).foregroundColor(.secondary).frame(width: 70, alignment: .leading)
+            if isEditing {
+                TextField(label, text: $value)
+                    .foregroundColor(.white)
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
+                Button { isEditing = false } label: {
+                    Image(systemName: "checkmark.circle.fill").foregroundColor(.kachaSuccess)
+                }
+            } else {
+                Text(value.isEmpty ? "未設定" : String(repeating: "•", count: min(value.count, 12)))
+                    .font(.subheadline)
+                    .foregroundColor(value.isEmpty ? .secondary : .white)
+                Spacer()
+                Button { isEditing = true } label: {
+                    Image(systemName: "pencil.circle").foregroundColor(.kacha)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Secure Token Field (always masked, paste-friendly)
+
+struct SecureTokenField: View {
+    let label: String
+    @Binding var text: String
+    @State private var isEditing = false
+
+    var body: some View {
+        HStack {
+            Text(label).font(.caption).foregroundColor(.secondary).frame(width: 90, alignment: .leading)
+            if isEditing {
+                SecureField("貼り付けてください", text: $text)
+                    .foregroundColor(.white)
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
+                Button { isEditing = false } label: {
+                    Text("完了").font(.caption).foregroundColor(.kacha)
+                }
+            } else if text.isEmpty {
+                Text("未設定").font(.subheadline).foregroundColor(.secondary)
+                Spacer()
+                Button { isEditing = true } label: {
+                    Text("設定する").font(.caption).bold().foregroundColor(.kacha)
+                        .padding(.horizontal, 10).padding(.vertical, 4)
+                        .background(Color.kacha.opacity(0.12))
+                        .clipShape(Capsule())
+                }
+            } else {
+                Text("•••••••••").font(.subheadline).foregroundColor(.white)
+                Spacer()
+                Button { isEditing = true } label: {
+                    Text("変更").font(.caption).foregroundColor(.secondary)
+                }
+            }
+        }
     }
 }
 
@@ -826,8 +865,6 @@ private extension View {
     }
 }
 
-// MARK: - Settings Components (shared)
-
 struct SettingsHeader: View {
     let icon: String
     let title: String
@@ -850,19 +887,13 @@ struct SettingsTextField: View {
 
     var body: some View {
         HStack {
-            Text(label)
-                .font(.caption).foregroundColor(.secondary)
-                .frame(width: 90, alignment: .leading)
+            Text(label).font(.caption).foregroundColor(.secondary).frame(width: 90, alignment: .leading)
             if isSecure {
                 SecureField(placeholder, text: $text)
-                    .foregroundColor(.white)
-                    .autocorrectionDisabled()
-                    .textInputAutocapitalization(.never)
+                    .foregroundColor(.white).autocorrectionDisabled().textInputAutocapitalization(.never)
             } else {
                 TextField(placeholder, text: $text)
-                    .foregroundColor(.white)
-                    .autocorrectionDisabled()
-                    .textInputAutocapitalization(.never)
+                    .foregroundColor(.white).autocorrectionDisabled().textInputAutocapitalization(.never)
             }
         }
     }
@@ -880,12 +911,8 @@ struct IntegrationRow: View {
         HStack(spacing: 12) {
             if let p = platform {
                 ZStack {
-                    Circle()
-                        .fill(Color(hex: p.colorHex).opacity(0.15))
-                        .frame(width: 36, height: 36)
-                    Image(systemName: p.icon)
-                        .font(.system(size: 16))
-                        .foregroundColor(Color(hex: p.colorHex))
+                    Circle().fill(Color(hex: p.colorHex).opacity(0.15)).frame(width: 36, height: 36)
+                    Image(systemName: p.icon).font(.system(size: 16)).foregroundColor(Color(hex: p.colorHex))
                 }
             } else {
                 Image(systemName: "cpu").foregroundColor(.secondary)
@@ -899,13 +926,10 @@ struct IntegrationRow: View {
                 get: { integration.isEnabled },
                 set: { integration.isEnabled = $0 }
             ))
-            .tint(.kacha)
-            .labelsHidden()
+            .tint(.kacha).labelsHidden()
         }
         .swipeActions(edge: .trailing) {
-            Button(role: .destructive, action: onDelete) {
-                Label("削除", systemImage: "trash")
-            }
+            Button(role: .destructive, action: onDelete) { Label("削除", systemImage: "trash") }
         }
     }
 }

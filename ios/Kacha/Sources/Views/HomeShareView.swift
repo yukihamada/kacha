@@ -201,6 +201,15 @@ struct HomeShareView: View {
                                     .background(Color.kacha)
                                     .clipShape(RoundedRectangle(cornerRadius: 13))
                                 }
+
+                                Button { dismiss() } label: {
+                                    HStack(spacing: 8) {
+                                        Image(systemName: "calendar")
+                                        Text("カレンダーで確認").bold()
+                                    }
+                                    .foregroundColor(.secondary)
+                                    .frame(maxWidth: .infinity).padding(.vertical, 14)
+                                }
                             }
                             .padding(.horizontal)
                         } else {

@@ -11,6 +11,7 @@ struct ShareCalendarView: View {
     @State private var showRevokeConfirm = false
     @State private var revoking = false
     @State private var showNewShare = false
+    @State private var didAutoShow = false
 
     private var records: [ShareRecord] {
         allRecords.filter { $0.homeId == home.id }
@@ -121,6 +122,15 @@ struct ShareCalendarView: View {
             }
             .sheet(isPresented: $showNewShare) {
                 HomeShareView(home: home)
+            }
+            .onAppear {
+                // シェア履歴がなければ自動で新規シェア画面を開く
+                if records.isEmpty && !didAutoShow {
+                    didAutoShow = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        showNewShare = true
+                    }
+                }
             }
             .alert("このシェアを取り消しますか？", isPresented: $showRevokeConfirm) {
                 Button("取り消す", role: .destructive) {

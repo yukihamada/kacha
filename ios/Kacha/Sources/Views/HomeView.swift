@@ -25,6 +25,10 @@ struct HomeView: View {
     @State private var celebrationBookingName = ""
     @State private var showShare = false
     @State private var showKeyRotation = false
+    @State private var showGuestCard = false
+    @State private var showChecklist = false
+    @State private var showUtility = false
+    @State private var showMaintenance = false
     @State private var isRunningScene = false
 
     private var activeHome: Home? { homes.first { $0.id == activeHomeId } }
@@ -60,6 +64,7 @@ struct HomeView: View {
                 ScrollView {
                     VStack(spacing: 20) {
                         headerSection
+                        quickActionsGrid
                         if minpakuModeEnabled {
                             statsSection
                             minpakuCounterSection
@@ -90,6 +95,18 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showKeyRotation) {
                 if let home = activeHome { KeyRotationView(home: home) }
+            }
+            .sheet(isPresented: $showGuestCard) {
+                if let home = activeHome { GuestCardView(home: home) }
+            }
+            .sheet(isPresented: $showChecklist) {
+                if let home = activeHome { ChecklistView(home: home) }
+            }
+            .sheet(isPresented: $showUtility) {
+                if let home = activeHome { UtilityView(home: home) }
+            }
+            .sheet(isPresented: $showMaintenance) {
+                if let home = activeHome { MaintenanceView(home: home) }
             }
         }
     }
@@ -122,6 +139,34 @@ struct HomeView: View {
             }
         }
         .padding(.top, 8)
+    }
+
+    // MARK: - Quick Actions Grid
+
+    private var quickActionsGrid: some View {
+        let actions: [(String, String, Color, () -> Void)] = [
+            ("wifi", "ゲストカード", .kachaAccent, { showGuestCard = true }),
+            ("checklist", "チェックリスト", .kachaSuccess, { showChecklist = true }),
+            ("bolt.fill", "光熱費", .kachaWarn, { showUtility = true }),
+            ("wrench.and.screwdriver", "家の管理", .kacha, { showMaintenance = true }),
+        ]
+        return LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
+            ForEach(actions, id: \.1) { icon, label, color, action in
+                Button(action: action) {
+                    KachaCard {
+                        HStack(spacing: 10) {
+                            ZStack {
+                                Circle().fill(color.opacity(0.15)).frame(width: 36, height: 36)
+                                Image(systemName: icon).font(.system(size: 16)).foregroundColor(color)
+                            }
+                            Text(label).font(.caption).bold().foregroundColor(.white)
+                            Spacer()
+                        }
+                        .padding(12)
+                    }
+                }
+            }
+        }
     }
 
     // MARK: - Scenes

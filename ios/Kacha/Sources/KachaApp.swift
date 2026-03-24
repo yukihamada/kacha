@@ -9,6 +9,7 @@ struct KachaApp: App {
         do {
             container = try ModelContainer(
                 for: Home.self, Booking.self, SmartDevice.self, DeviceIntegration.self, ShareRecord.self,
+                    ChecklistItem.self, UtilityRecord.self, MaintenanceTask.self, NearbyPlace.self,
                 configurations: ModelConfiguration()
             )
         } catch {
