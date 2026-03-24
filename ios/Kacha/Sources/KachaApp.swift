@@ -31,15 +31,23 @@ struct KachaApp: App {
                 .onOpenURL { url in
                     handleDeepLink(url)
                 }
+                .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { activity in
+                    if let url = activity.webpageURL {
+                        handleDeepLink(url)
+                    }
+                }
         }
     }
 
     // MARK: - Deep Link
-    // New E2E format: kacha://join?t=TOKEN#ENCRYPTION_KEY
-    // Legacy format:  kacha://join?d=BASE64
+    // Universal Link: https://kacha.pasha.run/join?t=TOKEN#ENCRYPTION_KEY
+    // Custom scheme:  kacha://join?t=TOKEN#ENCRYPTION_KEY
+    // Legacy:         kacha://join?d=BASE64
 
     private func handleDeepLink(_ url: URL) {
-        guard url.scheme == "kacha", url.host == "join" else { return }
+        let isUniversalLink = url.scheme == "https" && url.host == "kacha.pasha.run" && url.path == "/join"
+        let isCustomScheme = url.scheme == "kacha" && url.host == "join"
+        guard isUniversalLink || isCustomScheme else { return }
         let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
 
         // New E2E format

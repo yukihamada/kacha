@@ -47,6 +47,9 @@ targets:
         SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: false
     entitlements:
       path: Kacha/Kacha.entitlements
+      properties:
+        com.apple.developer.associated-domains:
+          - applinks:kacha.pasha.run
 
   KachaWidget:
     type: app-extension

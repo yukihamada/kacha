@@ -1,6 +1,7 @@
 use axum::{
     extract::{Path, State},
-    http::StatusCode,
+    http::{header, StatusCode},
+    response::{Html, IntoResponse},
     routing::{delete, get, post},
     Json, Router,
 };
@@ -189,6 +190,70 @@ async fn list_shares(
     Ok(Json(rows))
 }
 
+// MARK: - Apple App Site Association (Universal Links)
+
+async fn aasa() -> impl IntoResponse {
+    let body = r#"{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appIDs": ["5BV85JW8US.com.enablerdao.kacha"],
+        "paths": ["/join*"]
+      }
+    ]
+  }
+}"#;
+    (
+        StatusCode::OK,
+        [(header::CONTENT_TYPE, "application/json")],
+        body,
+    )
+}
+
+// MARK: - Web fallback for /join (when app not installed)
+
+async fn join_fallback() -> Html<String> {
+    Html(r#"<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>カチャ — ホームをシェア</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;background:#0A0A12;color:#eaeaf2;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
+.card{text-align:center;max-width:400px}
+.icon{font-size:64px;margin-bottom:16px}
+h1{font-size:24px;margin-bottom:8px}
+p{color:#7a7a95;font-size:14px;line-height:1.6;margin-bottom:24px}
+a.btn{display:inline-block;padding:14px 32px;background:#E8A838;color:#000;font-weight:700;border-radius:12px;text-decoration:none;font-size:16px}
+a.btn:hover{opacity:.9}
+.security{margin-top:24px;padding:16px;border:1px solid rgba(255,255,255,.06);border-radius:12px;text-align:left}
+.security h3{font-size:13px;color:#3B9FE8;margin-bottom:8px}
+.security li{font-size:12px;color:#7a7a95;margin-bottom:4px;list-style:none}
+.security li::before{content:"🔒 "}
+</style>
+</head>
+<body>
+<div class="card">
+<div class="icon">🏠</div>
+<h1>カチャ</h1>
+<p>スマートホームを友達とシェア。<br>鍵・照明・エアコンをまとめて管理。</p>
+<a class="btn" href="https://apps.apple.com/app/id6760736346">App Storeで開く</a>
+<div class="security">
+<h3>セキュリティ</h3>
+<ul>
+<li>AES-256-GCM E2E暗号化</li>
+<li>サーバーに平文データは保存されません</li>
+<li>アクセス期間の制限・取り消しが可能</li>
+</ul>
+</div>
+</div>
+</body>
+</html>"#.to_string())
+}
+
 #[tokio::main]
 async fn main() {
     let db_path = std::env::var("DATABASE_PATH").unwrap_or_else(|_| "kacha.db".into());
@@ -206,6 +271,8 @@ async fn main() {
         .route("/api/v1/shares/:token", get(fetch_share))
         .route("/api/v1/shares/:token", delete(revoke_share))
         .route("/api/v1/shares/list", post(list_shares))
+        .route("/.well-known/apple-app-site-association", get(aasa))
+        .route("/join", get(join_fallback))
         .route("/health", get(|| async { "ok" }))
         .layer(CorsLayer::permissive())
         .with_state(state);

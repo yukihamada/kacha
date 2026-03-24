@@ -265,10 +265,10 @@ struct HomeShareView: View {
             context.insert(record)
             try? context.save()
 
-            // Build deep link: kacha://join?t=TOKEN#ENCRYPTION_KEY
+            // Universal Link: https://kacha.pasha.run/join?t=TOKEN#KEY
             // The #fragment is never sent to the server
             let key = result.encryptionKey.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? result.encryptionKey
-            createdLink = "kacha://join?t=\(result.token)#\(key)"
+            createdLink = "https://kacha.pasha.run/join?t=\(result.token)#\(key)"
 
             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         } catch {
