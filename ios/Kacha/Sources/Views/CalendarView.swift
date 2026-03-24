@@ -3,9 +3,12 @@ import SwiftData
 
 struct CalendarView: View {
     @Query private var bookings: [Booking]
+    @Query(sort: \ShareRecord.validFrom) private var shareRecords: [ShareRecord]
+    @AppStorage("activeHomeId") private var activeHomeId = ""
     @State private var displayMonth: Date = Calendar.current.startOfMonth(for: Date())
     @State private var selectedDay: Date? = nil
 
+    private var homeShares: [ShareRecord] { shareRecords.filter { $0.homeId == activeHomeId } }
     private let calendar = Calendar.current
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 4), count: 7)
     private let weekdaySymbols = ["日", "月", "火", "水", "木", "金", "土"]
@@ -21,6 +24,9 @@ struct CalendarView: View {
                         calendarGrid
                         Divider().background(Color.kachaCardBorder).padding(.horizontal, 16)
                         monthBookingsList
+                        if !sharesForSelectedOrMonth.isEmpty {
+                            sharesList
+                        }
                         Spacer(minLength: 40)
                     }
                     .padding(.top, 8)
@@ -184,19 +190,83 @@ struct CalendarView: View {
     }
 
     enum DayState {
-        case empty, booked, checkIn, checkOut, multiEvent
+        case empty, booked, checkIn, checkOut, multiEvent, shared
     }
 
     private func dayState(for day: Date) -> DayState {
         let checkIns = bookings.filter { calendar.isDate($0.checkIn, inSameDayAs: day) && $0.status != "cancelled" }
         let checkOuts = bookings.filter { calendar.isDate($0.checkOut, inSameDayAs: day) && $0.status != "cancelled" }
         let occupied = bookings.filter { isBookingOccupying(day: day, booking: $0) }
+        let hasShare = homeShares.contains { share in
+            let d = calendar.startOfDay(for: day)
+            return d >= calendar.startOfDay(for: share.validFrom) && d <= calendar.startOfDay(for: share.expiresAt) && !share.revoked
+        }
 
         if !checkIns.isEmpty && !checkOuts.isEmpty { return .multiEvent }
         if !checkIns.isEmpty { return .checkIn }
         if !checkOuts.isEmpty { return .checkOut }
         if !occupied.isEmpty { return .booked }
+        if hasShare { return .shared }
         return .empty
+    }
+
+    private var sharesForSelectedOrMonth: [ShareRecord] {
+        if let day = selectedDay {
+            let d = calendar.startOfDay(for: day)
+            return homeShares.filter {
+                d >= calendar.startOfDay(for: $0.validFrom) && d <= calendar.startOfDay(for: $0.expiresAt)
+            }
+        }
+        guard let range = calendar.range(of: .day, in: .month, for: displayMonth),
+              let firstDay = calendar.date(from: calendar.dateComponents([.year, .month], from: displayMonth)),
+              let lastDay = calendar.date(byAdding: .day, value: range.count - 1, to: firstDay)
+        else { return [] }
+        let start = calendar.startOfDay(for: firstDay)
+        let end = calendar.startOfDay(for: lastDay)
+        return homeShares.filter { share in
+            let from = calendar.startOfDay(for: share.validFrom)
+            let to = calendar.startOfDay(for: share.expiresAt)
+            return to >= start && from <= end
+        }
+    }
+
+    private var sharesList: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Image(systemName: "person.badge.plus").foregroundColor(.kachaAccent)
+                Text("シェア").font(.subheadline).bold().foregroundColor(.white)
+                Spacer()
+                Text("\(sharesForSelectedOrMonth.count)件").font(.caption).foregroundColor(.secondary)
+            }
+            .padding(.horizontal, 16)
+
+            ForEach(sharesForSelectedOrMonth) { share in
+                KachaCard {
+                    HStack(spacing: 12) {
+                        RoundedRectangle(cornerRadius: 4)
+                            .fill(share.isActive ? Color.kachaAccent : Color.secondary)
+                            .frame(width: 4, height: 40)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(share.recipientName.isEmpty ? "ゲスト" : share.recipientName)
+                                .font(.subheadline).bold().foregroundColor(.white)
+                            let fmt = DateFormatter()
+                            let _ = fmt.dateFormat = "M/d HH:mm"
+                            Text("\(fmt.string(from: share.validFrom)) 〜 \(fmt.string(from: share.expiresAt))")
+                                .font(.caption).foregroundColor(.secondary)
+                        }
+                        Spacer()
+                        Text(share.statusLabel)
+                            .font(.caption2)
+                            .padding(.horizontal, 6).padding(.vertical, 2)
+                            .background(share.isActive ? Color.kachaAccent.opacity(0.2) : Color.secondary.opacity(0.2))
+                            .foregroundColor(share.isActive ? .kachaAccent : .secondary)
+                            .clipShape(Capsule())
+                    }
+                    .padding(12)
+                }
+                .padding(.horizontal, 16)
+            }
+        }
     }
 
     private func isBookingOnDay(_ booking: Booking, day: Date) -> Bool {
@@ -271,6 +341,7 @@ struct DayCell: View {
         case .checkIn: return Color.kachaSuccess.opacity(0.20)
         case .checkOut: return Color.kachaAccent.opacity(0.20)
         case .multiEvent: return Color.kacha.opacity(0.15)
+        case .shared: return Color.kachaAccent.opacity(0.10)
         }
     }
 
@@ -288,6 +359,7 @@ struct DayCell: View {
         case .checkIn: return .kachaSuccess
         case .checkOut: return .kachaAccent
         case .multiEvent: return .kacha
+        case .shared: return .kachaAccent
         case .empty: return .clear
         }
     }

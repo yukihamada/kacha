@@ -39,6 +39,7 @@
 		AD098BA09F6689AA6F6EEBC8 /* GuestCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601EAE312FF512150A91EA68 /* GuestCardView.swift */; };
 		B08DB81CBEDD02BCA1C28D5C /* Beds24Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22725AD80A7BB9DEF3C3855A /* Beds24Client.swift */; };
 		B2615DCF0B22DF1E3AB77911 /* SwitchBotClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE616B87BEC7294C763936F /* SwitchBotClient.swift */; };
+		B580A115D64500E4E9F4F9F0 /* SecurityInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C8DED2BC0B563B3EF3A14BF /* SecurityInfoView.swift */; };
 		BB5B1C14CB42E28322BBC306 /* SesameClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1213C23623556FBA096EAE19 /* SesameClient.swift */; };
 		CCB73D8BBD93E1BAF84BAF19 /* ActivityLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 979B7EEC69EB43FDB261BDEA /* ActivityLogView.swift */; };
 		D0356F48AE9412001484208D /* ActivityLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8255B3969C40B1CB0D0F9A2 /* ActivityLog.swift */; };
@@ -73,6 +74,7 @@
 		1503E46193782B1F5B23D7FF /* BookingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingView.swift; sourceTree = "<group>"; };
 		175549B75AE7B8BFC0C842D5 /* UtilityRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityRecord.swift; sourceTree = "<group>"; };
 		1797C59E8718E09C95867CEA /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		1C8DED2BC0B563B3EF3A14BF /* SecurityInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityInfoView.swift; sourceTree = "<group>"; };
 		22725AD80A7BB9DEF3C3855A /* Beds24Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Beds24Client.swift; sourceTree = "<group>"; };
 		256031C69587A8CA93CA2918 /* NatureRemoClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NatureRemoClient.swift; sourceTree = "<group>"; };
 		33D65736F4BF2913C2928BD7 /* Kacha.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Kacha.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -180,6 +182,7 @@
 				1797C59E8718E09C95867CEA /* HomeView.swift */,
 				13DDDD3441AB20CFD7ED91B1 /* MaintenanceView.swift */,
 				7272FF7B92B5399F5143EE9E /* OnboardingView.swift */,
+				1C8DED2BC0B563B3EF3A14BF /* SecurityInfoView.swift */,
 				EBCEDB37B2D0B9345ABDE94A /* SettingsView.swift */,
 				730BAFCFBC0348F6D8C5123A /* ShareCalendarView.swift */,
 				0A24BD7D0D7257316164F996 /* UtilityView.swift */,
@@ -368,6 +371,7 @@
 				88EC00251B02C08D328B74F8 /* NotificationManager.swift in Sources */,
 				5D6B635FCCC55DB6DAF0F040 /* NukiClient.swift in Sources */,
 				7C81B0CFD18586B8462ACCEA /* OnboardingView.swift in Sources */,
+				B580A115D64500E4E9F4F9F0 /* SecurityInfoView.swift in Sources */,
 				68B5FC384F63E9884DE6BA98 /* SeedData.swift in Sources */,
 				BB5B1C14CB42E28322BBC306 /* SesameClient.swift in Sources */,
 				05890CC3EA735DB3F0561CDA /* SettingsView.swift in Sources */,

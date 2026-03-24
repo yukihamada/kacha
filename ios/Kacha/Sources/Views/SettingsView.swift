@@ -14,6 +14,8 @@ struct SettingsView: View {
     @State private var newHomeName = ""
     @State private var showDeleteAlert = false
     @State private var homeToDelete: Home?
+    @State private var showTutorial = false
+    @State private var showSecurity = false
 
     var activeHome: Home? { homes.first { $0.id == activeHomeId } }
 
@@ -34,6 +36,7 @@ struct SettingsView: View {
                             emptyState
                         }
                         appInfoSection
+                        helpSection
                         deviceShopSection
                         Spacer(minLength: 40)
                     }
@@ -45,6 +48,8 @@ struct SettingsView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbarBackground(Color.kachaBg, for: .navigationBar)
             .sheet(isPresented: $showAddHome) { addHomeSheet }
+            .fullScreenCover(isPresented: $showTutorial) { OnboardingView() }
+            .sheet(isPresented: $showSecurity) { SecurityInfoView() }
             .alert("ホームを削除", isPresented: $showDeleteAlert) {
                 Button("削除", role: .destructive) { deleteHome() }
                 Button("キャンセル", role: .cancel) {}
@@ -181,6 +186,34 @@ struct SettingsView: View {
                     }
                     if name != shopDevices.last?.0 {
                         Divider().background(Color.kachaCardBorder)
+                    }
+                }
+            }
+            .padding(16)
+        }
+    }
+
+    // MARK: - Help
+
+    private var helpSection: some View {
+        KachaCard {
+            VStack(spacing: 12) {
+                SettingsHeader(icon: "questionmark.circle.fill", title: "ヘルプ", color: .kachaAccent)
+                Button { showTutorial = true } label: {
+                    HStack(spacing: 10) {
+                        Image(systemName: "book.fill").foregroundColor(.kacha).frame(width: 20)
+                        Text("チュートリアルを見る").font(.subheadline).foregroundColor(.white)
+                        Spacer()
+                        Image(systemName: "chevron.right").font(.caption).foregroundColor(.secondary)
+                    }
+                }
+                Divider().background(Color.kachaCardBorder)
+                Button { showSecurity = true } label: {
+                    HStack(spacing: 10) {
+                        Image(systemName: "lock.shield.fill").foregroundColor(.kachaSuccess).frame(width: 20)
+                        Text("セキュリティとデータ保護").font(.subheadline).foregroundColor(.white)
+                        Spacer()
+                        Image(systemName: "chevron.right").font(.caption).foregroundColor(.secondary)
                     }
                 }
             }

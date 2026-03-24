@@ -10,10 +10,15 @@ struct ContentView: View {
                     Label("ホーム", systemImage: "house.fill")
                 }
 
+            CalendarView()
+                .tabItem {
+                    Label("カレンダー", systemImage: "calendar")
+                }
+
             if minpakuModeEnabled {
                 BookingView()
                     .tabItem {
-                        Label("予約", systemImage: "calendar")
+                        Label("予約", systemImage: "list.clipboard")
                     }
             }
 
