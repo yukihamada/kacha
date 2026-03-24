@@ -875,7 +875,7 @@ struct HomeSettingsSections: View {
     @State private var isConnectingBeds24 = false
     @State private var beds24Error: String?
     @State private var beds24InviteInput = ""
-    @State private var showBeds24PropertyModal = false
+    // showBeds24PropertyModal removed — inline display
 
     private var beds24Section: some View {
         KachaCard {
@@ -961,27 +961,20 @@ struct HomeSettingsSections: View {
                     Text(err).font(.caption2).foregroundColor(.kachaDanger)
                 }
 
-                // Property linking
+                // Property linking (auto-loaded)
                 if !home.beds24ICalURL.isEmpty {
                     Divider().background(Color.kachaCardBorder)
                     HStack {
                         Text("物件の関連付け").font(.caption).bold().foregroundColor(.white)
                         Spacer()
-                        Button {
-                            Task { await fetchBeds24Properties() }
-                        } label: {
-                            HStack(spacing: 4) {
-                                if isFetchingBeds24Props { ProgressView().tint(.kachaAccent) }
-                                else { Image(systemName: "arrow.clockwise") }
-                                Text("取得").font(.caption)
-                            }
-                            .foregroundColor(.kachaAccent)
+                        if isFetchingBeds24Props {
+                            ProgressView().tint(.kachaAccent)
                         }
                     }
-
-                    if beds24Properties.isEmpty && !isFetchingBeds24Props {
-                        Text("「取得」でBeds24の物件一覧を読み込みます")
-                            .font(.caption2).foregroundColor(.secondary)
+                    .onAppear {
+                        if beds24Properties.isEmpty {
+                            Task { await fetchBeds24Properties() }
+                        }
                     }
 
                     ForEach(0..<beds24Properties.count, id: \.self) { idx in
@@ -1058,77 +1051,6 @@ struct HomeSettingsSections: View {
                 .disabled(isSyncingBeds24 || home.beds24ICalURL.isEmpty)
             }
             .padding(16)
-        }
-        .sheet(isPresented: $showBeds24PropertyModal) {
-            beds24PropertyModalSheet
-        }
-    }
-
-    private var beds24PropertyModalSheet: some View {
-        NavigationStack {
-            ZStack {
-                Color.kachaBg.ignoresSafeArea()
-                ScrollView {
-                    VStack(spacing: 16) {
-                        VStack(spacing: 4) {
-                            Image(systemName: "building.2.fill").font(.system(size: 36)).foregroundColor(Color(hex: "0066CC"))
-                            Text("物件を選択").font(.title3).bold().foregroundColor(.white)
-                            Text("Beds24の物件をカチャに登録します").font(.caption).foregroundColor(.secondary)
-                        }
-                        .padding(.top, 16)
-
-                        ForEach(0..<beds24Properties.count, id: \.self) { idx in
-                            let prop = beds24Properties[idx]
-                            let propId = prop["id"] as? Int ?? 0
-                            let propName = prop["name"] as? String ?? "物件 \(propId)"
-                            KachaCard {
-                                VStack(spacing: 10) {
-                                    HStack(spacing: 10) {
-                                        Image(systemName: "building.2").foregroundColor(Color(hex: "0066CC"))
-                                        VStack(alignment: .leading, spacing: 1) {
-                                            Text(propName).font(.subheadline).bold().foregroundColor(.white)
-                                            Text("ID: \(propId)").font(.caption2).foregroundColor(.secondary)
-                                        }
-                                        Spacer()
-                                    }
-                                    HStack(spacing: 8) {
-                                        Button {
-                                            linkBeds24Property(propId: propId, propName: propName, toCurrentHome: true)
-                                            showBeds24PropertyModal = false
-                                        } label: {
-                                            HStack(spacing: 4) { Image(systemName: "link"); Text("このホームに紐付け") }
-                                                .font(.caption2).bold().foregroundColor(Color(hex: "0066CC"))
-                                                .frame(maxWidth: .infinity).padding(.vertical, 8)
-                                                .background(Color(hex: "0066CC").opacity(0.1))
-                                                .clipShape(RoundedRectangle(cornerRadius: 8))
-                                        }
-                                        Button {
-                                            linkBeds24Property(propId: propId, propName: propName, toCurrentHome: false)
-                                            showBeds24PropertyModal = false
-                                        } label: {
-                                            HStack(spacing: 4) { Image(systemName: "plus.circle"); Text("新規ホーム作成") }
-                                                .font(.caption2).bold().foregroundColor(.kacha)
-                                                .frame(maxWidth: .infinity).padding(.vertical, 8)
-                                                .background(Color.kacha.opacity(0.1))
-                                                .clipShape(RoundedRectangle(cornerRadius: 8))
-                                        }
-                                    }
-                                }
-                                .padding(12)
-                            }
-                            .padding(.horizontal, 16)
-                        }
-                    }
-                    .padding(.bottom, 40)
-                }
-            }
-            .navigationTitle("Beds24 物件")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("閉じる") { showBeds24PropertyModal = false }.foregroundStyle(.secondary)
-                }
-            }
         }
     }
 
@@ -1431,13 +1353,9 @@ struct HomeSettingsSections: View {
             home.beds24ICalURL = result.refreshToken
             beds24InviteInput = ""
             home.beds24ApiKey = ""
-            // Auto-fetch properties and show modal
+            // Auto-fetch properties inline
             await fetchBeds24Properties()
-            if !beds24Properties.isEmpty {
-                showBeds24PropertyModal = true
-            } else {
-                showAlertMsg(title: "接続成功", message: "Beds24に接続しました")
-            }
+            showAlertMsg(title: "接続成功", message: beds24Properties.isEmpty ? "Beds24に接続しました" : "Beds24に接続しました。物件を選択してください。")
         } catch {
             beds24Error = error.localizedDescription
         }
