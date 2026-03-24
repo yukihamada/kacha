@@ -42,6 +42,12 @@ final class Home {
     var autolockBotDeviceId: String  // SwitchBot Bot device ID for intercom unlock
     var autolockRoomNumber: String   // room number to display in guide
 
+    // Geofence
+    var latitude: Double
+    var longitude: Double
+    var geofenceRadius: Double       // meters, 0 = disabled
+    var geofenceEnabled: Bool
+
     // Minpaku
     var minpakuNumber: String
     var minpakuNights: Int
@@ -64,6 +70,10 @@ final class Home {
         self.qrioDeviceIds = ""
         self.autolockBotDeviceId = ""
         self.autolockRoomNumber = ""
+        self.latitude = 0
+        self.longitude = 0
+        self.geofenceRadius = 200
+        self.geofenceEnabled = false
         self.beds24ApiKey = ""
         self.beds24ICalURL = ""
         self.airbnbICalURL = ""

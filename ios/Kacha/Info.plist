@@ -41,6 +41,14 @@
 	</array>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Philips HueブリッジとSwitchBotデバイスを検索するためにローカルネットワークにアクセスします</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>自宅に近づいた時にオートロック解除の通知を表示するために、バックグラウンドでも位置情報を使用します</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>自宅に近づいた時にオートロック解除の通知を表示するために位置情報を使用します</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
 	<key>UILaunchScreen</key>
 	<dict>
 		<key>UIColorName</key>

@@ -29,6 +29,7 @@ struct KachaApp: App {
                     SeedData.insert(into: container.mainContext)
                     #endif
                     Task { await NotificationManager.shared.requestPermission() }
+                    GeofenceManager.registerNotificationCategory()
                 }
                 .onOpenURL { url in
                     handleDeepLink(url)

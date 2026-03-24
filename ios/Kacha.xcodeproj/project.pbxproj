@@ -32,6 +32,7 @@
 		7E01049D64A8C3ADAC50FE33 /* KachaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C897E53B48E2B6F63413241 /* KachaApp.swift */; };
 		88EC00251B02C08D328B74F8 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFFA1E3C067B393326D1572 /* NotificationManager.swift */; };
 		8B62098FD7EDA0DD001A07D9 /* BookingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36164FF9D7E181381FF28D54 /* BookingDetailView.swift */; };
+		A9D5E3204568B4D2A923BD95 /* GeofenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2CA2DE013566DD3C86D6D42 /* GeofenceManager.swift */; };
 		AB68328061A1EE08766B2CEF /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D6CA3BE71B9C6388662314E /* Home.swift */; };
 		AB9063950B8D9839501C2F04 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D483303E5E06E7219BE5C056 /* CalendarView.swift */; };
 		ACCB4AE33D0A427E06434595 /* SmartDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659D2214496DFC118E1583E2 /* SmartDevice.swift */; };
@@ -105,6 +106,7 @@
 		ADDDCAF1D563A193F10EFB4E /* ShareRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareRecord.swift; sourceTree = "<group>"; };
 		B0BCCBB16ABEE301F649AB44 /* GuestMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestMessageView.swift; sourceTree = "<group>"; };
 		B8255B3969C40B1CB0D0F9A2 /* ActivityLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityLog.swift; sourceTree = "<group>"; };
+		C2CA2DE013566DD3C86D6D42 /* GeofenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeofenceManager.swift; sourceTree = "<group>"; };
 		C7FCA2C0407C3E360D03E0CD /* DeviceLogSyncer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceLogSyncer.swift; sourceTree = "<group>"; };
 		D47FA2A1E0C7359B3C3025F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D483303E5E06E7219BE5C056 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
@@ -201,6 +203,7 @@
 				22725AD80A7BB9DEF3C3855A /* Beds24Client.swift */,
 				36332B105EE7996D0B6B5197 /* CustomWebhookClient.swift */,
 				C7FCA2C0407C3E360D03E0CD /* DeviceLogSyncer.swift */,
+				C2CA2DE013566DD3C86D6D42 /* GeofenceManager.swift */,
 				FDE620580DAF5BA1260B2AAC /* HueClient.swift */,
 				256031C69587A8CA93CA2918 /* NatureRemoClient.swift */,
 				7FA3CD9872B7A9F7A09558CD /* NukiClient.swift */,
@@ -349,6 +352,7 @@
 				73CFDE878FC689930BA05A68 /* DeviceIntegration.swift in Sources */,
 				72B1C36D93EC1B98FE78568A /* DeviceLogSyncer.swift in Sources */,
 				F5BF8AEFCF54F469253E0D44 /* DeviceView.swift in Sources */,
+				A9D5E3204568B4D2A923BD95 /* GeofenceManager.swift in Sources */,
 				AD098BA09F6689AA6F6EEBC8 /* GuestCardView.swift in Sources */,
 				55527DFC92282D1114F67AFC /* GuestMessageView.swift in Sources */,
 				AB68328061A1EE08766B2CEF /* Home.swift in Sources */,

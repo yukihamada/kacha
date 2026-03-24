@@ -36,8 +36,12 @@ targets:
           - CFBundleURLSchemes:
               - kacha
         NSLocalNetworkUsageDescription: Philips HueブリッジとSwitchBotデバイスを検索するためにローカルネットワークにアクセスします
+        NSLocationWhenInUseUsageDescription: 自宅に近づいた時にオートロック解除の通知を表示するために位置情報を使用します
+        NSLocationAlwaysAndWhenInUseUsageDescription: 自宅に近づいた時にオートロック解除の通知を表示するために、バックグラウンドでも位置情報を使用します
         NSBonjourServices:
           - _hue._tcp
+        UIBackgroundModes:
+          - location
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.enablerdao.kacha

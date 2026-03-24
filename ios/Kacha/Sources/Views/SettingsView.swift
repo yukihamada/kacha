@@ -439,6 +439,11 @@ struct HomeSettingsSections: View {
                     .background(Color.kacha.opacity(0.08))
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
+
+                Divider().background(Color.kachaCardBorder)
+
+                // Geofence
+                geofenceSection
             }
         }
     }
@@ -455,6 +460,110 @@ struct HomeSettingsSections: View {
                 Text(desc).font(.caption2).foregroundColor(.secondary)
             }
         }
+    }
+
+    @ObservedObject private var geofence = GeofenceManager.shared
+    @State private var isGeocoding = false
+
+    private var geofenceSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 6) {
+                Image(systemName: "location.circle.fill").foregroundColor(.kachaSuccess)
+                Text("近づいたら通知").font(.caption).bold().foregroundColor(.white)
+            }
+            Text("自宅に近づくとオートロック解除の通知が届きます")
+                .font(.caption2).foregroundColor(.secondary)
+
+            Toggle(isOn: $home.geofenceEnabled) {
+                Text("ジオフェンス通知").font(.subheadline).foregroundColor(.white)
+            }
+            .tint(.kacha)
+            .onChange(of: home.geofenceEnabled) { _, enabled in
+                if enabled {
+                    GeofenceManager.shared.requestPermission()
+                    if home.latitude != 0 {
+                        GeofenceManager.shared.registerGeofence(
+                            homeId: home.id, latitude: home.latitude,
+                            longitude: home.longitude, radius: home.geofenceRadius
+                        )
+                    } else {
+                        Task { await geocodeAndRegister() }
+                    }
+                } else {
+                    GeofenceManager.shared.removeGeofence(homeId: home.id)
+                }
+            }
+
+            if home.geofenceEnabled {
+                if home.latitude == 0 && !home.address.isEmpty {
+                    Button {
+                        Task { await geocodeAndRegister() }
+                    } label: {
+                        HStack(spacing: 6) {
+                            if isGeocoding { ProgressView().tint(.kachaAccent) }
+                            else { Image(systemName: "location.magnifyingglass") }
+                            Text("住所から座標を取得").font(.caption)
+                        }
+                        .foregroundColor(.kachaAccent)
+                    }
+                    .disabled(isGeocoding)
+                } else if home.latitude != 0 {
+                    HStack {
+                        Text("座標").font(.caption2).foregroundColor(.secondary)
+                        Spacer()
+                        Text("\(String(format: "%.4f", home.latitude)), \(String(format: "%.4f", home.longitude))")
+                            .font(.caption2).foregroundColor(.white)
+                    }
+                }
+
+                HStack {
+                    Text("半径").font(.caption).foregroundColor(.secondary)
+                    Spacer()
+                    Picker("", selection: Binding(
+                        get: { Int(home.geofenceRadius) },
+                        set: { home.geofenceRadius = Double($0) }
+                    )) {
+                        Text("100m").tag(100)
+                        Text("200m").tag(200)
+                        Text("500m").tag(500)
+                    }
+                    .pickerStyle(.segmented)
+                    .frame(width: 200)
+                }
+                .onChange(of: home.geofenceRadius) { _, _ in
+                    if home.geofenceEnabled && home.latitude != 0 {
+                        GeofenceManager.shared.registerGeofence(
+                            homeId: home.id, latitude: home.latitude,
+                            longitude: home.longitude, radius: home.geofenceRadius
+                        )
+                    }
+                }
+
+                if let result = geofence.lastGeocodeResult {
+                    Text(result).font(.caption2).foregroundColor(.kachaSuccess)
+                }
+
+                if geofence.authorizationStatus == .denied || geofence.authorizationStatus == .restricted {
+                    HStack(spacing: 6) {
+                        Image(systemName: "exclamationmark.triangle.fill").foregroundColor(.kachaWarn)
+                        Text("位置情報の許可が必要です。設定アプリから許可してください。")
+                            .font(.caption2).foregroundColor(.kachaWarn)
+                    }
+                }
+            }
+        }
+    }
+
+    private func geocodeAndRegister() async {
+        isGeocoding = true
+        defer { isGeocoding = false }
+        guard let coord = await GeofenceManager.shared.geocodeAddress(home.address) else { return }
+        home.latitude = coord.latitude
+        home.longitude = coord.longitude
+        GeofenceManager.shared.registerGeofence(
+            homeId: home.id, latitude: home.latitude,
+            longitude: home.longitude, radius: home.geofenceRadius
+        )
     }
 
     private func fetchBotDevices() async {
