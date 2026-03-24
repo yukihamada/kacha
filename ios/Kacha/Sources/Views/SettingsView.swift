@@ -934,7 +934,7 @@ struct HomeSettingsSections: View {
             .padding(16)
         }
         .sheet(isPresented: $showPermitGuide) {
-            PermitGuideView(businessType: home.businessType)
+            PermitGuideView(businessType: home.businessType, home: home)
         }
     }
 
