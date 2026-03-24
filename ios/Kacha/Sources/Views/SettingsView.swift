@@ -967,20 +967,49 @@ struct HomeSettingsSections: View {
                         let prop = beds24Properties[idx]
                         let propId = prop["id"] as? Int ?? 0
                         let propName = prop["name"] as? String ?? "物件 \(propId)"
-                        HStack(spacing: 10) {
-                            Image(systemName: "building.2")
-                                .foregroundColor(Color(hex: "0066CC"))
-                            VStack(alignment: .leading, spacing: 1) {
-                                Text(propName).font(.caption).foregroundColor(.white)
-                                Text("ID: \(propId)").font(.caption2).foregroundColor(.secondary)
+                        VStack(spacing: 8) {
+                            HStack(spacing: 10) {
+                                Image(systemName: "building.2")
+                                    .foregroundColor(Color(hex: "0066CC"))
+                                VStack(alignment: .leading, spacing: 1) {
+                                    Text(propName).font(.caption).bold().foregroundColor(.white)
+                                    Text("ID: \(propId)").font(.caption2).foregroundColor(.secondary)
+                                }
+                                Spacer()
                             }
-                            Spacer()
-                            Text("このホームに関連付け")
-                                .font(.caption2).foregroundColor(.kachaAccent)
+                            HStack(spacing: 8) {
+                                Button {
+                                    linkBeds24Property(propId: propId, propName: propName, toCurrentHome: true)
+                                } label: {
+                                    HStack(spacing: 4) {
+                                        Image(systemName: "link")
+                                        Text("このホームに関連付け")
+                                    }
+                                    .font(.caption2).bold()
+                                    .foregroundColor(Color(hex: "0066CC"))
+                                    .frame(maxWidth: .infinity).padding(.vertical, 8)
+                                    .background(Color(hex: "0066CC").opacity(0.1))
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                }
+                                Button {
+                                    linkBeds24Property(propId: propId, propName: propName, toCurrentHome: false)
+                                } label: {
+                                    HStack(spacing: 4) {
+                                        Image(systemName: "plus.circle")
+                                        Text("新規ホーム作成")
+                                    }
+                                    .font(.caption2).bold()
+                                    .foregroundColor(.kacha)
+                                    .frame(maxWidth: .infinity).padding(.vertical, 8)
+                                    .background(Color.kacha.opacity(0.1))
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                }
+                            }
                         }
-                        .padding(8)
+                        .padding(10)
                         .background(Color.kachaCard)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.kachaCardBorder))
                     }
                 }
 
@@ -1256,6 +1285,27 @@ struct HomeSettingsSections: View {
             beds24Error = error.localizedDescription
         }
         isConnectingBeds24 = false
+    }
+
+    private func linkBeds24Property(propId: Int, propName: String, toCurrentHome: Bool) {
+        if toCurrentHome {
+            // 現在のホームにBeds24物件IDを関連付け
+            // beds24ApiKeyフィールドにpropIdも保持（invite_code|propId形式）
+            let inviteCode = home.beds24ApiKey.split(separator: "|").first.map(String.init) ?? home.beds24ApiKey
+            home.beds24ApiKey = "\(inviteCode)|\(propId)"
+            showAlertMsg(title: "関連付け完了", message: "\(propName)を「\(home.name)」に関連付けました")
+        } else {
+            // 新規ホームを作成してBeds24情報をコピー
+            let newHome = Home(name: propName, sortOrder: 100)
+            newHome.address = home.address
+            newHome.businessType = home.businessType
+            let inviteCode = home.beds24ApiKey.split(separator: "|").first.map(String.init) ?? home.beds24ApiKey
+            newHome.beds24ApiKey = "\(inviteCode)|\(propId)"
+            newHome.beds24ICalURL = home.beds24ICalURL // refreshToken共有
+            modelContext.insert(newHome)
+            try? modelContext.save()
+            showAlertMsg(title: "ホーム作成", message: "「\(propName)」を新しいホームとして作成しました。設定タブで切り替えられます")
+        }
     }
 
     private func fetchBeds24Properties() async {
