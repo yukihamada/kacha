@@ -29,6 +29,7 @@ struct HomeView: View {
     @State private var showChecklist = false
     @State private var showUtility = false
     @State private var showMaintenance = false
+    @State private var showActivityLog = false
     @State private var isRunningScene = false
 
     private var activeHome: Home? { homes.first { $0.id == activeHomeId } }
@@ -108,6 +109,9 @@ struct HomeView: View {
             .sheet(isPresented: $showMaintenance) {
                 if let home = activeHome { MaintenanceView(home: home) }
             }
+            .sheet(isPresented: $showActivityLog) {
+                if let home = activeHome { ActivityLogView(home: home) }
+            }
         }
     }
 
@@ -123,6 +127,11 @@ struct HomeView: View {
             }
             Spacer()
             HStack(spacing: 14) {
+                Button { showActivityLog = true } label: {
+                    Image(systemName: "list.bullet.rectangle")
+                        .font(.system(size: 18))
+                        .foregroundColor(.kacha.opacity(0.6))
+                }
                 Button { showKeyRotation = true } label: {
                     Image(systemName: "key.rotate")
                         .font(.system(size: 20))
@@ -144,12 +153,14 @@ struct HomeView: View {
     // MARK: - Quick Actions Grid
 
     private var quickActionsGrid: some View {
-        let actions: [(String, String, Color, () -> Void)] = [
-            ("wifi", "ゲストカード", .kachaAccent, { showGuestCard = true }),
-            ("checklist", "チェックリスト", .kachaSuccess, { showChecklist = true }),
+        var actions: [(String, String, Color, () -> Void)] = [
             ("bolt.fill", "光熱費", .kachaWarn, { showUtility = true }),
             ("wrench.and.screwdriver", "家の管理", .kacha, { showMaintenance = true }),
         ]
+        if minpakuModeEnabled {
+            actions.insert(("wifi", "ゲストカード", .kachaAccent, { showGuestCard = true }), at: 0)
+            actions.insert(("checklist", "チェックリスト", .kachaSuccess, { showChecklist = true }), at: 1)
+        }
         return LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
             ForEach(actions, id: \.1) { icon, label, color, action in
                 Button(action: action) {
@@ -332,12 +343,17 @@ struct HomeView: View {
 
     enum Scene { case homecoming, leaving, sleep, wakeup }
 
+    @Environment(\.modelContext) private var modelContext
+
     private func runScene(_ scene: Scene) async {
         isRunningScene = true
         defer { isRunningScene = false }
         let apiKey = activeHome?.sesameApiKey ?? ""
+        let homeId = activeHome?.id ?? ""
+        let sceneName: String
         switch scene {
         case .homecoming:
+            sceneName = "ただいま"
             for uuid in sesameUUIDs { try? await SesameClient.shared.unlock(uuid: uuid, apiKey: apiKey) }
             for d in switchBot.devices.filter({ $0.deviceType.lowercased().contains("lock") }) {
                 try? await SwitchBotClient.shared.unlock(deviceId: d.deviceId, token: switchBotToken, secret: switchBotSecret)
@@ -345,16 +361,20 @@ struct HomeView: View {
             if !hueBridgeIP.isEmpty { try? await HueClient.shared.welcomeScene(bridgeIP: hueBridgeIP, username: hueUsername) }
             SoundPlayer.shared.playKacha()
         case .leaving:
+            sceneName = "おでかけ"
             for uuid in sesameUUIDs { try? await SesameClient.shared.lock(uuid: uuid, apiKey: apiKey) }
             for d in switchBot.devices.filter({ $0.deviceType.lowercased().contains("lock") }) {
                 try? await SwitchBotClient.shared.lock(deviceId: d.deviceId, token: switchBotToken, secret: switchBotSecret)
             }
             if !hueBridgeIP.isEmpty { try? await HueClient.shared.allOff(bridgeIP: hueBridgeIP, username: hueUsername) }
         case .sleep:
+            sceneName = "おやすみ"
             if !hueBridgeIP.isEmpty { try? await HueClient.shared.nightScene(bridgeIP: hueBridgeIP, username: hueUsername) }
         case .wakeup:
+            sceneName = "おはよう"
             if !hueBridgeIP.isEmpty { try? await HueClient.shared.welcomeScene(bridgeIP: hueBridgeIP, username: hueUsername) }
         }
+        ActivityLogger.log(context: modelContext, homeId: homeId, action: "scene", detail: "「\(sceneName)」シーンを実行")
     }
 
     private func checkInGuest(_ booking: Booking) {

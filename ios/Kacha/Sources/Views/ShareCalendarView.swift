@@ -199,8 +199,10 @@ struct ShareCalendarView: View {
                     .frame(width: 4, height: 40)
 
                 VStack(alignment: .leading, spacing: 4) {
+                    Text(record.recipientName.isEmpty ? "ゲスト" : record.recipientName)
+                        .font(.subheadline).bold().foregroundColor(.white)
                     Text("\(formatted(record.validFrom)) 〜 \(formatted(record.expiresAt))")
-                        .font(.caption).foregroundColor(.white)
+                        .font(.caption).foregroundColor(.secondary)
                     Text(record.statusLabel)
                         .font(.caption2)
                         .foregroundColor(record.isActive ? .kachaSuccess : .secondary)
@@ -241,9 +243,14 @@ struct ShareCalendarView: View {
         do {
             try await ShareClient.revokeShare(token: record.token, ownerToken: record.ownerToken)
             record.revoked = true
+            ActivityLogger.log(
+                context: context,
+                homeId: record.homeId,
+                action: "share_revoke",
+                detail: "\(record.recipientName.isEmpty ? "ゲスト" : record.recipientName)のシェアを取り消し"
+            )
             try? context.save()
         } catch {
-            // サーバー到達不能でもローカルで取り消しマーク
             record.revoked = true
             try? context.save()
         }

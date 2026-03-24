@@ -6,6 +6,7 @@ final class ShareRecord {
     var id: String
     var homeId: String
     var homeName: String
+    var recipientName: String  // who it was shared with
     var token: String          // server-side token
     var ownerToken: String     // secret — needed to revoke
     var validFrom: Date
@@ -28,10 +29,11 @@ final class ShareRecord {
         return "有効"
     }
 
-    init(homeId: String, homeName: String, token: String, ownerToken: String, validFrom: Date, expiresAt: Date) {
+    init(homeId: String, homeName: String, recipientName: String = "", token: String, ownerToken: String, validFrom: Date, expiresAt: Date) {
         self.id = UUID().uuidString
         self.homeId = homeId
         self.homeName = homeName
+        self.recipientName = recipientName
         self.token = token
         self.ownerToken = ownerToken
         self.validFrom = validFrom

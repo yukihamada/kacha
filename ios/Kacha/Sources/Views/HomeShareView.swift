@@ -11,6 +11,7 @@ struct HomeShareView: View {
     @State private var startDate = Date()
     @State private var endDate = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
     @State private var noExpiry = false
+    @State private var recipientName = ""
     @State private var isCreating = false
     @State private var createdLink: String?
     @State private var showCopied = false
@@ -57,6 +58,23 @@ struct HomeShareView: View {
                                 .padding(.horizontal)
                         }
                         .padding(.top, 8)
+
+                        // Recipient name
+                        KachaCard {
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "person.fill").foregroundColor(.kacha)
+                                    Text("シェア先").font(.subheadline).bold().foregroundColor(.white)
+                                }
+                                TextField("名前（例: 田中さん、Airbnbゲスト）", text: $recipientName)
+                                    .foregroundColor(.white)
+                                    .padding(12)
+                                    .background(Color.kachaCard)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.kachaCardBorder))
+                            }
+                            .padding(16)
+                        }
 
                         // Period picker
                         KachaCard {
@@ -263,15 +281,25 @@ struct HomeShareView: View {
             )
 
             // Save record locally
+            let name = recipientName.trimmingCharacters(in: .whitespaces)
             let record = ShareRecord(
                 homeId: home.id,
                 homeName: home.name,
+                recipientName: name.isEmpty ? "ゲスト" : name,
                 token: result.token,
                 ownerToken: ownerToken,
                 validFrom: validFrom ?? Date.distantPast,
                 expiresAt: expiresAt ?? Date.distantFuture
             )
             context.insert(record)
+
+            // Activity log
+            ActivityLogger.log(
+                context: context,
+                homeId: home.id,
+                action: "share_create",
+                detail: "\(name.isEmpty ? "ゲスト" : name)にシェアを作成"
+            )
             try? context.save()
 
             // Universal Link: https://kacha.pasha.run/join?t=TOKEN#KEY
