@@ -30,6 +30,8 @@ struct HomeView: View {
     @State private var showUtility = false
     @State private var showMaintenance = false
     @State private var showActivityLog = false
+    @State private var isPressingAutolock = false
+    @State private var autolockSuccess = false
     @State private var isRunningScene = false
 
     private var activeHome: Home? { homes.first { $0.id == activeHomeId } }
@@ -65,6 +67,9 @@ struct HomeView: View {
                 ScrollView {
                     VStack(spacing: 20) {
                         headerSection
+                        if !(activeHome?.autolockBotDeviceId ?? "").isEmpty {
+                            autolockSection
+                        }
                         quickActionsGrid
                         if minpakuModeEnabled {
                             statsSection
@@ -148,6 +153,73 @@ struct HomeView: View {
             }
         }
         .padding(.top, 8)
+    }
+
+    // MARK: - Auto-lock Unlock
+
+    private var autolockSection: some View {
+        Button {
+            Task { await pressAutolockBot() }
+        } label: {
+            KachaCard {
+                HStack(spacing: 14) {
+                    ZStack {
+                        Circle()
+                            .fill((autolockSuccess ? Color.kachaSuccess : Color.kachaAccent).opacity(0.15))
+                            .frame(width: 50, height: 50)
+                        if isPressingAutolock {
+                            ProgressView().tint(.kachaAccent)
+                        } else {
+                            Image(systemName: autolockSuccess ? "checkmark.circle.fill" : "building.2.fill")
+                                .font(.system(size: 22))
+                                .foregroundColor(autolockSuccess ? .kachaSuccess : .kachaAccent)
+                        }
+                    }
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(autolockSuccess ? "解錠しました" : "オートロック解除")
+                            .font(.subheadline).bold()
+                            .foregroundColor(autolockSuccess ? .kachaSuccess : .white)
+                        Text("エントランスのオートロックを遠隔解除")
+                            .font(.caption2).foregroundColor(.secondary)
+                    }
+                    Spacer()
+                    Image(systemName: "arrow.right.circle.fill")
+                        .font(.title3).foregroundColor(.kachaAccent.opacity(0.5))
+                }
+                .padding(16)
+            }
+        }
+        .disabled(isPressingAutolock)
+    }
+
+    private func pressAutolockBot() async {
+        guard let home = activeHome, !home.autolockBotDeviceId.isEmpty else { return }
+        isPressingAutolock = true
+        autolockSuccess = false
+        do {
+            // SwitchBot Bot: "press" command simulates button press
+            try await SwitchBotClient.shared.sendCommand(
+                deviceId: home.autolockBotDeviceId,
+                command: "press",
+                token: home.switchBotToken,
+                secret: home.switchBotSecret
+            )
+            ActivityLogger.log(
+                context: modelContext,
+                homeId: home.id,
+                action: "unlock",
+                detail: "オートロックを遠隔解除",
+                deviceName: "SwitchBot Bot (インターホン)"
+            )
+            withAnimation { autolockSuccess = true }
+            SoundPlayer.shared.playKacha()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                withAnimation { autolockSuccess = false }
+            }
+        } catch {
+            // fail silently
+        }
+        isPressingAutolock = false
     }
 
     // MARK: - Quick Actions Grid

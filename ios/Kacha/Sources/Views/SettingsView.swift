@@ -279,12 +279,16 @@ struct HomeSettingsSections: View {
     @State private var expandHue = false
     @State private var expandSesame = false
     @State private var expandQrio = false
+    @State private var expandAutolock = false
+    @State private var isFetchingBotDevices = false
+    @State private var botDevices: [SwitchBotClient.SwitchBotDevice] = []
 
     private var integrations: [DeviceIntegration] { allIntegrations.filter { $0.homeId == home.id } }
 
     var body: some View {
         Group {
             homeInfoSection
+            autolockSetupSection
             devicesOverviewSection
             deviceIntegrationsSection
             if minpakuModeEnabled {
@@ -332,6 +336,140 @@ struct HomeSettingsSections: View {
                     .onChange(of: home.wifiPassword) { _, val in UserDefaults.standard.set(val, forKey: "facilityWifiPassword") }
             }
             .padding(16)
+        }
+    }
+
+    // MARK: - Auto-lock Setup
+
+    private var autolockSetupSection: some View {
+        DeviceStatusCard(
+            icon: "building.2.fill",
+            name: "オートロック解除",
+            color: .kachaAccent,
+            isConnected: !home.autolockBotDeviceId.isEmpty,
+            isExpanded: $expandAutolock
+        ) {
+            VStack(alignment: .leading, spacing: 14) {
+                // Guide
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("セットアップ手順").font(.caption).bold().foregroundColor(.kacha)
+                    guideStep(1, "SwitchBot Botを用意",
+                              "指ロボットタイプのSwitchBot Bot")
+                    guideStep(2, "インターホンの解錠ボタンに貼り付け",
+                              "室内のインターホン受話器の「解錠」ボタンにBotのアームが当たるように設置")
+                    guideStep(3, "SwitchBotアプリでBot動作を確認",
+                              "ボタンモードを「押す」に設定し、解錠ボタンが押されることを確認")
+                    guideStep(4, "下のリストからBotを選択",
+                              "カチャから遠隔でオートロック解除できるようになります")
+                }
+
+                Divider().background(Color.kachaCardBorder)
+
+                // Room number
+                SettingsTextField(label: "部屋番号", placeholder: "例: 301", text: $home.autolockRoomNumber)
+
+                Divider().background(Color.kachaCardBorder)
+
+                // Bot device picker
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Text("インターホン用Bot").font(.caption).foregroundColor(.secondary)
+                        Spacer()
+                        Button {
+                            Task { await fetchBotDevices() }
+                        } label: {
+                            HStack(spacing: 4) {
+                                if isFetchingBotDevices { ProgressView().tint(.kachaAccent) }
+                                else { Image(systemName: "arrow.clockwise") }
+                                Text("取得").font(.caption)
+                            }
+                            .foregroundColor(.kachaAccent)
+                        }
+                        .disabled(isFetchingBotDevices || home.switchBotToken.isEmpty)
+                    }
+
+                    if home.switchBotToken.isEmpty {
+                        Text("先にSwitchBotのAPIトークンを設定してください")
+                            .font(.caption2).foregroundColor(.kachaWarn)
+                    } else if botDevices.isEmpty && !isFetchingBotDevices {
+                        Text("「取得」をタップしてBotデバイスを検索")
+                            .font(.caption2).foregroundColor(.secondary)
+                    }
+
+                    ForEach(botDevices, id: \.deviceId) { device in
+                        Button {
+                            home.autolockBotDeviceId = device.deviceId
+                        } label: {
+                            HStack(spacing: 10) {
+                                Image(systemName: home.autolockBotDeviceId == device.deviceId
+                                      ? "checkmark.circle.fill" : "circle")
+                                    .foregroundColor(home.autolockBotDeviceId == device.deviceId
+                                                     ? .kachaSuccess : .secondary)
+                                Text(device.deviceName).font(.subheadline).foregroundColor(.white)
+                                Spacer()
+                                Text(device.deviceType).font(.caption2).foregroundColor(.secondary)
+                            }
+                            .padding(10)
+                            .background(home.autolockBotDeviceId == device.deviceId
+                                        ? Color.kachaSuccess.opacity(0.08) : Color.clear)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                        }
+                    }
+
+                    if !home.autolockBotDeviceId.isEmpty {
+                        Divider().background(Color.kachaCardBorder)
+                        HStack(spacing: 6) {
+                            Image(systemName: "checkmark.seal.fill").foregroundColor(.kachaSuccess)
+                            Text("設定完了 — ホーム画面に「オートロック解除」ボタンが表示されます")
+                                .font(.caption).foregroundColor(.kachaSuccess)
+                        }
+                    }
+                }
+
+                // Amazon link
+                Link(destination: URL(string: "https://www.amazon.co.jp/dp/B09B2KJ7WJ?tag=yukihamada-22")!) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "cart.fill").font(.caption)
+                        Text("SwitchBot Botを購入").font(.caption).bold()
+                        Spacer()
+                        Image(systemName: "arrow.up.right").font(.caption2)
+                    }
+                    .foregroundColor(.kacha)
+                    .padding(10)
+                    .background(Color.kacha.opacity(0.08))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                }
+            }
+        }
+    }
+
+    private func guideStep(_ num: Int, _ title: String, _ desc: String) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            Text("\(num)")
+                .font(.caption2).bold().foregroundColor(.black)
+                .frame(width: 20, height: 20)
+                .background(Color.kacha)
+                .clipShape(Circle())
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title).font(.caption).bold().foregroundColor(.white)
+                Text(desc).font(.caption2).foregroundColor(.secondary)
+            }
+        }
+    }
+
+    private func fetchBotDevices() async {
+        isFetchingBotDevices = true
+        defer { isFetchingBotDevices = false }
+        guard let devices = try? await SwitchBotClient.shared.fetchDevices(
+            token: home.switchBotToken, secret: home.switchBotSecret
+        ) else { return }
+        // Filter to Bot type devices
+        botDevices = devices.filter {
+            $0.deviceType.lowercased().contains("bot")
+        }
+        // If no bots, show all devices as fallback
+        if botDevices.isEmpty {
+            botDevices = devices
         }
     }
 

@@ -38,6 +38,10 @@ final class Home {
     var jalanICalURL: String
     var icalLastSync: Double
 
+    // Auto-lock (building entrance)
+    var autolockBotDeviceId: String  // SwitchBot Bot device ID for intercom unlock
+    var autolockRoomNumber: String   // room number to display in guide
+
     // Minpaku
     var minpakuNumber: String
     var minpakuNights: Int
@@ -58,6 +62,8 @@ final class Home {
         self.sesameDeviceUUIDs = ""
         self.qrioApiKey = ""
         self.qrioDeviceIds = ""
+        self.autolockBotDeviceId = ""
+        self.autolockRoomNumber = ""
         self.beds24ApiKey = ""
         self.beds24ICalURL = ""
         self.airbnbICalURL = ""
