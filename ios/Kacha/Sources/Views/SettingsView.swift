@@ -882,7 +882,31 @@ struct HomeSettingsSections: View {
                         .foregroundColor(.kachaWarn)
                         .clipShape(Capsule())
                 }
-                SecureTokenField(label: "APIキー", text: $home.beds24ApiKey)
+
+                // Setup guide
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Invite Codeの取得方法").font(.caption).bold().foregroundColor(.white)
+                    VStack(alignment: .leading, spacing: 4) {
+                        beds24Step("1", "Beds24にログイン")
+                        beds24Step("2", "設定 → API v2 を開く")
+                        beds24Step("3", "「Invite Code」を作成")
+                        beds24Step("4", "生成されたコードを下に貼り付け")
+                    }
+                    Link(destination: URL(string: "https://beds24.com/control3.php?pagetype=apiv2")!) {
+                        HStack(spacing: 6) {
+                            Image(systemName: "arrow.up.right.square").font(.caption)
+                            Text("Beds24 API設定ページを開く").font(.caption).bold()
+                        }
+                        .foregroundColor(Color(hex: "0066CC"))
+                        .padding(.horizontal, 12).padding(.vertical, 8)
+                        .background(Color(hex: "0066CC").opacity(0.1))
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                    }
+                }
+
+                Divider().background(Color.kachaCardBorder)
+
+                SecureTokenField(label: "Invite Code", text: $home.beds24ApiKey)
                 SettingsTextField(label: "iCal URL", placeholder: "beds24.com/ical.php?...", text: $home.beds24ICalURL)
 
                 // Property linking
@@ -1176,6 +1200,16 @@ struct HomeSettingsSections: View {
         }
         home.icalLastSync = Date().timeIntervalSince1970
         showAlertMsg(title: "同期完了", message: "\(imported)件インポート")
+    }
+
+    private func beds24Step(_ num: String, _ text: String) -> some View {
+        HStack(spacing: 8) {
+            Text(num).font(.caption2).bold().foregroundColor(.black)
+                .frame(width: 18, height: 18)
+                .background(Color(hex: "0066CC"))
+                .clipShape(Circle())
+            Text(text).font(.caption2).foregroundColor(.secondary)
+        }
     }
 
     private func fetchBeds24Properties() async {
