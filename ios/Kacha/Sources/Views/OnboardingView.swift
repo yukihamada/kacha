@@ -103,53 +103,101 @@ struct OnboardingView: View {
         }
     }
 
+    // MARK: - Amazon affiliate links (tag: yukihamada-22)
+    private let recommendedDevices: [(name: String, icon: String, url: String)] = [
+        ("SwitchBot ロック Pro", "lock.fill",
+         "https://www.amazon.co.jp/dp/B0CWL6RMPP?tag=yukihamada-22"),
+        ("SwitchBot ハブ2", "antenna.radiowaves.left.and.right",
+         "https://www.amazon.co.jp/dp/B0BM8VS13P?tag=yukihamada-22"),
+        ("Philips Hue スターターキット", "lightbulb.fill",
+         "https://www.amazon.co.jp/dp/B09MRZ2LPQ?tag=yukihamada-22"),
+        ("Sesame 5 Pro", "key.fill",
+         "https://www.amazon.co.jp/dp/B0D4JRLB63?tag=yukihamada-22"),
+        ("Nature Remo mini 2", "dot.radiowaves.right",
+         "https://www.amazon.co.jp/dp/B09B2N5MKL?tag=yukihamada-22"),
+    ]
+
     private func pageView(_ page: (icon: String, title: String, subtitle: String, features: [(String, String)], color: Color), isLast: Bool) -> some View {
-        VStack(spacing: 28) {
-            Spacer()
+        ScrollView(showsIndicators: false) {
+            VStack(spacing: 24) {
+                Spacer(minLength: 40)
 
-            ZStack {
-                Circle().fill(page.color.opacity(0.12)).frame(width: 120, height: 120)
-                Image(systemName: page.icon).font(.system(size: 52)).foregroundColor(page.color)
-            }
+                ZStack {
+                    Circle().fill(page.color.opacity(0.12)).frame(width: 120, height: 120)
+                    Image(systemName: page.icon).font(.system(size: 52)).foregroundColor(page.color)
+                }
 
-            VStack(spacing: 8) {
-                Text(page.title).font(.title).bold().foregroundColor(.white)
-                Text(page.subtitle).font(.body).foregroundColor(.secondary)
-            }
+                VStack(spacing: 8) {
+                    Text(page.title).font(.title).bold().foregroundColor(.white)
+                    Text(page.subtitle).font(.body).foregroundColor(.secondary)
+                }
 
-            if !page.features.isEmpty {
-                VStack(spacing: 14) {
-                    ForEach(page.features, id: \.0) { icon, text in
-                        HStack(spacing: 14) {
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 10).fill(page.color.opacity(0.12))
-                                    .frame(width: 40, height: 40)
-                                Image(systemName: icon).font(.system(size: 18)).foregroundColor(page.color)
+                if !page.features.isEmpty {
+                    VStack(spacing: 14) {
+                        ForEach(page.features, id: \.0) { icon, text in
+                            HStack(spacing: 14) {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 10).fill(page.color.opacity(0.12))
+                                        .frame(width: 40, height: 40)
+                                    Image(systemName: icon).font(.system(size: 18)).foregroundColor(page.color)
+                                }
+                                Text(text).font(.subheadline).foregroundColor(.white)
+                                Spacer()
                             }
-                            Text(text).font(.subheadline).foregroundColor(.white)
-                            Spacer()
                         }
                     }
+                    .padding(.horizontal, 40)
                 }
-                .padding(.horizontal, 40)
-            }
 
-            if isLast {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("家の名前").font(.caption).foregroundColor(.secondary)
-                    TextField("例: 我が家、山田家、渋谷の部屋", text: $facilityInput)
-                        .font(.subheadline).foregroundColor(.white)
-                        .padding(14)
-                        .background(Color.kachaCard)
-                        .overlay(RoundedRectangle(cornerRadius: 12)
-                            .stroke(facilityInput.isEmpty ? Color.kachaCardBorder : Color.kacha, lineWidth: 1))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                // Device purchase links on first page
+                if currentPage == 0 {
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack(spacing: 6) {
+                            Image(systemName: "cart.fill").foregroundColor(.kacha)
+                            Text("対応デバイスを揃える").font(.subheadline).bold().foregroundColor(.white)
+                        }
+                        Text("まだスマートデバイスをお持ちでない方はこちら")
+                            .font(.caption).foregroundColor(.secondary)
+
+                        ForEach(recommendedDevices, id: \.name) { device in
+                            Link(destination: URL(string: device.url)!) {
+                                HStack(spacing: 12) {
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 8).fill(Color.kacha.opacity(0.1))
+                                            .frame(width: 36, height: 36)
+                                        Image(systemName: device.icon).font(.system(size: 14)).foregroundColor(.kacha)
+                                    }
+                                    Text(device.name).font(.caption).foregroundColor(.white)
+                                    Spacer()
+                                    Image(systemName: "arrow.up.right").font(.caption2).foregroundColor(.secondary)
+                                }
+                                .padding(10)
+                                .background(Color.kachaCard)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.kachaCardBorder))
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 32)
+                    .padding(.top, 8)
                 }
-                .padding(.horizontal, 32)
-            }
 
-            Spacer()
-            Spacer()
+                if isLast {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("家の名前").font(.caption).foregroundColor(.secondary)
+                        TextField("例: 我が家、山田家、渋谷の部屋", text: $facilityInput)
+                            .font(.subheadline).foregroundColor(.white)
+                            .padding(14)
+                            .background(Color.kachaCard)
+                            .overlay(RoundedRectangle(cornerRadius: 12)
+                                .stroke(facilityInput.isEmpty ? Color.kachaCardBorder : Color.kacha, lineWidth: 1))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                    .padding(.horizontal, 32)
+                }
+
+                Spacer(minLength: 60)
+            }
         }
     }
 
