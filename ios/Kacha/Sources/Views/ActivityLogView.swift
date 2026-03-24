@@ -7,6 +7,8 @@ struct ActivityLogView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: \ActivityLog.timestamp, order: .reverse) private var allLogs: [ActivityLog]
     @State private var filterAction = "all"
+    @State private var isSyncing = false
+    @State private var syncResult: String?
 
     private var logs: [ActivityLog] {
         let homeLogs = allLogs.filter { $0.homeId == home.id }
@@ -95,7 +97,52 @@ struct ActivityLogView: View {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("閉じる") { dismiss() }.foregroundStyle(.secondary)
                 }
+                ToolbarItem(placement: .primaryAction) {
+                    Button { Task { await syncDeviceLogs() } } label: {
+                        if isSyncing {
+                            ProgressView().tint(.kacha)
+                        } else {
+                            Image(systemName: "arrow.clockwise").foregroundColor(.kacha)
+                        }
+                    }
+                    .disabled(isSyncing)
+                }
             }
+            .onAppear { Task { await syncDeviceLogs() } }
+            .overlay(alignment: .bottom) {
+                if let result = syncResult {
+                    Text(result)
+                        .font(.caption).foregroundColor(.white)
+                        .padding(.horizontal, 16).padding(.vertical, 8)
+                        .background(Color.kacha.opacity(0.9))
+                        .clipShape(Capsule())
+                        .padding(.bottom, 16)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                withAnimation { syncResult = nil }
+                            }
+                        }
+                }
+            }
+        }
+    }
+
+    private func syncDeviceLogs() async {
+        isSyncing = true
+        defer { isSyncing = false }
+        let sesameUUIDs = home.sesameDeviceUUIDs
+            .split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty }
+        let count = await DeviceLogSyncer.syncAll(
+            context: context,
+            homeId: home.id,
+            sesameUUIDs: sesameUUIDs,
+            sesameApiKey: home.sesameApiKey,
+            switchBotToken: home.switchBotToken,
+            switchBotSecret: home.switchBotSecret
+        )
+        withAnimation {
+            syncResult = count > 0 ? "\(count)件の新しいログを取得" : "最新の状態です"
         }
     }
 

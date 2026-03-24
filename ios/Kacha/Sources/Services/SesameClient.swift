@@ -67,6 +67,39 @@ final class SesameClient: ObservableObject {
         }
     }
 
+    // MARK: - History
+
+    struct HistoryEntry: Codable, Identifiable {
+        let type: Int           // 1=BLE lock, 2=BLE unlock, 7=Web lock, 8=Web unlock
+        let timeStamp: Double   // unix ms
+        let historyTag: String?
+        let recordID: Int
+
+        var id: Int { recordID }
+
+        var isLock: Bool { type == 1 || type == 7 }
+        var isUnlock: Bool { type == 2 || type == 8 }
+        var actionLabel: String {
+            if isLock { return "施錠" }
+            if isUnlock { return "解錠" }
+            return "操作(\(type))"
+        }
+        var actor: String { historyTag ?? "不明" }
+        var date: Date { Date(timeIntervalSince1970: timeStamp / 1000) }
+    }
+
+    func fetchHistory(uuid: String, apiKey: String, page: Int = 0, count: Int = 20) async throws -> [HistoryEntry] {
+        guard !uuid.isEmpty, !apiKey.isEmpty else { throw SesameError.missingConfig }
+        var req = URLRequest(url: URL(string: "\(base)/\(uuid)/history?page=\(page)&lg=\(count)")!)
+        req.addValue(apiKey, forHTTPHeaderField: "x-api-key")
+        req.timeoutInterval = 15
+        let (data, resp) = try await URLSession.shared.data(for: req)
+        guard let http = resp as? HTTPURLResponse, (200...299).contains(http.statusCode) else {
+            throw SesameError.apiError((resp as? HTTPURLResponse)?.statusCode ?? 0)
+        }
+        return try JSONDecoder().decode([HistoryEntry].self, from: data)
+    }
+
     func fetchAll(uuids: [String], apiKey: String) async {
         await MainActor.run { isLoading = true; lastError = nil }
         for uuid in uuids.filter({ !$0.isEmpty }) {

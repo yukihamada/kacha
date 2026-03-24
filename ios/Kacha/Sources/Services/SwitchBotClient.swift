@@ -96,6 +96,33 @@ class SwitchBotClient: ObservableObject {
         try await sendCommand(deviceId: deviceId, command: "unlock", token: token, secret: secret)
     }
 
+    // MARK: - Device Status (lock state, battery etc.)
+
+    struct DeviceStatus: Codable {
+        let deviceId: String?
+        let deviceType: String?
+        let lockState: String?      // "locked" or "unlocked"
+        let doorState: String?      // "closed" or "open"
+        let battery: Int?
+        let calibrate: Bool?
+    }
+
+    func fetchStatus(deviceId: String, token: String, secret: String) async throws -> DeviceStatus {
+        let url = URL(string: "\(baseURL)/devices/\(deviceId)/status")!
+        var request = URLRequest(url: url)
+        makeHeaders(token: token, secret: secret).forEach {
+            request.setValue($1, forHTTPHeaderField: $0)
+        }
+        let (data, _) = try await URLSession.shared.data(for: request)
+        struct StatusResponse: Codable {
+            let statusCode: Int
+            let body: DeviceStatus?
+        }
+        let response = try JSONDecoder().decode(StatusResponse.self, from: data)
+        guard let body = response.body else { throw URLError(.badServerResponse) }
+        return body
+    }
+
     func turnOn(deviceId: String, token: String, secret: String) async throws {
         try await sendCommand(deviceId: deviceId, command: "turnOn", token: token, secret: secret)
     }

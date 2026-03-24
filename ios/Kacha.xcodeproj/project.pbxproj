@@ -24,6 +24,7 @@
 		68B5FC384F63E9884DE6BA98 /* SeedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 806DDA31D51546E558470EDA /* SeedData.swift */; };
 		6AFFA55D4BBB4F04EE086ECA /* KachaIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBB93E99B7CC125754749E2 /* KachaIntents.swift */; };
 		6BB1DE16D8A1BA9AD03A6C43 /* BookingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1503E46193782B1F5B23D7FF /* BookingView.swift */; };
+		72B1C36D93EC1B98FE78568A /* DeviceLogSyncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7FCA2C0407C3E360D03E0CD /* DeviceLogSyncer.swift */; };
 		73CFDE878FC689930BA05A68 /* DeviceIntegration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A26AF7341A07F152DAA60F3 /* DeviceIntegration.swift */; };
 		77A0CBDAF76B9DD0DBB7948F /* MaintenanceTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E694CC782F89977CDFFA6E /* MaintenanceTask.swift */; };
 		7C81B0CFD18586B8462ACCEA /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7272FF7B92B5399F5143EE9E /* OnboardingView.swift */; };
@@ -104,6 +105,7 @@
 		ADDDCAF1D563A193F10EFB4E /* ShareRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareRecord.swift; sourceTree = "<group>"; };
 		B0BCCBB16ABEE301F649AB44 /* GuestMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestMessageView.swift; sourceTree = "<group>"; };
 		B8255B3969C40B1CB0D0F9A2 /* ActivityLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityLog.swift; sourceTree = "<group>"; };
+		C7FCA2C0407C3E360D03E0CD /* DeviceLogSyncer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceLogSyncer.swift; sourceTree = "<group>"; };
 		D47FA2A1E0C7359B3C3025F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D483303E5E06E7219BE5C056 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		D71DD24B3C87D4B368EA8495 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -198,6 +200,7 @@
 			children = (
 				22725AD80A7BB9DEF3C3855A /* Beds24Client.swift */,
 				36332B105EE7996D0B6B5197 /* CustomWebhookClient.swift */,
+				C7FCA2C0407C3E360D03E0CD /* DeviceLogSyncer.swift */,
 				FDE620580DAF5BA1260B2AAC /* HueClient.swift */,
 				256031C69587A8CA93CA2918 /* NatureRemoClient.swift */,
 				7FA3CD9872B7A9F7A09558CD /* NukiClient.swift */,
@@ -344,6 +347,7 @@
 				F29BE3618F572A9D510744B9 /* ContentView.swift in Sources */,
 				D81AA2880E72DCB17BFB6B76 /* CustomWebhookClient.swift in Sources */,
 				73CFDE878FC689930BA05A68 /* DeviceIntegration.swift in Sources */,
+				72B1C36D93EC1B98FE78568A /* DeviceLogSyncer.swift in Sources */,
 				F5BF8AEFCF54F469253E0D44 /* DeviceView.swift in Sources */,
 				AD098BA09F6689AA6F6EEBC8 /* GuestCardView.swift in Sources */,
 				55527DFC92282D1114F67AFC /* GuestMessageView.swift in Sources */,
