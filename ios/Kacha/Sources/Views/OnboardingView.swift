@@ -2,9 +2,11 @@ import SwiftUI
 import SwiftData
 
 struct OnboardingView: View {
+    var isReview: Bool = false  // true when opened from settings
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @AppStorage("activeHomeId") private var activeHomeId = ""
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
 
     @State private var currentPage = 0
     @State private var facilityInput = ""
@@ -78,27 +80,47 @@ struct OnboardingView: View {
                     Button {
                         if currentPage < pages.count - 1 {
                             withAnimation { currentPage += 1 }
+                        } else if isReview {
+                            dismiss()
                         } else {
                             completeOnboarding()
                         }
                     } label: {
                         HStack(spacing: 6) {
-                            Text(currentPage == pages.count - 1 ? "はじめる" : "次へ").bold()
-                            Image(systemName: currentPage == pages.count - 1 ? "door.left.hand.open" : "arrow.right")
+                            let lastLabel = isReview ? "閉じる" : "はじめる"
+                            Text(currentPage == pages.count - 1 ? lastLabel : "次へ").bold()
+                            Image(systemName: currentPage == pages.count - 1
+                                  ? (isReview ? "xmark.circle" : "door.left.hand.open")
+                                  : "arrow.right")
                         }
                         .foregroundColor(.kachaBg)
                         .padding(.horizontal, 28).padding(.vertical, 14)
                         .background(
-                            currentPage == pages.count - 1 && facilityInput.isEmpty
+                            !isReview && currentPage == pages.count - 1 && facilityInput.isEmpty
                             ? Color.kacha.opacity(0.4) : Color.kacha
                         )
                         .clipShape(Capsule())
                     }
-                    .disabled(currentPage == pages.count - 1 && facilityInput.isEmpty)
+                    .disabled(!isReview && currentPage == pages.count - 1 && facilityInput.isEmpty)
                     Spacer().frame(width: 80)
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 40)
+            }
+            // Close button (review mode only)
+            if isReview {
+                VStack {
+                    HStack {
+                        Spacer()
+                        Button { dismiss() } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .font(.title2)
+                                .foregroundColor(.white.opacity(0.6))
+                        }
+                        .padding(20)
+                    }
+                    Spacer()
+                }
             }
         }
     }

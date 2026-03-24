@@ -49,7 +49,7 @@ struct SettingsView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbarBackground(Color.kachaBg, for: .navigationBar)
             .sheet(isPresented: $showAddHome) { addHomeSheet }
-            .fullScreenCover(isPresented: $showTutorial) { OnboardingView() }
+            .fullScreenCover(isPresented: $showTutorial) { OnboardingView(isReview: true) }
             .sheet(isPresented: $showSecurity) { SecurityInfoView() }
             .alert("ホームを削除", isPresented: $showDeleteAlert) {
                 Button("削除", role: .destructive) { deleteHome() }
