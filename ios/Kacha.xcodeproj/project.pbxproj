@@ -34,6 +34,7 @@
 		7DB90868F78FFE94A8BA9000 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1797C59E8718E09C95867CEA /* HomeView.swift */; };
 		7DBC07BB5A28A3543048CC1D /* KachaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7520FE5B11987221F8DCA88 /* KachaUITests.swift */; };
 		7E01049D64A8C3ADAC50FE33 /* KachaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C897E53B48E2B6F63413241 /* KachaApp.swift */; };
+		7F466376A92EEA9BE8271586 /* HomePagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 999984BAFDDFAC8BCF0584EC /* HomePagerView.swift */; };
 		88EC00251B02C08D328B74F8 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFFA1E3C067B393326D1572 /* NotificationManager.swift */; };
 		8B62098FD7EDA0DD001A07D9 /* BookingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36164FF9D7E181381FF28D54 /* BookingDetailView.swift */; };
 		9EB4FD724CFD089208CD1463 /* HouseManualView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3274B590E5951F22DF3CFD98 /* HouseManualView.swift */; };
@@ -128,6 +129,7 @@
 		8B7AEFDAB378F3AF8D6B1F8B /* AddDeviceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDeviceView.swift; sourceTree = "<group>"; };
 		8BBB93E99B7CC125754749E2 /* KachaIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KachaIntents.swift; sourceTree = "<group>"; };
 		979B7EEC69EB43FDB261BDEA /* ActivityLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityLogView.swift; sourceTree = "<group>"; };
+		999984BAFDDFAC8BCF0584EC /* HomePagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePagerView.swift; sourceTree = "<group>"; };
 		9D1AB6E38DE556A80A4FDACF /* CelebrationEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CelebrationEffect.swift; sourceTree = "<group>"; };
 		A252235D4A96185B03167092 /* Booking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Booking.swift; sourceTree = "<group>"; };
 		AB70FC0B2FFC1F7B5F1B6BB1 /* SoundPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundPlayer.swift; sourceTree = "<group>"; };
@@ -221,6 +223,7 @@
 				DD87C22012BFBD2F0CAE6110 /* DeviceView.swift */,
 				601EAE312FF512150A91EA68 /* GuestCardView.swift */,
 				B0BCCBB16ABEE301F649AB44 /* GuestMessageView.swift */,
+				999984BAFDDFAC8BCF0584EC /* HomePagerView.swift */,
 				DBDBD2EE216FCCE6C01C4E51 /* HomeShareView.swift */,
 				1797C59E8718E09C95867CEA /* HomeView.swift */,
 				3274B590E5951F22DF3CFD98 /* HouseManualView.swift */,
@@ -479,6 +482,7 @@
 				AD098BA09F6689AA6F6EEBC8 /* GuestCardView.swift in Sources */,
 				55527DFC92282D1114F67AFC /* GuestMessageView.swift in Sources */,
 				AB68328061A1EE08766B2CEF /* Home.swift in Sources */,
+				7F466376A92EEA9BE8271586 /* HomePagerView.swift in Sources */,
 				3C64CB3B719F2E02D1C9DFDD /* HomeShareView.swift in Sources */,
 				7DB90868F78FFE94A8BA9000 /* HomeView.swift in Sources */,
 				5407AFDC53CFA390FD5949A3 /* HouseManual.swift in Sources */,

@@ -126,13 +126,43 @@ struct HomeView: View {
 
     // MARK: - Header
 
+    @State private var showHomePicker = false
+
     private var headerSection: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(facilityName)
-                    .font(.title2).bold().foregroundColor(.white)
-                Text(minpakuModeEnabled ? "開いた、ウェルカム。" : "おかえりなさい。")
-                    .font(.caption).foregroundColor(.kacha)
+            Menu {
+                // Dashboard
+                Button {
+                    // Post notification to switch to dashboard page
+                    NotificationCenter.default.post(name: .switchToDashboard, object: nil)
+                } label: {
+                    Label("ダッシュボード", systemImage: "square.grid.2x2.fill")
+                }
+
+                Divider()
+
+                // Home list
+                ForEach(homes) { home in
+                    Button {
+                        activeHomeId = home.id
+                        home.syncToAppStorage()
+                    } label: {
+                        Label(home.name, systemImage: home.id == activeHomeId ? "house.fill" : "house")
+                    }
+                }
+            } label: {
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(spacing: 6) {
+                        Text(facilityName)
+                            .font(.title2).bold().foregroundColor(.white)
+                        if homes.count > 1 {
+                            Image(systemName: "chevron.down")
+                                .font(.caption).foregroundColor(.secondary)
+                        }
+                    }
+                    Text(minpakuModeEnabled ? "開いた、ウェルカム。" : "おかえりなさい。")
+                        .font(.caption).foregroundColor(.kacha)
+                }
             }
             Spacer()
             HStack(spacing: 14) {

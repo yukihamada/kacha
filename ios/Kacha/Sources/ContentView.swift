@@ -5,7 +5,7 @@ struct ContentView: View {
 
     var body: some View {
         TabView {
-            HomeView()
+            HomePagerView()
                 .tabItem {
                     Label("ホーム", systemImage: "house.fill")
                 }
