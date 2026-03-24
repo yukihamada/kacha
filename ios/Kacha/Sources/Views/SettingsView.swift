@@ -1328,11 +1328,13 @@ struct HomeSettingsSections: View {
             newHome.address = home.address
             newHome.businessType = home.businessType
             newHome.beds24ApiKey = "\(propId)"
-            newHome.beds24ICalURL = home.beds24ICalURL  // 同じrefreshToken共有
+            newHome.beds24ICalURL = home.beds24ICalURL
             modelContext.insert(newHome)
             try? modelContext.save()
             showAlertMsg(title: "ホーム作成", message: "「\(propName)」を新しいホームとして作成しました")
         }
+        // Remove from list
+        beds24Properties.removeAll { ($0["id"] as? Int) == propId }
     }
 
     private func fetchBeds24Properties() async {

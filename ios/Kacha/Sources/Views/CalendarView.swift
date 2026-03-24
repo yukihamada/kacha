@@ -4,7 +4,12 @@ import SwiftData
 struct CalendarView: View {
     @Query private var bookings: [Booking]
     @Query(sort: \ShareRecord.validFrom) private var shareRecords: [ShareRecord]
+    @Query(sort: \Home.sortOrder) private var homes: [Home]
     @AppStorage("activeHomeId") private var activeHomeId = ""
+
+    private var activeHomeName: String {
+        homes.first { $0.id == activeHomeId }?.name ?? "カレンダー"
+    }
     @State private var displayMonth: Date = Calendar.current.startOfMonth(for: Date())
     @State private var selectedDay: Date? = nil
 
@@ -32,7 +37,7 @@ struct CalendarView: View {
                     .padding(.top, 8)
                 }
             }
-            .navigationTitle("カレンダー")
+            .navigationTitle(activeHomeName)
             .navigationBarTitleDisplayMode(.large)
             .toolbarBackground(Color.kachaBg, for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)

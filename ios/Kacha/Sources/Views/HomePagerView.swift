@@ -103,6 +103,13 @@ struct DashboardView: View {
             .sorted { $0.checkIn < $1.checkIn }
     }
 
+    // Recently added bookings (last 7 days)
+    private var recentNewBookings: [Booking] {
+        let weekAgo = Calendar.current.date(byAdding: .day, value: -7, to: Date()) ?? Date()
+        return bookings.filter { $0.createdAt > weekAgo }
+            .sorted { $0.createdAt > $1.createdAt }
+    }
+
     private var activeShares: [ShareRecord] {
         shares.filter(\.isActive)
     }
@@ -172,6 +179,44 @@ struct DashboardView: View {
                                 }
                             }
                             .padding(16)
+                        }
+
+                        // Recent new bookings
+                        if !recentNewBookings.isEmpty {
+                            KachaCard {
+                                VStack(alignment: .leading, spacing: 10) {
+                                    HStack(spacing: 6) {
+                                        Image(systemName: "bell.badge.fill").foregroundColor(.kacha)
+                                        Text("最近入った予約").font(.subheadline).bold().foregroundColor(.white)
+                                    }
+                                    ForEach(recentNewBookings.prefix(5)) { booking in
+                                        let homeName = homes.first { $0.id == booking.homeId }?.name ?? ""
+                                        HStack(spacing: 10) {
+                                            VStack(alignment: .leading, spacing: 2) {
+                                                HStack(spacing: 6) {
+                                                    Text(booking.guestName).font(.subheadline).bold().foregroundColor(.white)
+                                                    Text(booking.platformLabel).font(.system(size: 9))
+                                                        .padding(.horizontal, 5).padding(.vertical, 1)
+                                                        .background(Color(hex: booking.platformColor).opacity(0.2))
+                                                        .foregroundColor(Color(hex: booking.platformColor))
+                                                        .clipShape(Capsule())
+                                                }
+                                                Text("\(booking.checkIn.formatted(date: .abbreviated, time: .omitted)) → \(booking.checkOut.formatted(date: .abbreviated, time: .omitted)) · \(homeName)")
+                                                    .font(.caption2).foregroundColor(.secondary)
+                                            }
+                                            Spacer()
+                                            if booking.totalAmount > 0 {
+                                                Text("¥\(booking.totalAmount / 100)")
+                                                    .font(.caption).bold().foregroundColor(.kacha)
+                                            }
+                                        }
+                                        if booking.id != recentNewBookings.prefix(5).last?.id {
+                                            Divider().background(Color.kachaCardBorder)
+                                        }
+                                    }
+                                }
+                                .padding(16)
+                            }
                         }
 
                         // Upcoming bookings (if business mode)
