@@ -32,6 +32,7 @@ struct ActivityLogView: View {
         ("scene", "シーン"),
         ("share_create", "シェア"),
         ("share_revoke", "取り消し"),
+        ("maintenance", "メンテ"),
     ]
 
     var body: some View {
@@ -128,18 +129,28 @@ struct ActivityLogView: View {
         }
     }
 
+    @Query private var allIntegrations: [DeviceIntegration]
+
     private func syncDeviceLogs() async {
         isSyncing = true
         defer { isSyncing = false }
         let sesameUUIDs = home.sesameDeviceUUIDs
             .split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty }
+
+        // Find Nuki token from DeviceIntegration
+        let nukiToken = allIntegrations
+            .first { $0.homeId == home.id && $0.platform == "nuki" }?["token"] ?? ""
+
         let count = await DeviceLogSyncer.syncAll(
             context: context,
             homeId: home.id,
             sesameUUIDs: sesameUUIDs,
             sesameApiKey: home.sesameApiKey,
             switchBotToken: home.switchBotToken,
-            switchBotSecret: home.switchBotSecret
+            switchBotSecret: home.switchBotSecret,
+            nukiToken: nukiToken,
+            hueBridgeIP: home.hueBridgeIP,
+            hueUsername: home.hueUsername
         )
         withAnimation {
             syncResult = count > 0 ? "\(count)件の新しいログを取得" : "最新の状態です"

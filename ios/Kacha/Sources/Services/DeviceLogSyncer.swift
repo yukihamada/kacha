@@ -107,6 +107,91 @@ struct DeviceLogSyncer {
         return imported
     }
 
+    // MARK: - Nuki Log Sync
+
+    static func syncNukiLogs(
+        context: ModelContext,
+        homeId: String,
+        token: String
+    ) async -> Int {
+        guard !token.isEmpty else { return 0 }
+        var imported = 0
+        let locks = (try? await NukiClient.shared.fetchSmartLocks(token: token)) ?? []
+
+        let descriptor = FetchDescriptor<ActivityLog>(
+            predicate: #Predicate { $0.homeId == homeId && $0.deviceName.contains("Nuki") }
+        )
+        let existingLogs = (try? context.fetch(descriptor)) ?? []
+        let existingIds = Set(existingLogs.compactMap { extractExternalId($0.detail) })
+
+        for lock in locks {
+            guard let entries = try? await NukiClient.shared.fetchLogs(smartlockId: lock.smartlockId, token: token) else { continue }
+            for entry in entries {
+                let extId = "nuki-\(entry.id)"
+                guard !existingIds.contains(extId) else { continue }
+                let log = ActivityLog(
+                    homeId: homeId,
+                    action: entry.isLock ? "lock" : entry.isUnlock ? "unlock" : "scene",
+                    detail: "[\(extId)] \(entry.actionLabel)",
+                    actor: entry.actor,
+                    deviceName: "Nuki \(lock.name)"
+                )
+                if let ts = entry.timestamp { log.timestamp = ts }
+                context.insert(log)
+                imported += 1
+            }
+
+            // Battery warning
+            if lock.state?.batteryCritical == true {
+                let log = ActivityLog(
+                    homeId: homeId,
+                    action: "maintenance",
+                    detail: "バッテリー残量低下 — 交換してください",
+                    actor: "システム",
+                    deviceName: "Nuki \(lock.name)"
+                )
+                context.insert(log)
+                imported += 1
+            }
+        }
+        try? context.save()
+        return imported
+    }
+
+    // MARK: - Hue Light Change Detection
+
+    private static var lastHueSnapshots: [HueClient.LightSnapshot] = []
+
+    static func syncHueChanges(
+        context: ModelContext,
+        homeId: String,
+        bridgeIP: String,
+        username: String
+    ) async -> Int {
+        guard !bridgeIP.isEmpty, !username.isEmpty else { return 0 }
+        var imported = 0
+        let current = await HueClient.shared.fetchLightSnapshots(bridgeIP: bridgeIP, username: username)
+
+        if !lastHueSnapshots.isEmpty {
+            for light in current {
+                if let prev = lastHueSnapshots.first(where: { $0.id == light.id }), prev.on != light.on {
+                    let log = ActivityLog(
+                        homeId: homeId,
+                        action: light.on ? "light_on" : "light_off",
+                        detail: "\(light.name)を\(light.on ? "点灯" : "消灯")",
+                        actor: "デバイス",
+                        deviceName: "Hue \(light.name)"
+                    )
+                    context.insert(log)
+                    imported += 1
+                }
+            }
+            try? context.save()
+        }
+        lastHueSnapshots = current
+        return imported
+    }
+
     // MARK: - Sync All
 
     static func syncAll(
@@ -115,25 +200,22 @@ struct DeviceLogSyncer {
         sesameUUIDs: [String],
         sesameApiKey: String,
         switchBotToken: String,
-        switchBotSecret: String
+        switchBotSecret: String,
+        nukiToken: String = "",
+        hueBridgeIP: String = "",
+        hueUsername: String = ""
     ) async -> Int {
-        async let sesameCount = syncSesameHistory(
-            context: context, homeId: homeId,
-            uuids: sesameUUIDs, apiKey: sesameApiKey
-        )
-        async let switchBotCount = syncSwitchBotStatus(
-            context: context, homeId: homeId,
-            token: switchBotToken, secret: switchBotSecret
-        )
-        let s = await sesameCount
-        let b = await switchBotCount
-        return s + b
+        var total = 0
+        total += await syncSesameHistory(context: context, homeId: homeId, uuids: sesameUUIDs, apiKey: sesameApiKey)
+        total += await syncSwitchBotStatus(context: context, homeId: homeId, token: switchBotToken, secret: switchBotSecret)
+        total += await syncNukiLogs(context: context, homeId: homeId, token: nukiToken)
+        total += await syncHueChanges(context: context, homeId: homeId, bridgeIP: hueBridgeIP, username: hueUsername)
+        return total
     }
 
     // MARK: - Helpers
 
     private static func extractExternalId(_ detail: String) -> String? {
-        // Extract [sesame-123] from detail string
         guard let start = detail.firstIndex(of: "["),
               let end = detail.firstIndex(of: "]"),
               start < end else { return nil }

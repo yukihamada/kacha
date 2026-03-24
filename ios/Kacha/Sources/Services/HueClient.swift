@@ -136,4 +136,17 @@ class HueClient: ObservableObject {
         let bri = max(1, min(254, Int(Double(percent) / 100.0 * 254)))
         try await setState(lightId: lightId, bri: bri, bridgeIP: bridgeIP, username: username)
     }
+
+    // MARK: - Light State Snapshot (for change detection)
+
+    struct LightSnapshot: Equatable {
+        let id: String
+        let name: String
+        let on: Bool
+    }
+
+    func fetchLightSnapshots(bridgeIP: String, username: String) async -> [LightSnapshot] {
+        guard let list = try? await fetchLights(bridgeIP: bridgeIP, username: username) else { return [] }
+        return list.map { LightSnapshot(id: $0.id, name: $0.name, on: $0.on) }
+    }
 }

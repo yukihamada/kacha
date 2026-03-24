@@ -47,4 +47,47 @@ class NukiClient: ObservableObject {
     func unlock(smartlockId: Int, token: String) async throws {
         _ = try await request("/smartlock/\(smartlockId)/action/unlock", method: "POST", token: token)
     }
+
+    // MARK: - Activity Log
+
+    struct LogEntry: Codable, Identifiable {
+        let id: String
+        let smartlockId: Int
+        let action: Int          // 1=unlock, 2=lock, 3=unlatch, 5=lock'n'go
+        let trigger: Int         // 0=system, 1=manual, 2=button, 3=auto, 5=app, 6=keypad
+        let state: Int
+        let autoUnlock: Bool?
+        let date: String         // ISO 8601
+        let name: String?        // user name
+
+        var isLock: Bool { action == 2 }
+        var isUnlock: Bool { action == 1 || action == 3 || action == 5 }
+        var actionLabel: String {
+            if isLock { return "施錠" }
+            if isUnlock { return "解錠" }
+            return "操作(\(action))"
+        }
+        var triggerLabel: String {
+            switch trigger {
+            case 0: return "システム"
+            case 1: return "手動"
+            case 2: return "ボタン"
+            case 3: return "オートロック"
+            case 5: return "アプリ"
+            case 6: return "キーパッド"
+            default: return "不明(\(trigger))"
+            }
+        }
+        var actor: String { name ?? triggerLabel }
+        var timestamp: Date? {
+            let f = ISO8601DateFormatter()
+            f.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            return f.date(from: date) ?? ISO8601DateFormatter().date(from: date)
+        }
+    }
+
+    func fetchLogs(smartlockId: Int, token: String, limit: Int = 20) async throws -> [LogEntry] {
+        let data = try await request("/smartlock/\(smartlockId)/log?limit=\(limit)", token: token)
+        return try JSONDecoder().decode([LogEntry].self, from: data)
+    }
 }
