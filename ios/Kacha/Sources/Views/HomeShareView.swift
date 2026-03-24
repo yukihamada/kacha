@@ -19,23 +19,27 @@ struct HomeShareView: View {
     @State private var errorMessage: String?
 
     private var sharePayload: HomeShareData {
-        let isAdmin = selectedRole == "admin"
+        let hasDeviceAccess = selectedRole == "admin" || selectedRole == "manager"
+        let hasFullAdmin = selectedRole == "admin"
         return HomeShareData(
             name: home.name,
             address: home.address,
             role: selectedRole,
-            switchBotToken: isAdmin ? home.switchBotToken : "",
-            switchBotSecret: isAdmin ? home.switchBotSecret : "",
-            hueBridgeIP: isAdmin ? home.hueBridgeIP : "",
-            hueUsername: isAdmin ? home.hueUsername : "",
-            sesameApiKey: isAdmin ? home.sesameApiKey : "",
-            sesameDeviceUUIDs: isAdmin ? home.sesameDeviceUUIDs : "",
-            qrioApiKey: isAdmin ? home.qrioApiKey : "",
-            qrioDeviceIds: isAdmin ? home.qrioDeviceIds : "",
-            doorCode: home.doorCode,
-            wifiPassword: home.wifiPassword,
-            beds24ApiKey: isAdmin ? home.beds24ApiKey : nil,
-            beds24RefreshToken: isAdmin ? home.beds24ICalURL : nil
+            // manager+admin: device control keys
+            switchBotToken: hasDeviceAccess ? home.switchBotToken : "",
+            switchBotSecret: hasDeviceAccess ? home.switchBotSecret : "",
+            hueBridgeIP: hasDeviceAccess ? home.hueBridgeIP : "",
+            hueUsername: hasDeviceAccess ? home.hueUsername : "",
+            sesameApiKey: hasDeviceAccess ? home.sesameApiKey : "",
+            sesameDeviceUUIDs: hasDeviceAccess ? home.sesameDeviceUUIDs : "",
+            qrioApiKey: hasDeviceAccess ? home.qrioApiKey : "",
+            qrioDeviceIds: hasDeviceAccess ? home.qrioDeviceIds : "",
+            // everyone: door code & wifi
+            doorCode: (selectedRole != "cleaner") ? home.doorCode : "",
+            wifiPassword: (selectedRole != "cleaner") ? home.wifiPassword : "",
+            // admin only: Beds24
+            beds24ApiKey: hasFullAdmin ? home.beds24ApiKey : nil,
+            beds24RefreshToken: hasFullAdmin ? home.beds24ICalURL : nil
         )
     }
 
@@ -90,7 +94,9 @@ struct HomeShareView: View {
                                 }
                                 ForEach([
                                     ("guest", "ゲスト", "WiFi・ドアコードの閲覧のみ", "person.fill"),
-                                    ("admin", "管理者", "デバイス操作・予約管理・Beds24連携など全機能", "person.badge.key.fill"),
+                                    ("cleaner", "清掃スタッフ", "チェックリストの確認・完了報告", "sparkles"),
+                                    ("manager", "マネージャー", "デバイス操作・予約管理（API鍵は共有しない）", "person.badge.shield.checkmark.fill"),
+                                    ("admin", "オーナー代理", "全権限（API鍵・Beds24含む）", "person.badge.key.fill"),
                                 ], id: \.0) { key, title, desc, icon in
                                     Button {
                                         withAnimation { selectedRole = key }
@@ -112,11 +118,18 @@ struct HomeShareView: View {
                                         .clipShape(RoundedRectangle(cornerRadius: 8))
                                     }
                                 }
+                                // Role-specific warnings
                                 if selectedRole == "admin" {
                                     HStack(spacing: 6) {
                                         Image(systemName: "exclamationmark.triangle.fill").foregroundColor(.kachaWarn)
-                                        Text("管理者にはデバイスのAPIキーやBeds24認証情報も共有されます")
+                                        Text("全てのAPIキー・Beds24認証情報が共有されます。信頼できる方のみに共有してください。")
                                             .font(.caption2).foregroundColor(.kachaWarn)
+                                    }
+                                } else if selectedRole == "manager" {
+                                    HStack(spacing: 6) {
+                                        Image(systemName: "info.circle.fill").foregroundColor(.kachaAccent)
+                                        Text("デバイス操作と予約閲覧が可能です。APIキーは共有されません。")
+                                            .font(.caption2).foregroundColor(.kachaAccent)
                                     }
                                 }
                             }

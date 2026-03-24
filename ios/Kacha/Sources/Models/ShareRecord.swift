@@ -31,7 +31,14 @@ final class ShareRecord {
     }
 
     var isAdmin: Bool { role == "admin" }
-    var roleLabel: String { role == "admin" ? "管理者" : "ゲスト" }
+    var roleLabel: String {
+        switch role {
+        case "admin":   return "オーナー代理"
+        case "manager": return "マネージャー"
+        case "cleaner": return "清掃"
+        default:        return "ゲスト"
+        }
+    }
 
     init(homeId: String, homeName: String, recipientName: String = "", role: String = "guest", token: String, ownerToken: String, validFrom: Date, expiresAt: Date) {
         self.id = UUID().uuidString

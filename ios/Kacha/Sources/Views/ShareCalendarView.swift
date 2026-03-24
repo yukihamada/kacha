@@ -205,8 +205,8 @@ struct ShareCalendarView: View {
                         Text(record.roleLabel)
                             .font(.caption2).bold()
                             .padding(.horizontal, 5).padding(.vertical, 1)
-                            .background(record.isAdmin ? Color.kachaWarn.opacity(0.2) : Color.kachaAccent.opacity(0.2))
-                            .foregroundColor(record.isAdmin ? .kachaWarn : .kachaAccent)
+                            .background(roleColor(record.role).opacity(0.2))
+                            .foregroundColor(roleColor(record.role))
                             .clipShape(Capsule())
                     }
                     Text("\(formatted(record.validFrom)) 〜 \(formatted(record.expiresAt))")
@@ -265,6 +265,15 @@ struct ShareCalendarView: View {
     }
 
     // MARK: - Helpers
+
+    private func roleColor(_ role: String) -> Color {
+        switch role {
+        case "admin":   return .kachaWarn
+        case "manager": return .kacha
+        case "cleaner": return .kachaSuccess
+        default:        return .kachaAccent
+        }
+    }
 
     private func formatted(_ date: Date) -> String {
         let f = DateFormatter()
