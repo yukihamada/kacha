@@ -13,6 +13,7 @@
 		0690CA823F9DBDECC448BBBD /* ShareClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DAC4EBDFF1DF72B996DF36 /* ShareClient.swift */; };
 		132B227AC2F559D68DCF02FA /* ShareCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730BAFCFBC0348F6D8C5123A /* ShareCalendarView.swift */; };
 		195BDBE6E335330751D4C106 /* PermitGuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53057EE1C5415898AEC8053 /* PermitGuideView.swift */; };
+		1F66B446CD99D759CBF17B16 /* BackgroundRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D91C73AA237252B585C7F0 /* BackgroundRefresh.swift */; };
 		26493989640D643F3E3B18D9 /* ChecklistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0223FC6395DC117DBB0CF7D /* ChecklistView.swift */; };
 		2BBAEE09C59F8750EF937110 /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DA0C90D173C9B934F5A1D7 /* ModelTests.swift */; };
 		346B513892A72C7033CED82D /* UtilityRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175549B75AE7B8BFC0C842D5 /* UtilityRecord.swift */; };
@@ -110,6 +111,7 @@
 		36332B105EE7996D0B6B5197 /* CustomWebhookClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomWebhookClient.swift; sourceTree = "<group>"; };
 		37052F89E217CD72DDF3EC65 /* Beds24Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Beds24Tests.swift; sourceTree = "<group>"; };
 		3760F8B3DCFBD7037F9DB342 /* AddBookingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBookingView.swift; sourceTree = "<group>"; };
+		39D91C73AA237252B585C7F0 /* BackgroundRefresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundRefresh.swift; sourceTree = "<group>"; };
 		3DE616B87BEC7294C763936F /* SwitchBotClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchBotClient.swift; sourceTree = "<group>"; };
 		50DAC4EBDFF1DF72B996DF36 /* ShareClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareClient.swift; sourceTree = "<group>"; };
 		566175359870AAEC75CE0235 /* ChecklistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistItem.swift; sourceTree = "<group>"; };
@@ -262,6 +264,7 @@
 		A86304FFB8662A0111C51ABC /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				39D91C73AA237252B585C7F0 /* BackgroundRefresh.swift */,
 				22725AD80A7BB9DEF3C3855A /* Beds24Client.swift */,
 				E719969D6418EF39D1B1A71D /* BookingPoller.swift */,
 				36332B105EE7996D0B6B5197 /* CustomWebhookClient.swift */,
@@ -477,6 +480,7 @@
 				CCB73D8BBD93E1BAF84BAF19 /* ActivityLogView.swift in Sources */,
 				EB3B18000CB8645C97159CB0 /* AddBookingView.swift in Sources */,
 				E30E21C0CDC4CFFD9EE87D0B /* AddDeviceView.swift in Sources */,
+				1F66B446CD99D759CBF17B16 /* BackgroundRefresh.swift in Sources */,
 				B08DB81CBEDD02BCA1C28D5C /* Beds24Client.swift in Sources */,
 				FEC2DC81632A34455613C501 /* Booking.swift in Sources */,
 				8B62098FD7EDA0DD001A07D9 /* BookingDetailView.swift in Sources */,

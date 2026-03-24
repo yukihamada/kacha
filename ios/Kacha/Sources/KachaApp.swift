@@ -17,6 +17,7 @@ struct KachaApp: App {
             fatalError("SwiftData container init failed: \(error)")
         }
         migrateIfNeeded()
+        BackgroundRefresh.register(container: container)
     }
 
     @Environment(\.scenePhase) private var scenePhase
@@ -39,6 +40,9 @@ struct KachaApp: App {
 
                     // Backup to Keychain on every launch
                     KeychainBackup.backup(context: container.mainContext)
+
+                    // Schedule background refresh
+                    BackgroundRefresh.scheduleNext()
 
                     // Poll Beds24 for new bookings + schedule notifications
                     Task {
