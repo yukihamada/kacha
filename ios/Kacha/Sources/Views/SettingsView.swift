@@ -332,6 +332,7 @@ struct HomeSettingsSections: View {
             if minpakuModeEnabled {
                 beds24Section
                 icalSection
+                automationSection
             }
         }
         .alert(alertTitle, isPresented: $showAlert) {
@@ -1127,6 +1128,52 @@ struct HomeSettingsSections: View {
                     Button("閉じる") { showBeds24PropertyModal = false }.foregroundStyle(.secondary)
                 }
             }
+        }
+    }
+
+    // MARK: Automation (guest message + cleaner notify)
+
+    @AppStorage("autoGuestMessage") private var autoGuestMessageGlobal = false
+    @AppStorage("autoCleanerNotify") private var autoCleanerNotifyGlobal = false
+
+    private var automationSection: some View {
+        KachaCard {
+            VStack(spacing: 14) {
+                SettingsHeader(icon: "bell.badge.fill", title: "自動通知", color: .kacha)
+
+                Toggle(isOn: Binding(
+                    get: { UserDefaults.standard.bool(forKey: "autoGuestMessage_\(home.id)") },
+                    set: { UserDefaults.standard.set($0, forKey: "autoGuestMessage_\(home.id)") }
+                )) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("ゲスト自動メッセージ").font(.subheadline).foregroundColor(.white)
+                        Text("チェックイン前日18時にWiFi/ドアコード案内を通知")
+                            .font(.caption2).foregroundColor(.secondary)
+                    }
+                }
+                .tint(.kacha)
+
+                Divider().background(Color.kachaCardBorder)
+
+                Toggle(isOn: Binding(
+                    get: { UserDefaults.standard.bool(forKey: "autoCleanerNotify_\(home.id)") },
+                    set: { UserDefaults.standard.set($0, forKey: "autoCleanerNotify_\(home.id)") }
+                )) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("清掃スタッフ通知").font(.subheadline).foregroundColor(.white)
+                        Text("チェックアウト時に清掃依頼を自動通知")
+                            .font(.caption2).foregroundColor(.secondary)
+                    }
+                }
+                .tint(.kacha)
+
+                HStack(spacing: 6) {
+                    Image(systemName: "info.circle").foregroundColor(.secondary)
+                    Text("どちらもデフォルトOFFです。必要に応じてONにしてください。")
+                        .font(.caption2).foregroundColor(.secondary)
+                }
+            }
+            .padding(16)
         }
     }
 

@@ -31,6 +31,7 @@ struct HomeView: View {
     @State private var showMaintenance = false
     @State private var showActivityLog = false
     @State private var showHouseManual = false
+    @State private var showRevenueReport = false
     @State private var isPressingAutolock = false
     @State private var autolockSuccess = false
     @State private var isRunningScene = false
@@ -120,6 +121,9 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showHouseManual) {
                 if let home = activeHome { HouseManualView(home: home) }
+            }
+            .sheet(isPresented: $showRevenueReport) {
+                if let home = activeHome { RevenueReportView(home: home) }
             }
         }
     }
@@ -267,6 +271,7 @@ struct HomeView: View {
             actions.insert(("wifi", "ゲストカード", .kachaAccent, { showGuestCard = true }), at: 0)
             actions.insert(("checklist", "チェックリスト", .kachaSuccess, { showChecklist = true }), at: 1)
             actions.append(("book.fill", "マニュアル", .kachaAccent, { showHouseManual = true }))
+            actions.append(("chart.bar.fill", "収支", .kacha, { showRevenueReport = true }))
         }
         return LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
             ForEach(actions, id: \.1) { icon, label, color, action in

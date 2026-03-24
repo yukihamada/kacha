@@ -9,6 +9,23 @@ struct GuestCardView: View {
     @Query private var allPlaces: [NearbyPlace]
     @Environment(\.dismiss) private var dismiss
     @State private var showWifiPassword = false
+    @State private var selectedLang = "ja"
+
+    private let languages = [
+        ("ja", "日本語"),
+        ("en", "English"),
+        ("zh", "中文"),
+        ("ko", "한국어"),
+    ]
+
+    private func t(_ ja: String, _ en: String, _ zh: String, _ ko: String) -> String {
+        switch selectedLang {
+        case "en": return en
+        case "zh": return zh
+        case "ko": return ko
+        default: return ja
+        }
+    }
 
     private var places: [NearbyPlace] { allPlaces.filter { $0.homeId == home.id } }
 
@@ -27,9 +44,26 @@ struct GuestCardView: View {
                 Color.kachaBg.ignoresSafeArea()
                 ScrollView {
                     VStack(spacing: 20) {
+                        // Language picker
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 8) {
+                                ForEach(languages, id: \.0) { code, label in
+                                    Button { withAnimation { selectedLang = code } } label: {
+                                        Text(label).font(.caption).bold()
+                                            .padding(.horizontal, 12).padding(.vertical, 6)
+                                            .background(selectedLang == code ? Color.kacha : Color.kacha.opacity(0.1))
+                                            .foregroundColor(selectedLang == code ? .black : .kacha)
+                                            .clipShape(Capsule())
+                                    }
+                                }
+                            }
+                            .padding(.horizontal, 16)
+                        }
+
                         // Welcome
                         VStack(spacing: 4) {
-                            Text("ようこそ").font(.caption).foregroundColor(.secondary)
+                            Text(t("ようこそ", "Welcome", "欢迎", "환영합니다"))
+                                .font(.caption).foregroundColor(.secondary)
                             Text(home.name).font(.title).bold().foregroundColor(.white)
                             if !home.address.isEmpty {
                                 Text(home.address).font(.caption).foregroundColor(.secondary)
@@ -56,7 +90,7 @@ struct GuestCardView: View {
                                             .padding(12).background(Color.white)
                                             .clipShape(RoundedRectangle(cornerRadius: 12))
                                     }
-                                    Text("カメラでスキャンして接続")
+                                    Text(t("カメラでスキャンして接続", "Scan to connect", "扫描连接", "스캔하여 연결"))
                                         .font(.caption).foregroundColor(.secondary)
                                     if showWifiPassword {
                                         HStack {
@@ -79,7 +113,8 @@ struct GuestCardView: View {
                                         Image(systemName: "keypad.rectangle.fill").font(.system(size: 20)).foregroundColor(.kacha)
                                     }
                                     VStack(alignment: .leading, spacing: 2) {
-                                        Text("ドアコード").font(.caption).foregroundColor(.secondary)
+                                        Text(t("ドアコード", "Door Code", "门禁密码", "도어코드"))
+                                            .font(.caption).foregroundColor(.secondary)
                                         Text(home.doorCode).font(.title2).bold().foregroundColor(.white)
                                             .textSelection(.enabled)
                                     }
@@ -95,7 +130,8 @@ struct GuestCardView: View {
                                 VStack(alignment: .leading, spacing: 12) {
                                     HStack(spacing: 6) {
                                         Image(systemName: "mappin.and.ellipse").foregroundColor(.kachaSuccess)
-                                        Text("近くの施設").font(.subheadline).bold().foregroundColor(.white)
+                                        Text(t("近くの施設", "Nearby", "附近设施", "주변 시설"))
+                                            .font(.subheadline).bold().foregroundColor(.white)
                                     }
                                     ForEach(places) { place in
                                         let info = NearbyPlace.categoryInfo.first { $0.key == place.category }
@@ -124,10 +160,11 @@ struct GuestCardView: View {
                             VStack(alignment: .leading, spacing: 10) {
                                 HStack(spacing: 6) {
                                     Image(systemName: "exclamationmark.triangle.fill").foregroundColor(.kachaWarn)
-                                    Text("緊急連絡先").font(.subheadline).bold().foregroundColor(.white)
+                                    Text(t("緊急連絡先", "Emergency", "紧急联系", "긴급 연락처"))
+                                        .font(.subheadline).bold().foregroundColor(.white)
                                 }
-                                emergencyRow("110", "警察")
-                                emergencyRow("119", "消防・救急")
+                                emergencyRow("110", t("警察", "Police", "警察", "경찰"))
+                                emergencyRow("119", t("消防・救急", "Fire/Ambulance", "消防/急救", "소방/구급"))
                             }
                             .padding(16)
                         }

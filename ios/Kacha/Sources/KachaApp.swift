@@ -39,6 +39,16 @@ struct KachaApp: App {
 
                     // Backup to Keychain on every launch
                     KeychainBackup.backup(context: container.mainContext)
+
+                    // Poll Beds24 for new bookings + schedule notifications
+                    Task {
+                        let homes = (try? container.mainContext.fetch(FetchDescriptor<Home>())) ?? []
+                        for home in homes {
+                            let _ = await BookingPoller.pollAndNotify(context: container.mainContext, home: home)
+                            GuestMessenger.scheduleMessages(context: container.mainContext, home: home)
+                            CleanerNotifier.scheduleCleaningNotifications(context: container.mainContext, home: home)
+                        }
+                    }
                 }
                 .onOpenURL { url in
                     handleDeepLink(url)
