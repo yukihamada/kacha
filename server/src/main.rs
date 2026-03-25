@@ -47,7 +47,12 @@ struct ShareInfo {
 
 fn init_db(conn: &Connection) {
     conn.execute_batch(
-        "CREATE TABLE IF NOT EXISTS shares (
+        "CREATE TABLE IF NOT EXISTS waitlist (
+            email       TEXT PRIMARY KEY,
+            source      TEXT NOT NULL DEFAULT 'website',
+            created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+        );
+        CREATE TABLE IF NOT EXISTS shares (
             token       TEXT PRIMARY KEY,
             owner_token TEXT NOT NULL,
             encrypted_data TEXT NOT NULL,
@@ -292,6 +297,47 @@ async fn support_page() -> Html<String> {
 </body></html>"#.to_string())
 }
 
+// MARK: - Waitlist
+
+#[derive(Deserialize)]
+struct WaitlistRequest {
+    email: String,
+}
+
+#[derive(Serialize)]
+struct WaitlistResponse {
+    success: bool,
+    message: String,
+}
+
+async fn join_waitlist(
+    State(state): State<Arc<AppState>>,
+    Json(body): Json<WaitlistRequest>,
+) -> Result<(StatusCode, Json<WaitlistResponse>), StatusCode> {
+    let email = body.email.trim().to_lowercase();
+    if email.is_empty() || !email.contains('@') {
+        return Ok((StatusCode::BAD_REQUEST, Json(WaitlistResponse {
+            success: false,
+            message: "有効なメールアドレスを入力してください".into(),
+        })));
+    }
+    let db = state.db.lock().unwrap();
+    let result = db.execute(
+        "INSERT OR IGNORE INTO waitlist (email) VALUES (?1)",
+        rusqlite::params![email],
+    );
+    match result {
+        Ok(_) => Ok((StatusCode::OK, Json(WaitlistResponse {
+            success: true,
+            message: "登録ありがとうございます！ベータ版の準備ができ次第ご連絡します。".into(),
+        }))),
+        Err(_) => Ok((StatusCode::OK, Json(WaitlistResponse {
+            success: true,
+            message: "既に登録済みです。".into(),
+        }))),
+    }
+}
+
 #[tokio::main]
 async fn main() {
     let db_path = std::env::var("DATABASE_PATH").unwrap_or_else(|_| "kacha.db".into());
@@ -313,10 +359,15 @@ async fn main() {
         .route("/join", get(join_fallback))
         .route("/privacy", get(privacy_page))
         .route("/support", get(support_page))
+        .route("/api/v1/waitlist", post(join_waitlist))
         .route("/health", get(|| async { "ok" }))
         .layer(
             CorsLayer::new()
-                .allow_origin("https://kacha.pasha.run".parse::<http::HeaderValue>().unwrap())
+                .allow_origin([
+                    "https://kacha.pasha.run".parse::<http::HeaderValue>().unwrap(),
+                    "https://enablerdao.com".parse::<http::HeaderValue>().unwrap(),
+                    "https://pasha.run".parse::<http::HeaderValue>().unwrap(),
+                ])
                 .allow_methods([http::Method::GET, http::Method::POST, http::Method::DELETE])
                 .allow_headers([header::CONTENT_TYPE])
         )
