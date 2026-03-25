@@ -14,6 +14,7 @@
 		132B227AC2F559D68DCF02FA /* ShareCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730BAFCFBC0348F6D8C5123A /* ShareCalendarView.swift */; };
 		195BDBE6E335330751D4C106 /* PermitGuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53057EE1C5415898AEC8053 /* PermitGuideView.swift */; };
 		1F66B446CD99D759CBF17B16 /* BackgroundRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D91C73AA237252B585C7F0 /* BackgroundRefresh.swift */; };
+		258622C88AA8368D6379B313 /* VaultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC9295CA5D5AAF78513DD645 /* VaultView.swift */; };
 		26493989640D643F3E3B18D9 /* ChecklistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0223FC6395DC117DBB0CF7D /* ChecklistView.swift */; };
 		2BBAEE09C59F8750EF937110 /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DA0C90D173C9B934F5A1D7 /* ModelTests.swift */; };
 		346B513892A72C7033CED82D /* UtilityRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175549B75AE7B8BFC0C842D5 /* UtilityRecord.swift */; };
@@ -58,6 +59,7 @@
 		D6D569E9E4F9D1141AC5CBE0 /* KachaWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04135282A86BCECD05783AB8 /* KachaWidget.swift */; };
 		D81AA2880E72DCB17BFB6B76 /* CustomWebhookClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36332B105EE7996D0B6B5197 /* CustomWebhookClient.swift */; };
 		D94D275F8DBFB4ACEDC1F2C4 /* NatureRemoClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 256031C69587A8CA93CA2918 /* NatureRemoClient.swift */; };
+		DAF9B415D86A97815639E4A4 /* SecureItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAFB0EEE8BC6B48AB3FC8144 /* SecureItem.swift */; };
 		DC6D02EB7EADD575DAA48961 /* CelebrationEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1AB6E38DE556A80A4FDACF /* CelebrationEffect.swift */; };
 		E30E21C0CDC4CFFD9EE87D0B /* AddDeviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7AEFDAB378F3AF8D6B1F8B /* AddDeviceView.swift */; };
 		E31349FF232BE850D3B4A8D5 /* ShareTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6787C7F6224E939F853894EB /* ShareTests.swift */; };
@@ -140,6 +142,7 @@
 		9D1AB6E38DE556A80A4FDACF /* CelebrationEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CelebrationEffect.swift; sourceTree = "<group>"; };
 		A252235D4A96185B03167092 /* Booking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Booking.swift; sourceTree = "<group>"; };
 		AB70FC0B2FFC1F7B5F1B6BB1 /* SoundPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundPlayer.swift; sourceTree = "<group>"; };
+		AC9295CA5D5AAF78513DD645 /* VaultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultView.swift; sourceTree = "<group>"; };
 		ADDDCAF1D563A193F10EFB4E /* ShareRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareRecord.swift; sourceTree = "<group>"; };
 		B0BCCBB16ABEE301F649AB44 /* GuestMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestMessageView.swift; sourceTree = "<group>"; };
 		B80752034096398735A502A3 /* RevenueReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevenueReportView.swift; sourceTree = "<group>"; };
@@ -159,6 +162,7 @@
 		F5E640BBC420365E145EA283 /* KachaUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = KachaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7520FE5B11987221F8DCA88 /* KachaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KachaUITests.swift; sourceTree = "<group>"; };
 		FA719FEFB13BE9B2634BF757 /* HouseManual.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseManual.swift; sourceTree = "<group>"; };
+		FAFB0EEE8BC6B48AB3FC8144 /* SecureItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureItem.swift; sourceTree = "<group>"; };
 		FDE620580DAF5BA1260B2AAC /* HueClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HueClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -183,6 +187,7 @@
 				6D6CA3BE71B9C6388662314E /* Home.swift */,
 				FA719FEFB13BE9B2634BF757 /* HouseManual.swift */,
 				85E694CC782F89977CDFFA6E /* MaintenanceTask.swift */,
+				FAFB0EEE8BC6B48AB3FC8144 /* SecureItem.swift */,
 				ADDDCAF1D563A193F10EFB4E /* ShareRecord.swift */,
 				659D2214496DFC118E1583E2 /* SmartDevice.swift */,
 				175549B75AE7B8BFC0C842D5 /* UtilityRecord.swift */,
@@ -245,6 +250,7 @@
 				EBCEDB37B2D0B9345ABDE94A /* SettingsView.swift */,
 				730BAFCFBC0348F6D8C5123A /* ShareCalendarView.swift */,
 				0A24BD7D0D7257316164F996 /* UtilityView.swift */,
+				AC9295CA5D5AAF78513DD645 /* VaultView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -518,6 +524,7 @@
 				7C81B0CFD18586B8462ACCEA /* OnboardingView.swift in Sources */,
 				195BDBE6E335330751D4C106 /* PermitGuideView.swift in Sources */,
 				A209E982B75512C52AB00AD0 /* RevenueReportView.swift in Sources */,
+				DAF9B415D86A97815639E4A4 /* SecureItem.swift in Sources */,
 				B580A115D64500E4E9F4F9F0 /* SecurityInfoView.swift in Sources */,
 				68B5FC384F63E9884DE6BA98 /* SeedData.swift in Sources */,
 				BB5B1C14CB42E28322BBC306 /* SesameClient.swift in Sources */,
@@ -530,6 +537,7 @@
 				B2615DCF0B22DF1E3AB77911 /* SwitchBotClient.swift in Sources */,
 				346B513892A72C7033CED82D /* UtilityRecord.swift in Sources */,
 				571F922AA8CDCC9AA29EED11 /* UtilityView.swift in Sources */,
+				258622C88AA8368D6379B313 /* VaultView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

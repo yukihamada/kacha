@@ -32,6 +32,7 @@ struct HomeView: View {
     @State private var showActivityLog = false
     @State private var showHouseManual = false
     @State private var showRevenueReport = false
+    @State private var showVault = false
     @State private var isPressingAutolock = false
     @State private var autolockSuccess = false
     @State private var isRunningScene = false
@@ -124,6 +125,9 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showRevenueReport) {
                 if let home = activeHome { RevenueReportView(home: home) }
+            }
+            .sheet(isPresented: $showVault) {
+                if let home = activeHome { VaultView(home: home) }
             }
         }
     }
@@ -267,6 +271,7 @@ struct HomeView: View {
         var actions: [(String, String, Color, () -> Void)] = [
             ("bolt.fill", "光熱費", .kachaWarn, { showUtility = true }),
             ("wrench.and.screwdriver", "家の管理", .kacha, { showMaintenance = true }),
+            ("key.fill", "パスワード", .kachaAccent, { showVault = true }),
         ]
         if minpakuModeEnabled {
             actions.insert(("wifi", "ゲストカード", .kachaAccent, { showGuestCard = true }), at: 0)
