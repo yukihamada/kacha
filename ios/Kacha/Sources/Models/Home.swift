@@ -31,7 +31,7 @@ final class Home {
 
     // Beds24
     var beds24ApiKey: String
-    var beds24ICalURL: String
+    var beds24RefreshToken: String
 
     // iCal (民泊モード)
     var airbnbICalURL: String
@@ -78,7 +78,7 @@ final class Home {
         self.geofenceRadius = 200
         self.geofenceEnabled = false
         self.beds24ApiKey = ""
-        self.beds24ICalURL = ""
+        self.beds24RefreshToken = ""
         self.airbnbICalURL = ""
         self.jalanICalURL = ""
         self.icalLastSync = 0

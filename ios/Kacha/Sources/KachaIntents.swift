@@ -1,5 +1,4 @@
 import AppIntents
-import SwiftData
 
 // MARK: - Check-in Intent
 
@@ -23,20 +22,10 @@ struct LockDoorIntent: AppIntent {
     static var description = IntentDescription("スマートロックを施錠します")
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        let token = UserDefaults.standard.string(forKey: "switchBotToken") ?? ""
-        let secret = UserDefaults.standard.string(forKey: "switchBotSecret") ?? ""
-        let deviceId = UserDefaults.standard.string(forKey: "switchBotDeviceId") ?? ""
-
-        guard !token.isEmpty, !secret.isEmpty, !deviceId.isEmpty else {
-            return .result(dialog: "SwitchBotの設定が必要です。カチャアプリで設定してください。")
-        }
-
-        do {
-            try await SwitchBotClient.shared.lock(deviceId: deviceId, token: token, secret: secret)
-            return .result(dialog: "施錠しました")
-        } catch {
-            return .result(dialog: "施錠に失敗しました: \(error.localizedDescription)")
-        }
+        // TODO: SwitchBot credentials are stored in SwiftData (per-Home), not UserDefaults.
+        // Intents cannot directly access SwiftData ModelContext yet.
+        // For now, return a guidance message until App Intents + SwiftData integration is implemented.
+        return .result(dialog: "SwitchBotの設定が必要です。カチャアプリから操作してください。")
     }
 }
 
@@ -47,20 +36,10 @@ struct UnlockDoorIntent: AppIntent {
     static var description = IntentDescription("スマートロックを解錠します")
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        let token = UserDefaults.standard.string(forKey: "switchBotToken") ?? ""
-        let secret = UserDefaults.standard.string(forKey: "switchBotSecret") ?? ""
-        let deviceId = UserDefaults.standard.string(forKey: "switchBotDeviceId") ?? ""
-
-        guard !token.isEmpty, !secret.isEmpty, !deviceId.isEmpty else {
-            return .result(dialog: "SwitchBotの設定が必要です。カチャアプリで設定してください。")
-        }
-
-        do {
-            try await SwitchBotClient.shared.unlock(deviceId: deviceId, token: token, secret: secret)
-            return .result(dialog: "解錠しました")
-        } catch {
-            return .result(dialog: "解錠に失敗しました: \(error.localizedDescription)")
-        }
+        // TODO: SwitchBot credentials are stored in SwiftData (per-Home), not UserDefaults.
+        // Intents cannot directly access SwiftData ModelContext yet.
+        // For now, return a guidance message until App Intents + SwiftData integration is implemented.
+        return .result(dialog: "SwitchBotの設定が必要です。カチャアプリから操作してください。")
     }
 }
 

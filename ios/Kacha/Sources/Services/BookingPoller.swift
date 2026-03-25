@@ -11,8 +11,8 @@ struct BookingPoller {
 
     /// Beds24の物件を自動チェックし、未登録の物件があればホームを自動作成
     static func autoDetectProperties(context: ModelContext, home: Home) async -> Int {
-        guard !home.beds24ICalURL.isEmpty else { return 0 }
-        guard let token = try? await Beds24Client.shared.getToken(refreshToken: home.beds24ICalURL) else { return 0 }
+        guard !home.beds24RefreshToken.isEmpty else { return 0 }
+        guard let token = try? await Beds24Client.shared.getToken(refreshToken: home.beds24RefreshToken) else { return 0 }
         guard let properties = try? await Beds24Client.shared.fetchProperties(token: token) else { return 0 }
 
         let allHomes = (try? context.fetch(FetchDescriptor<Home>())) ?? []
@@ -25,7 +25,7 @@ struct BookingPoller {
 
             let newHome = Home(name: propName, sortOrder: allHomes.count + created)
             newHome.beds24ApiKey = "\(propId)"
-            newHome.beds24ICalURL = home.beds24ICalURL
+            newHome.beds24RefreshToken = home.beds24RefreshToken
             newHome.businessType = home.businessType
             context.insert(newHome)
             created += 1
@@ -52,8 +52,8 @@ struct BookingPoller {
     /// Beds24から最新予約を取得し、新規があれば通知
     /// allHomes: propertyIdからhomeIdを解決するために全ホームを渡す
     static func pollAndNotify(context: ModelContext, home: Home, allHomes: [Home] = []) async -> Int {
-        guard !home.beds24ICalURL.isEmpty else { return 0 }
-        guard let token = try? await Beds24Client.shared.getToken(refreshToken: home.beds24ICalURL) else { return 0 }
+        guard !home.beds24RefreshToken.isEmpty else { return 0 }
+        guard let token = try? await Beds24Client.shared.getToken(refreshToken: home.beds24RefreshToken) else { return 0 }
         guard let b24Bookings = try? await Beds24Client.shared.fetchBookings(token: token) else { return 0 }
 
         let existingExtIDs = Set(((try? context.fetch(FetchDescriptor<Booking>())) ?? []).map { $0.externalId })

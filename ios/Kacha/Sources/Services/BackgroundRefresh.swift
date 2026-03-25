@@ -34,9 +34,9 @@ struct BackgroundRefresh {
             var totalNew = 0
             var polledTokens = Set<String>()
 
-            for home in homes where !home.beds24ICalURL.isEmpty {
-                if !polledTokens.contains(home.beds24ICalURL) {
-                    polledTokens.insert(home.beds24ICalURL)
+            for home in homes where !home.beds24RefreshToken.isEmpty {
+                if !polledTokens.contains(home.beds24RefreshToken) {
+                    polledTokens.insert(home.beds24RefreshToken)
                     let _ = await BookingPoller.autoDetectProperties(context: context, home: home)
                     let refreshedHomes = (try? context.fetch(FetchDescriptor<Home>())) ?? homes
                     totalNew += await BookingPoller.pollAndNotify(context: context, home: home, allHomes: refreshedHomes)

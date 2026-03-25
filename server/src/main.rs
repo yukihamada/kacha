@@ -81,6 +81,12 @@ fn init_db(conn: &Connection) {
             encrypted_data TEXT NOT NULL,
             updated_at  TEXT NOT NULL DEFAULT (datetime('now')),
             PRIMARY KEY (user_id, app_id)
+        );
+        CREATE TABLE IF NOT EXISTS sessions (
+            token       TEXT PRIMARY KEY,
+            user_id     TEXT NOT NULL,
+            expires_at  TEXT NOT NULL,
+            created_at  TEXT NOT NULL DEFAULT (datetime('now'))
         );",
     )
     .expect("init db");
@@ -382,6 +388,7 @@ struct VerifyResponse {
     success: bool,
     user_id: String,
     token: String,
+    expires_at: String,
 }
 
 #[derive(Deserialize)]
@@ -389,6 +396,7 @@ struct SaveBackupRequest {
     user_id: String,
     app_id: String,
     encrypted_data: String,
+    session_token: String,
 }
 
 #[derive(Serialize)]
@@ -399,6 +407,7 @@ struct SaveBackupResponse {
 #[derive(Deserialize)]
 struct GetBackupQuery {
     user_id: String,
+    session_token: String,
 }
 
 #[derive(Serialize)]
@@ -423,8 +432,28 @@ async fn send_magic_link(
 
     let code: String = format!("{:06}", rand::thread_rng().gen_range(0..1_000_000u32));
     let expires_at = (Utc::now() + chrono::Duration::minutes(10)).to_rfc3339();
+    let one_hour_ago = (Utc::now() - chrono::Duration::hours(1)).to_rfc3339();
 
     let db = state.db.lock().unwrap();
+
+    // Rate limit: max 5 codes per email per hour
+    let recent_count: i64 = db
+        .query_row(
+            "SELECT COUNT(*) FROM magic_links WHERE email = ?1 AND created_at > ?2",
+            rusqlite::params![email, one_hour_ago],
+            |row| row.get(0),
+        )
+        .unwrap_or(0);
+    if recent_count >= 5 {
+        return Ok((
+            StatusCode::TOO_MANY_REQUESTS,
+            Json(MagicLinkResponse {
+                success: false,
+                message: "リクエストが多すぎます。しばらくしてから再試行してください。".into(),
+            }),
+        ));
+    }
+
     db.execute(
         "INSERT INTO magic_links (token, email, expires_at) VALUES (?1, ?2, ?3)",
         rusqlite::params![code, email, expires_at],
@@ -433,7 +462,9 @@ async fn send_magic_link(
 
     // TODO: In production, send email via Resend API
     // For now the code is stored in DB (retrieve via DB for testing)
-    println!("Magic link code for {}: {}", email, code);
+    if std::env::var("ENABLE_DEBUG_LOG").is_ok() {
+        println!("Magic link code for {}: {}", email, code);
+    }
 
     Ok((
         StatusCode::OK,
@@ -493,12 +524,36 @@ async fn verify_magic_link(
     };
 
     let session_token = Uuid::new_v4().to_string();
+    let session_expires = (Utc::now() + chrono::Duration::days(30)).to_rfc3339();
+
+    db.execute(
+        "INSERT INTO sessions (token, user_id, expires_at) VALUES (?1, ?2, ?3)",
+        rusqlite::params![session_token, user_id, session_expires],
+    )
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
     Ok(Json(VerifyResponse {
         success: true,
         user_id,
         token: session_token,
+        expires_at: session_expires,
     }))
+}
+
+fn cleanup_expired(conn: &Connection) {
+    conn.execute("DELETE FROM magic_links WHERE expires_at < datetime('now')", []).ok();
+    conn.execute("DELETE FROM shares WHERE expires_at IS NOT NULL AND expires_at < datetime('now') AND revoked = 0", []).ok();
+    conn.execute("DELETE FROM sessions WHERE expires_at < datetime('now')", []).ok();
+}
+
+fn verify_session(db: &Connection, session_token: &str, user_id: &str) -> Result<(), StatusCode> {
+    let now = Utc::now().to_rfc3339();
+    db.query_row(
+        "SELECT token FROM sessions WHERE token = ?1 AND user_id = ?2 AND expires_at > ?3",
+        rusqlite::params![session_token, user_id, now],
+        |_row| Ok(()),
+    )
+    .map_err(|_| StatusCode::UNAUTHORIZED)
 }
 
 async fn save_backup(
@@ -506,6 +561,7 @@ async fn save_backup(
     Json(body): Json<SaveBackupRequest>,
 ) -> Result<Json<SaveBackupResponse>, StatusCode> {
     let db = state.db.lock().unwrap();
+    verify_session(&db, &body.session_token, &body.user_id)?;
     db.execute(
         "INSERT INTO user_backups (user_id, app_id, encrypted_data, updated_at)
          VALUES (?1, ?2, ?3, datetime('now'))
@@ -523,6 +579,7 @@ async fn get_backup(
     Query(params): Query<GetBackupQuery>,
 ) -> Result<Json<GetBackupResponse>, StatusCode> {
     let db = state.db.lock().unwrap();
+    verify_session(&db, &params.session_token, &params.user_id)?;
     let encrypted_data: String = db
         .query_row(
             "SELECT encrypted_data FROM user_backups WHERE user_id = ?1 AND app_id = ?2",
@@ -560,7 +617,14 @@ async fn main() {
         .route("/api/v1/auth/verify", post(verify_magic_link))
         .route("/api/v1/auth/backup", post(save_backup))
         .route("/api/v1/auth/backup/:app_id", get(get_backup))
-        .route("/health", get(|| async { "ok" }))
+        .route("/health", get({
+            let state = state.clone();
+            move || async move {
+                let db = state.db.lock().unwrap();
+                cleanup_expired(&db);
+                "ok"
+            }
+        }))
         .layer(
             CorsLayer::new()
                 .allow_origin([

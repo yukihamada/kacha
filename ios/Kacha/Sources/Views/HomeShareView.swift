@@ -39,7 +39,7 @@ struct HomeShareView: View {
             wifiPassword: (selectedRole != "cleaner") ? home.wifiPassword : "",
             // admin only: Beds24
             beds24ApiKey: hasFullAdmin ? home.beds24ApiKey : nil,
-            beds24RefreshToken: hasFullAdmin ? home.beds24ICalURL : nil
+            beds24RefreshToken: hasFullAdmin ? home.beds24RefreshToken : nil
         )
     }
 

@@ -54,9 +54,9 @@ struct KachaApp: App {
 
                         // Auto-detect new Beds24 properties
                         var checkedTokens = Set<String>()
-                        for home in homes where !home.beds24ICalURL.isEmpty {
-                            if !checkedTokens.contains(home.beds24ICalURL) {
-                                checkedTokens.insert(home.beds24ICalURL)
+                        for home in homes where !home.beds24RefreshToken.isEmpty {
+                            if !checkedTokens.contains(home.beds24RefreshToken) {
+                                checkedTokens.insert(home.beds24RefreshToken)
                                 let created = await BookingPoller.autoDetectProperties(context: container.mainContext, home: home)
                                 if created > 0 {
                                     homes = (try? container.mainContext.fetch(FetchDescriptor<Home>())) ?? []
@@ -67,8 +67,8 @@ struct KachaApp: App {
                         // Poll Beds24 once per unique refreshToken (avoid duplicate fetches)
                         var polledTokens = Set<String>()
                         for home in homes {
-                            if !home.beds24ICalURL.isEmpty && !polledTokens.contains(home.beds24ICalURL) {
-                                polledTokens.insert(home.beds24ICalURL)
+                            if !home.beds24RefreshToken.isEmpty && !polledTokens.contains(home.beds24RefreshToken) {
+                                polledTokens.insert(home.beds24RefreshToken)
                                 let _ = await BookingPoller.pollAndNotify(context: container.mainContext, home: home, allHomes: homes)
                             }
                             GuestMessenger.scheduleMessages(context: container.mainContext, home: home)
@@ -137,7 +137,7 @@ struct KachaApp: App {
         // Admin-only: Beds24 credentials
         if shareData.role == "admin" {
             home.beds24ApiKey  = shareData.beds24ApiKey ?? ""
-            home.beds24ICalURL = shareData.beds24RefreshToken ?? ""
+            home.beds24RefreshToken = shareData.beds24RefreshToken ?? ""
             home.businessType  = "minpaku"
         }
         context.insert(home)

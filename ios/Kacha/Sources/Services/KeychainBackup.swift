@@ -88,7 +88,7 @@ struct KeychainBackup {
                 latitude: h.latitude, longitude: h.longitude,
                 geofenceRadius: h.geofenceRadius, geofenceEnabled: h.geofenceEnabled,
                 businessType: h.businessType,
-                beds24ApiKey: h.beds24ApiKey, beds24RefreshToken: h.beds24ICalURL,
+                beds24ApiKey: h.beds24ApiKey, beds24RefreshToken: h.beds24RefreshToken,
                 minpakuNumber: h.minpakuNumber, minpakuNights: h.minpakuNights
             )
         }
@@ -137,7 +137,7 @@ struct KeychainBackup {
             home.geofenceEnabled = bh.geofenceEnabled
             home.businessType = bh.businessType
             home.beds24ApiKey = bh.beds24ApiKey
-            home.beds24ICalURL = bh.beds24RefreshToken
+            home.beds24RefreshToken = bh.beds24RefreshToken
             home.minpakuNumber = bh.minpakuNumber
             home.minpakuNights = bh.minpakuNights
             context.insert(home)

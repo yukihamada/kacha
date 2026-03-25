@@ -320,17 +320,18 @@ struct HomeView: View {
     // MARK: - Quick Actions Grid
 
     private var quickActionsGrid: some View {
-        var actions: [(String, String, Color, () -> Void)] = [
-            ("bolt.fill", "光熱費", .kachaWarn, { showUtility = true }),
-            ("wrench.and.screwdriver", "家の管理", .kacha, { showMaintenance = true }),
-            ("key.fill", "パスワード", .kachaAccent, { showVault = true }),
-        ]
+        // Core features only — tested and stable
+        var actions: [(String, String, Color, () -> Void)] = []
         if minpakuModeEnabled {
-            actions.insert(("wifi", "ゲストカード", .kachaAccent, { showGuestCard = true }), at: 0)
-            actions.insert(("checklist", "チェックリスト", .kachaSuccess, { showChecklist = true }), at: 1)
-            actions.append(("book.fill", "マニュアル", .kachaAccent, { showHouseManual = true }))
-            actions.append(("chart.bar.fill", "収支", .kacha, { showRevenueReport = true }))
+            actions.append(("wifi", "ゲストカード", .kachaAccent, { showGuestCard = true }))
+            actions.append(("checklist", "チェックリスト", .kachaSuccess, { showChecklist = true }))
         }
+        // Beta features — under "もっと見る" in settings
+        // ("bolt.fill", "光熱費") → 設定から
+        // ("wrench.and.screwdriver", "家の管理") → 設定から
+        // ("key.fill", "パスワード") → 設定から
+        // ("book.fill", "マニュアル") → 設定から
+        // ("chart.bar.fill", "収支") → 設定から
         return LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
             ForEach(actions, id: \.1) { icon, label, color, action in
                 Button(action: action) {

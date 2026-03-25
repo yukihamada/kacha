@@ -915,7 +915,7 @@ struct HomeSettingsSections: View {
 
                 Divider().background(Color.kachaCardBorder)
 
-                if home.beds24ICalURL.isEmpty {
+                if home.beds24RefreshToken.isEmpty {
                     // Not connected — show invite code input
                     SecureTokenField(label: "Invite Code", text: $beds24InviteInput)
 
@@ -947,7 +947,7 @@ struct HomeSettingsSections: View {
                         }
                         Spacer()
                         Button {
-                            home.beds24ICalURL = ""
+                            home.beds24RefreshToken = ""
                             home.beds24ApiKey = ""
                         } label: {
                             Text("切断").font(.caption2).foregroundColor(.kachaDanger)
@@ -960,7 +960,7 @@ struct HomeSettingsSections: View {
                 }
 
                 // Property linking (auto-loaded)
-                if !home.beds24ICalURL.isEmpty {
+                if !home.beds24RefreshToken.isEmpty {
                     Divider().background(Color.kachaCardBorder)
                     HStack {
                         Text("物件の関連付け").font(.caption).bold().foregroundColor(.white)
@@ -1046,7 +1046,7 @@ struct HomeSettingsSections: View {
                     }
                     .actionButtonStyle(.kacha)
                 }
-                .disabled(isSyncingBeds24 || home.beds24ICalURL.isEmpty)
+                .disabled(isSyncingBeds24 || home.beds24RefreshToken.isEmpty)
             }
             .padding(16)
         }
@@ -1237,12 +1237,10 @@ struct HomeSettingsSections: View {
 
                 Divider().background(Color.kachaCardBorder)
                 MaskedField(label: "ドアコード", value: $home.doorCode, icon: "keypad.rectangle.fill")
-                    .onChange(of: home.doorCode) { _, val in UserDefaults.standard.set(val, forKey: "facilityDoorCode") }
 
                 Divider().background(Color.kachaCardBorder)
                 HStack {
                     MaskedField(label: "Wi-Fiパスワード", value: $home.wifiPassword, icon: "wifi")
-                        .onChange(of: home.wifiPassword) { _, val in UserDefaults.standard.set(val, forKey: "facilityWifiPassword") }
                 }
             }
             .padding(16)
@@ -1347,8 +1345,7 @@ struct HomeSettingsSections: View {
         beds24Error = nil
         do {
             let result = try await Beds24Client.shared.authenticate(inviteCode: beds24InviteInput)
-            // Store refreshToken per-home (beds24ICalURL field)
-            home.beds24ICalURL = result.refreshToken
+            home.beds24RefreshToken = result.refreshToken
             beds24InviteInput = ""
             home.beds24ApiKey = ""
             // Auto-fetch properties inline
@@ -1369,7 +1366,7 @@ struct HomeSettingsSections: View {
             newHome.address = home.address
             newHome.businessType = home.businessType
             newHome.beds24ApiKey = "\(propId)"
-            newHome.beds24ICalURL = home.beds24ICalURL
+            newHome.beds24RefreshToken = home.beds24RefreshToken
             modelContext.insert(newHome)
             try? modelContext.save()
             showAlertMsg(title: "ホーム作成", message: "「\(propName)」を新しいホームとして作成しました")
@@ -1381,7 +1378,7 @@ struct HomeSettingsSections: View {
     private func fetchBeds24Properties() async {
         isFetchingBeds24Props = true
         defer { isFetchingBeds24Props = false }
-        let refreshToken = home.beds24ICalURL
+        let refreshToken = home.beds24RefreshToken
         guard let token = try? await Beds24Client.shared.getToken(refreshToken: refreshToken) else { return }
         beds24Properties = (try? await Beds24Client.shared.fetchProperties(token: token)) ?? []
     }
@@ -1391,7 +1388,7 @@ struct HomeSettingsSections: View {
         defer { isSyncingBeds24 = false }
 
         // refreshToken → token → fetch bookings
-        let refreshToken = home.beds24ICalURL // repurposed as refreshToken storage
+        let refreshToken = home.beds24RefreshToken
         guard !refreshToken.isEmpty else {
             showAlertMsg(title: "エラー", message: "先にInvite Codeで接続してください")
             return
