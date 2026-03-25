@@ -1,0 +1,8 @@
+*.mobileprovision
+*.ipa
+*.dSYM/
+xcuserdata/
+DerivedData/
+build/
+.build/
+Pods/
