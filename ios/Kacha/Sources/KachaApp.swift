@@ -37,7 +37,9 @@ struct KachaApp: App {
                     #if DEBUG
                     SeedData.insert(into: container.mainContext)
                     #endif
+                    #if !targetEnvironment(simulator)
                     Task { await NotificationManager.shared.requestPermission() }
+                    #endif
                     GeofenceManager.registerNotificationCategory()
 
                     // Backup to Keychain on every launch
