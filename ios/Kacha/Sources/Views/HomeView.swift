@@ -36,6 +36,7 @@ struct HomeView: View {
     @State private var isPressingAutolock = false
     @State private var autolockSuccess = false
     @State private var isRunningScene = false
+    @State private var showVoiceControl = false
 
     private var activeHome: Home? { homes.first { $0.id == activeHomeId } }
 
@@ -129,6 +130,57 @@ struct HomeView: View {
             .sheet(isPresented: $showVault) {
                 if let home = activeHome { VaultView(home: home) }
             }
+            .overlay(alignment: .bottomTrailing) {
+                FloatingMicButton(showVoiceControl: $showVoiceControl)
+                    .padding(.trailing, 20)
+                    .padding(.bottom, 24)
+            }
+            .sheet(isPresented: $showVoiceControl) {
+                VoiceControlView { action in
+                    Task { await executeVoiceAction(action) }
+                }
+            }
+        }
+    }
+
+    // MARK: - Voice Command Execution
+
+    private func executeVoiceAction(_ action: VoiceCommandManager.VoiceAction) async {
+        let homeId = activeHome?.id ?? ""
+        switch action {
+        case .unlock:
+            let apiKey = activeHome?.sesameApiKey ?? ""
+            for uuid in sesameUUIDs { try? await SesameClient.shared.unlock(uuid: uuid, apiKey: apiKey) }
+            for d in switchBot.devices.filter({ $0.deviceType.lowercased().contains("lock") }) {
+                try? await SwitchBotClient.shared.unlock(deviceId: d.deviceId, token: switchBotToken, secret: switchBotSecret)
+            }
+            SoundPlayer.shared.playKacha()
+            ActivityLogger.log(context: modelContext, homeId: homeId, action: "unlock", detail: "音声コマンドで解錠")
+        case .lock:
+            let apiKey = activeHome?.sesameApiKey ?? ""
+            for uuid in sesameUUIDs { try? await SesameClient.shared.lock(uuid: uuid, apiKey: apiKey) }
+            for d in switchBot.devices.filter({ $0.deviceType.lowercased().contains("lock") }) {
+                try? await SwitchBotClient.shared.lock(deviceId: d.deviceId, token: switchBotToken, secret: switchBotSecret)
+            }
+            ActivityLogger.log(context: modelContext, homeId: homeId, action: "lock", detail: "音声コマンドで施錠")
+        case .homecoming:
+            await runScene(.homecoming)
+        case .leaving:
+            await runScene(.leaving)
+        case .sleep:
+            await runScene(.sleep)
+        case .wakeup:
+            await runScene(.wakeup)
+        case .lightOn:
+            if !hueBridgeIP.isEmpty {
+                try? await HueClient.shared.welcomeScene(bridgeIP: hueBridgeIP, username: hueUsername)
+            }
+            ActivityLogger.log(context: modelContext, homeId: homeId, action: "light_on", detail: "音声コマンドで照明オン")
+        case .lightOff:
+            if !hueBridgeIP.isEmpty {
+                try? await HueClient.shared.allOff(bridgeIP: hueBridgeIP, username: hueUsername)
+            }
+            ActivityLogger.log(context: modelContext, homeId: homeId, action: "light_off", detail: "音声コマンドで照明オフ")
         }
     }
 

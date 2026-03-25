@@ -1,10 +1,11 @@
 use axum::{
-    extract::{Path, State},
+    extract::{Path, Query, State},
     http::{header, StatusCode},
     response::{Html, IntoResponse},
     routing::{delete, get, post},
     Json, Router,
 };
+use rand::Rng;
 use chrono::{DateTime, Utc};
 use rusqlite::Connection;
 use serde::{Deserialize, Serialize};
@@ -61,7 +62,26 @@ fn init_db(conn: &Connection) {
             revoked     INTEGER NOT NULL DEFAULT 0,
             created_at  TEXT NOT NULL DEFAULT (datetime('now'))
         );
-        CREATE INDEX IF NOT EXISTS idx_owner ON shares(owner_token);",
+        CREATE INDEX IF NOT EXISTS idx_owner ON shares(owner_token);
+        CREATE TABLE IF NOT EXISTS users (
+            id          TEXT PRIMARY KEY,
+            email       TEXT UNIQUE NOT NULL,
+            created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+        );
+        CREATE TABLE IF NOT EXISTS magic_links (
+            token       TEXT PRIMARY KEY,
+            email       TEXT NOT NULL,
+            expires_at  TEXT NOT NULL,
+            used        INTEGER NOT NULL DEFAULT 0,
+            created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+        );
+        CREATE TABLE IF NOT EXISTS user_backups (
+            user_id     TEXT NOT NULL,
+            app_id      TEXT NOT NULL,
+            encrypted_data TEXT NOT NULL,
+            updated_at  TEXT NOT NULL DEFAULT (datetime('now')),
+            PRIMARY KEY (user_id, app_id)
+        );",
     )
     .expect("init db");
 }
@@ -338,6 +358,182 @@ async fn join_waitlist(
     }
 }
 
+// MARK: - Magic Link Auth
+
+#[derive(Deserialize)]
+struct MagicLinkRequest {
+    email: String,
+}
+
+#[derive(Serialize)]
+struct MagicLinkResponse {
+    success: bool,
+    message: String,
+}
+
+#[derive(Deserialize)]
+struct VerifyRequest {
+    email: String,
+    code: String,
+}
+
+#[derive(Serialize)]
+struct VerifyResponse {
+    success: bool,
+    user_id: String,
+    token: String,
+}
+
+#[derive(Deserialize)]
+struct SaveBackupRequest {
+    user_id: String,
+    app_id: String,
+    encrypted_data: String,
+}
+
+#[derive(Serialize)]
+struct SaveBackupResponse {
+    success: bool,
+}
+
+#[derive(Deserialize)]
+struct GetBackupQuery {
+    user_id: String,
+}
+
+#[derive(Serialize)]
+struct GetBackupResponse {
+    encrypted_data: String,
+}
+
+async fn send_magic_link(
+    State(state): State<Arc<AppState>>,
+    Json(body): Json<MagicLinkRequest>,
+) -> Result<(StatusCode, Json<MagicLinkResponse>), StatusCode> {
+    let email = body.email.trim().to_lowercase();
+    if email.is_empty() || !email.contains('@') {
+        return Ok((
+            StatusCode::BAD_REQUEST,
+            Json(MagicLinkResponse {
+                success: false,
+                message: "有効なメールアドレスを入力してください".into(),
+            }),
+        ));
+    }
+
+    let code: String = format!("{:06}", rand::thread_rng().gen_range(0..1_000_000u32));
+    let expires_at = (Utc::now() + chrono::Duration::minutes(10)).to_rfc3339();
+
+    let db = state.db.lock().unwrap();
+    db.execute(
+        "INSERT INTO magic_links (token, email, expires_at) VALUES (?1, ?2, ?3)",
+        rusqlite::params![code, email, expires_at],
+    )
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    // TODO: In production, send email via Resend API
+    // For now the code is stored in DB (retrieve via DB for testing)
+    println!("Magic link code for {}: {}", email, code);
+
+    Ok((
+        StatusCode::OK,
+        Json(MagicLinkResponse {
+            success: true,
+            message: "確認コードを送信しました".into(),
+        }),
+    ))
+}
+
+async fn verify_magic_link(
+    State(state): State<Arc<AppState>>,
+    Json(body): Json<VerifyRequest>,
+) -> Result<Json<VerifyResponse>, StatusCode> {
+    let email = body.email.trim().to_lowercase();
+    let code = body.code.trim().to_string();
+    let now = Utc::now().to_rfc3339();
+
+    let db = state.db.lock().unwrap();
+
+    // Check for valid, unused, non-expired code
+    let valid = db
+        .query_row(
+            "SELECT token FROM magic_links WHERE token = ?1 AND email = ?2 AND used = 0 AND expires_at > ?3",
+            rusqlite::params![code, email, now],
+            |_row| Ok(()),
+        )
+        .is_ok();
+
+    if !valid {
+        return Err(StatusCode::UNAUTHORIZED);
+    }
+
+    // Mark as used
+    db.execute(
+        "UPDATE magic_links SET used = 1 WHERE token = ?1 AND email = ?2",
+        rusqlite::params![code, email],
+    )
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    // Create user if not exists, get user_id
+    let user_id: String = match db.query_row(
+        "SELECT id FROM users WHERE email = ?1",
+        rusqlite::params![email],
+        |row| row.get(0),
+    ) {
+        Ok(id) => id,
+        Err(_) => {
+            let new_id = Uuid::new_v4().to_string();
+            db.execute(
+                "INSERT INTO users (id, email) VALUES (?1, ?2)",
+                rusqlite::params![new_id, email],
+            )
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+            new_id
+        }
+    };
+
+    let session_token = Uuid::new_v4().to_string();
+
+    Ok(Json(VerifyResponse {
+        success: true,
+        user_id,
+        token: session_token,
+    }))
+}
+
+async fn save_backup(
+    State(state): State<Arc<AppState>>,
+    Json(body): Json<SaveBackupRequest>,
+) -> Result<Json<SaveBackupResponse>, StatusCode> {
+    let db = state.db.lock().unwrap();
+    db.execute(
+        "INSERT INTO user_backups (user_id, app_id, encrypted_data, updated_at)
+         VALUES (?1, ?2, ?3, datetime('now'))
+         ON CONFLICT(user_id, app_id) DO UPDATE SET encrypted_data = ?3, updated_at = datetime('now')",
+        rusqlite::params![body.user_id, body.app_id, body.encrypted_data],
+    )
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    Ok(Json(SaveBackupResponse { success: true }))
+}
+
+async fn get_backup(
+    State(state): State<Arc<AppState>>,
+    Path(app_id): Path<String>,
+    Query(params): Query<GetBackupQuery>,
+) -> Result<Json<GetBackupResponse>, StatusCode> {
+    let db = state.db.lock().unwrap();
+    let encrypted_data: String = db
+        .query_row(
+            "SELECT encrypted_data FROM user_backups WHERE user_id = ?1 AND app_id = ?2",
+            rusqlite::params![params.user_id, app_id],
+            |row| row.get(0),
+        )
+        .map_err(|_| StatusCode::NOT_FOUND)?;
+
+    Ok(Json(GetBackupResponse { encrypted_data }))
+}
+
 #[tokio::main]
 async fn main() {
     let db_path = std::env::var("DATABASE_PATH").unwrap_or_else(|_| "kacha.db".into());
@@ -360,6 +556,10 @@ async fn main() {
         .route("/privacy", get(privacy_page))
         .route("/support", get(support_page))
         .route("/api/v1/waitlist", post(join_waitlist))
+        .route("/api/v1/auth/magic-link", post(send_magic_link))
+        .route("/api/v1/auth/verify", post(verify_magic_link))
+        .route("/api/v1/auth/backup", post(save_backup))
+        .route("/api/v1/auth/backup/:app_id", get(get_backup))
         .route("/health", get(|| async { "ok" }))
         .layer(
             CorsLayer::new()

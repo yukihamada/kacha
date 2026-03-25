@@ -1,0 +1,901 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 54;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		04CEACE6B8CA1B48B3AACDEB /* UtilityRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 706676D2C24D95967B5009DC /* UtilityRecord.swift */; };
+		0D538791E49E8B42EC597E5B /* KachaWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C610E402B266A860FAA0372 /* KachaWidget.swift */; };
+		0FC4C6D52A526D0A39DDB382 /* Beds24Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDC12EF7619F952CDC5C097 /* Beds24Tests.swift */; };
+		113A8623FC8B2F76E3E5218C /* MaintenanceTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = C190FF87DB232B39D1DEF742 /* MaintenanceTask.swift */; };
+		1945567B04ACD0105C070EE3 /* ChecklistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF72FD87FDE3B8024079E91 /* ChecklistItem.swift */; };
+		1B7F1D50099715B07A7D7BB7 /* MaintenanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACEEF959ED61C79789BCE531 /* MaintenanceView.swift */; };
+		1D8DB5076F3DC8478E1BF52B /* SoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B153E5A745042682B9C5E5E /* SoundPlayer.swift */; };
+		1F54F593E23A0FF022AF4470 /* KachaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECB4FB7EEB68F2FF93B870B /* KachaUITests.swift */; };
+		202178F1E9C71356A333D319 /* ChecklistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF9F29AA36D5EA8C3C0255F /* ChecklistView.swift */; };
+		2174615BAAFF5CFFD22141BD /* HouseManualView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B006D885C4207A8CBBDDAEE /* HouseManualView.swift */; };
+		22DB6CD013E4411D3ABE4CEC /* KachaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BF7B6C864754A7FCE9375 /* KachaApp.swift */; };
+		241F0A22455D6036369FA268 /* Beds24Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC08ABE8F6B17BFB01A0CAE /* Beds24Client.swift */; };
+		242F58D2019341A512038078 /* SmartDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD16967AE38FC49E46E0DD01 /* SmartDevice.swift */; };
+		287380B58E2EF6AC9EEC0A29 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE953FA1594D81A67EE803E /* ContentView.swift */; };
+		2AA63BDC1959E269BF1294AE /* VaultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB18BD8350978C3E3FA4513 /* VaultView.swift */; };
+		2E6FF3089527828110622EF7 /* CustomWebhookClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D70E215F9DE7390843E2DF7 /* CustomWebhookClient.swift */; };
+		34E08D361F512BBFF7221760 /* VoiceControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3D889890C8396509BAFE8C /* VoiceControlView.swift */; };
+		3586CBC736C3DC757ACAD60E /* AddBookingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4769D86BDFA6A76D75263DE7 /* AddBookingView.swift */; };
+		3753DB91A24E15DBFC6CCEF7 /* AddDeviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC865AA02FDC96978238EDC /* AddDeviceView.swift */; };
+		38D77CF8E8A8A2ED3377DD3E /* GuestCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E851084952E3CAFC34523A4 /* GuestCardView.swift */; };
+		39B86E19DEC577A5CBB25534 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA796739C47F10BF06AC0100 /* OnboardingView.swift */; };
+		3D60D0BD67072D7A194F026D /* GuestMessenger.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB04048E4EB01CEF369353F2 /* GuestMessenger.swift */; };
+		3E58A61E01C56197C88A7AB8 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A39BB08C1DE304C861E6DDF /* Theme.swift */; };
+		427C5F817BFE63A50C7E74D0 /* ShareClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCA8C9C6D061BAB8F01581 /* ShareClient.swift */; };
+		47C6016E2A32883EE332C370 /* DeviceIntegration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F988902B241B24F23EEE0E /* DeviceIntegration.swift */; };
+		4ED9B0D1C3597EA78F5B41C8 /* HomePagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160015E2DF380320E342D98A /* HomePagerView.swift */; };
+		5692DBECEB7B4EC1984B5E7B /* Booking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0068BF8C4B0125A9301E4AC2 /* Booking.swift */; };
+		5D29ABC7A5FD5D39490ECCE6 /* DeviceLogSyncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65411F6821DCAD885D29DB7D /* DeviceLogSyncer.swift */; };
+		5E63D765CC880A8672A332BD /* HouseManual.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36528C3D52714B042FBD63B8 /* HouseManual.swift */; };
+		64C319DAE37EE059B4F673F6 /* BookingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42E0B7D1773EDB94A1C55CD /* BookingView.swift */; };
+		654F6D9993AE0C02836A5908 /* CelebrationEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9183E03019349FA880E6457D /* CelebrationEffect.swift */; };
+		66937C83B5120D1343E68279 /* BookingPoller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3025F580CDCB2BAB1C92CD /* BookingPoller.swift */; };
+		66C3971587E732DD4FB143B4 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBCFCDF59A790E77A47EBEA /* SettingsView.swift */; };
+		6ADFEA5BD9DA2A9115A17D76 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A514031FEF470BC9E5CE411 /* HomeView.swift */; };
+		6D19AEFA31DCC33349C53045 /* NukiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F9D70D846BC44CF5A602BC /* NukiClient.swift */; };
+		7862EC0E078C9CC022633991 /* SecureItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BAAC5A7F6865955238BB8D /* SecureItem.swift */; };
+		7CB3ABFC506E5F05E6BF3BC9 /* ShareCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08025785F422D2919C6DA942 /* ShareCalendarView.swift */; };
+		90FF89A372AE781E3B5504D0 /* BookingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A259AED848AB4C8EA9E334F /* BookingDetailView.swift */; };
+		917C4552E16AC798887C1868 /* SesameClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0668A0574B44F66A312B807A /* SesameClient.swift */; };
+		94D166B50EB7124EA0361B09 /* RevenueReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6651802531863B94FDCF097B /* RevenueReportView.swift */; };
+		9870A57715DDEA01D8423448 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132DA316B0CD860F60709030 /* CalendarView.swift */; };
+		9BB9B10F92BDE7A06C1ACBEC /* VoiceCommandManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EC6ABBDF8CC69A388C09BE4 /* VoiceCommandManager.swift */; };
+		A535489F46C28B356702DA0B /* SecurityInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29E6C3F6C13060C797DE77BE /* SecurityInfoView.swift */; };
+		A6100AB632852E7577823899 /* ActivityLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3B1C9D98AC15A4C6B5F359 /* ActivityLog.swift */; };
+		AC43BB3319EC47FD8B384400 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 355C423920E61CBDAEF55751 /* Assets.xcassets */; };
+		AEAA1DB38EEE0B8C238DEE63 /* PermitGuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C8F685D38047FF791825571 /* PermitGuideView.swift */; };
+		AF8C83C18F5EFC9CC8103DA7 /* GeofenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE8733CB6FF67F0F2F96953 /* GeofenceManager.swift */; };
+		B2BE4BA6738B3A36B0C0589D /* ICalImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71A30F5AEBA76259343DCB7B /* ICalImporter.swift */; };
+		B6F2F22A46472DBDA06B24C2 /* SeedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09A76D1BDF1EA7B4A016620 /* SeedData.swift */; };
+		B9FD7C5865D80BBD83CA6FF7 /* NatureRemoClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A7738C9B133BAD5F2D5277 /* NatureRemoClient.swift */; };
+		C0A6844731A08880AEB7CD08 /* DeviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEFDB187FC95534AEC056E23 /* DeviceView.swift */; };
+		C7B7AC3A2393B9C777AC84C4 /* BackgroundRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFDE5DB46451C658BE8EDE3A /* BackgroundRefresh.swift */; };
+		D17C4025CE2547E918ADB7ED /* ShareRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A0EDD94BEFEE28BAC81C62 /* ShareRecord.swift */; };
+		D4492ACE9D921DF35EF6C44F /* HomeShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06827396B74878C3BB4D53AF /* HomeShareView.swift */; };
+		E2072AEA3954F9694168BD3F /* GuestMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 589873A5111678458952DDD4 /* GuestMessageView.swift */; };
+		E7FB2D4224197639312B80DF /* ActivityLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9F5904D70A3FCDEB23D20C /* ActivityLogView.swift */; };
+		E94F6AD123ACCBF0C441AD1A /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B055EFE5AB8D4365917B5C4E /* ModelTests.swift */; };
+		E9F45288CA6B5F76E5184540 /* KeychainBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB4FA583B92F4007538C62DB /* KeychainBackup.swift */; };
+		EA9D176F437ED6EFDD7AF58F /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87C38490B5E9B7D171FDB3D8 /* Home.swift */; };
+		EF81C29A2AA5012CEB538248 /* SwitchBotClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D434ABEDE8CBCF81DAB40B4 /* SwitchBotClient.swift */; };
+		F40C57058EABE1C1A59D4E67 /* ShareTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 377E94109DEDCA4F49937DB7 /* ShareTests.swift */; };
+		F463539A779177B5E82FCBB9 /* HueClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6480544F5EE3A4BB9E3659A7 /* HueClient.swift */; };
+		F9E7F7633747489707FB1683 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60F6A646D2896063281C066 /* NotificationManager.swift */; };
+		FBDAA00FE3A92387E446F912 /* UtilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608AB2A9F5F18D562E496375 /* UtilityView.swift */; };
+		FF2A01E15566B2171305F221 /* KachaIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70788C2DF6DE9CD669840FBE /* KachaIntents.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CE4AC2C2AC96756068A4E6C8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B5542499049F3EF46AF0716 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 59FDAC4872D7FB61A660A3D2;
+			remoteInfo = Kacha;
+		};
+		FCD6016F9C33A3842F6A6966 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B5542499049F3EF46AF0716 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 59FDAC4872D7FB61A660A3D2;
+			remoteInfo = Kacha;
+		};
+		FD2B3ABC33BA0CBD925DA855 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B5542499049F3EF46AF0716 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 59FDAC4872D7FB61A660A3D2;
+			remoteInfo = Kacha;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0068BF8C4B0125A9301E4AC2 /* Booking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Booking.swift; sourceTree = "<group>"; };
+		029B899D4EF902AED4FEADCE /* KachaWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = KachaWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		02BAAC5A7F6865955238BB8D /* SecureItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureItem.swift; sourceTree = "<group>"; };
+		05A0EDD94BEFEE28BAC81C62 /* ShareRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareRecord.swift; sourceTree = "<group>"; };
+		0668A0574B44F66A312B807A /* SesameClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SesameClient.swift; sourceTree = "<group>"; };
+		06827396B74878C3BB4D53AF /* HomeShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeShareView.swift; sourceTree = "<group>"; };
+		08025785F422D2919C6DA942 /* ShareCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareCalendarView.swift; sourceTree = "<group>"; };
+		0A39BB08C1DE304C861E6DDF /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		0CE8733CB6FF67F0F2F96953 /* GeofenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeofenceManager.swift; sourceTree = "<group>"; };
+		129CE2203CE0D35C7D0EFE7C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		132DA316B0CD860F60709030 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		160015E2DF380320E342D98A /* HomePagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePagerView.swift; sourceTree = "<group>"; };
+		1BF72FD87FDE3B8024079E91 /* ChecklistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistItem.swift; sourceTree = "<group>"; };
+		1C8F685D38047FF791825571 /* PermitGuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermitGuideView.swift; sourceTree = "<group>"; };
+		1EDC12EF7619F952CDC5C097 /* Beds24Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Beds24Tests.swift; sourceTree = "<group>"; };
+		1FB18BD8350978C3E3FA4513 /* VaultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultView.swift; sourceTree = "<group>"; };
+		29E6C3F6C13060C797DE77BE /* SecurityInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityInfoView.swift; sourceTree = "<group>"; };
+		2ECB4FB7EEB68F2FF93B870B /* KachaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KachaUITests.swift; sourceTree = "<group>"; };
+		355C423920E61CBDAEF55751 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		36528C3D52714B042FBD63B8 /* HouseManual.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseManual.swift; sourceTree = "<group>"; };
+		377E94109DEDCA4F49937DB7 /* ShareTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareTests.swift; sourceTree = "<group>"; };
+		3B153E5A745042682B9C5E5E /* SoundPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundPlayer.swift; sourceTree = "<group>"; };
+		3BDCA8C9C6D061BAB8F01581 /* ShareClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareClient.swift; sourceTree = "<group>"; };
+		3EC6ABBDF8CC69A388C09BE4 /* VoiceCommandManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceCommandManager.swift; sourceTree = "<group>"; };
+		4769D86BDFA6A76D75263DE7 /* AddBookingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBookingView.swift; sourceTree = "<group>"; };
+		4E705CE4E957781482F69C94 /* KachaTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = KachaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F3B1C9D98AC15A4C6B5F359 /* ActivityLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityLog.swift; sourceTree = "<group>"; };
+		568EC91134F0A2F61C08DBD7 /* KachaUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = KachaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		589873A5111678458952DDD4 /* GuestMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestMessageView.swift; sourceTree = "<group>"; };
+		5A3025F580CDCB2BAB1C92CD /* BookingPoller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingPoller.swift; sourceTree = "<group>"; };
+		5C610E402B266A860FAA0372 /* KachaWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KachaWidget.swift; sourceTree = "<group>"; };
+		608AB2A9F5F18D562E496375 /* UtilityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityView.swift; sourceTree = "<group>"; };
+		6480544F5EE3A4BB9E3659A7 /* HueClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HueClient.swift; sourceTree = "<group>"; };
+		65411F6821DCAD885D29DB7D /* DeviceLogSyncer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceLogSyncer.swift; sourceTree = "<group>"; };
+		6651802531863B94FDCF097B /* RevenueReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevenueReportView.swift; sourceTree = "<group>"; };
+		6A259AED848AB4C8EA9E334F /* BookingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingDetailView.swift; sourceTree = "<group>"; };
+		706676D2C24D95967B5009DC /* UtilityRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityRecord.swift; sourceTree = "<group>"; };
+		70788C2DF6DE9CD669840FBE /* KachaIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KachaIntents.swift; sourceTree = "<group>"; };
+		71A30F5AEBA76259343DCB7B /* ICalImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICalImporter.swift; sourceTree = "<group>"; };
+		75A7738C9B133BAD5F2D5277 /* NatureRemoClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NatureRemoClient.swift; sourceTree = "<group>"; };
+		7B006D885C4207A8CBBDDAEE /* HouseManualView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseManualView.swift; sourceTree = "<group>"; };
+		7BE953FA1594D81A67EE803E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		7DBCFCDF59A790E77A47EBEA /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		87C38490B5E9B7D171FDB3D8 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
+		8A514031FEF470BC9E5CE411 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		8D434ABEDE8CBCF81DAB40B4 /* SwitchBotClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchBotClient.swift; sourceTree = "<group>"; };
+		8FC865AA02FDC96978238EDC /* AddDeviceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDeviceView.swift; sourceTree = "<group>"; };
+		9183E03019349FA880E6457D /* CelebrationEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CelebrationEffect.swift; sourceTree = "<group>"; };
+		95E6DBDF41B9F8D5538AC3C5 /* KachaWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = KachaWidget.entitlements; sourceTree = "<group>"; };
+		9D70E215F9DE7390843E2DF7 /* CustomWebhookClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomWebhookClient.swift; sourceTree = "<group>"; };
+		9E851084952E3CAFC34523A4 /* GuestCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestCardView.swift; sourceTree = "<group>"; };
+		A60F6A646D2896063281C066 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		ACEEF959ED61C79789BCE531 /* MaintenanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceView.swift; sourceTree = "<group>"; };
+		B055EFE5AB8D4365917B5C4E /* ModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelTests.swift; sourceTree = "<group>"; };
+		BD16967AE38FC49E46E0DD01 /* SmartDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartDevice.swift; sourceTree = "<group>"; };
+		C190FF87DB232B39D1DEF742 /* MaintenanceTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceTask.swift; sourceTree = "<group>"; };
+		CB04048E4EB01CEF369353F2 /* GuestMessenger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestMessenger.swift; sourceTree = "<group>"; };
+		CE9F5904D70A3FCDEB23D20C /* ActivityLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityLogView.swift; sourceTree = "<group>"; };
+		D09A76D1BDF1EA7B4A016620 /* SeedData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedData.swift; sourceTree = "<group>"; };
+		DCC08ABE8F6B17BFB01A0CAE /* Beds24Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Beds24Client.swift; sourceTree = "<group>"; };
+		DEFDB187FC95534AEC056E23 /* DeviceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceView.swift; sourceTree = "<group>"; };
+		DF3D889890C8396509BAFE8C /* VoiceControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceControlView.swift; sourceTree = "<group>"; };
+		DFF9F29AA36D5EA8C3C0255F /* ChecklistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistView.swift; sourceTree = "<group>"; };
+		E6F9D70D846BC44CF5A602BC /* NukiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NukiClient.swift; sourceTree = "<group>"; };
+		E89BF7B6C864754A7FCE9375 /* KachaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KachaApp.swift; sourceTree = "<group>"; };
+		E9F988902B241B24F23EEE0E /* DeviceIntegration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceIntegration.swift; sourceTree = "<group>"; };
+		EB4FA583B92F4007538C62DB /* KeychainBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainBackup.swift; sourceTree = "<group>"; };
+		EF186F371A65C2693FAE07DB /* Kacha.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Kacha.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EFDE5DB46451C658BE8EDE3A /* BackgroundRefresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundRefresh.swift; sourceTree = "<group>"; };
+		F42E0B7D1773EDB94A1C55CD /* BookingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingView.swift; sourceTree = "<group>"; };
+		FA796739C47F10BF06AC0100 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		49EC5EF30442FA5C8BC442AC /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				355C423920E61CBDAEF55751 /* Assets.xcassets */,
+			);
+			name = Resources;
+			path = Kacha/Resources;
+			sourceTree = "<group>";
+		};
+		5CE0D5DD2354825BF498A55A /* KachaTests */ = {
+			isa = PBXGroup;
+			children = (
+				1EDC12EF7619F952CDC5C097 /* Beds24Tests.swift */,
+				B055EFE5AB8D4365917B5C4E /* ModelTests.swift */,
+				377E94109DEDCA4F49937DB7 /* ShareTests.swift */,
+			);
+			path = KachaTests;
+			sourceTree = "<group>";
+		};
+		6C3A68C7D8BB0698CF83B363 /* KachaWidget */ = {
+			isa = PBXGroup;
+			children = (
+				129CE2203CE0D35C7D0EFE7C /* Info.plist */,
+				95E6DBDF41B9F8D5538AC3C5 /* KachaWidget.entitlements */,
+				5C610E402B266A860FAA0372 /* KachaWidget.swift */,
+			);
+			path = KachaWidget;
+			sourceTree = "<group>";
+		};
+		7794EB87A920DB31714B9B44 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				EFDE5DB46451C658BE8EDE3A /* BackgroundRefresh.swift */,
+				DCC08ABE8F6B17BFB01A0CAE /* Beds24Client.swift */,
+				5A3025F580CDCB2BAB1C92CD /* BookingPoller.swift */,
+				9D70E215F9DE7390843E2DF7 /* CustomWebhookClient.swift */,
+				65411F6821DCAD885D29DB7D /* DeviceLogSyncer.swift */,
+				0CE8733CB6FF67F0F2F96953 /* GeofenceManager.swift */,
+				CB04048E4EB01CEF369353F2 /* GuestMessenger.swift */,
+				6480544F5EE3A4BB9E3659A7 /* HueClient.swift */,
+				EB4FA583B92F4007538C62DB /* KeychainBackup.swift */,
+				75A7738C9B133BAD5F2D5277 /* NatureRemoClient.swift */,
+				E6F9D70D846BC44CF5A602BC /* NukiClient.swift */,
+				0668A0574B44F66A312B807A /* SesameClient.swift */,
+				3BDCA8C9C6D061BAB8F01581 /* ShareClient.swift */,
+				8D434ABEDE8CBCF81DAB40B4 /* SwitchBotClient.swift */,
+				3EC6ABBDF8CC69A388C09BE4 /* VoiceCommandManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		85FDC025A46AC03BC59F7D48 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				CE9F5904D70A3FCDEB23D20C /* ActivityLogView.swift */,
+				4769D86BDFA6A76D75263DE7 /* AddBookingView.swift */,
+				8FC865AA02FDC96978238EDC /* AddDeviceView.swift */,
+				6A259AED848AB4C8EA9E334F /* BookingDetailView.swift */,
+				F42E0B7D1773EDB94A1C55CD /* BookingView.swift */,
+				132DA316B0CD860F60709030 /* CalendarView.swift */,
+				DFF9F29AA36D5EA8C3C0255F /* ChecklistView.swift */,
+				DEFDB187FC95534AEC056E23 /* DeviceView.swift */,
+				9E851084952E3CAFC34523A4 /* GuestCardView.swift */,
+				589873A5111678458952DDD4 /* GuestMessageView.swift */,
+				160015E2DF380320E342D98A /* HomePagerView.swift */,
+				06827396B74878C3BB4D53AF /* HomeShareView.swift */,
+				8A514031FEF470BC9E5CE411 /* HomeView.swift */,
+				7B006D885C4207A8CBBDDAEE /* HouseManualView.swift */,
+				ACEEF959ED61C79789BCE531 /* MaintenanceView.swift */,
+				FA796739C47F10BF06AC0100 /* OnboardingView.swift */,
+				1C8F685D38047FF791825571 /* PermitGuideView.swift */,
+				6651802531863B94FDCF097B /* RevenueReportView.swift */,
+				29E6C3F6C13060C797DE77BE /* SecurityInfoView.swift */,
+				7DBCFCDF59A790E77A47EBEA /* SettingsView.swift */,
+				08025785F422D2919C6DA942 /* ShareCalendarView.swift */,
+				608AB2A9F5F18D562E496375 /* UtilityView.swift */,
+				1FB18BD8350978C3E3FA4513 /* VaultView.swift */,
+				DF3D889890C8396509BAFE8C /* VoiceControlView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		9E1A5DDDCF5826FF2ADD8A39 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				9183E03019349FA880E6457D /* CelebrationEffect.swift */,
+				7BE953FA1594D81A67EE803E /* ContentView.swift */,
+				71A30F5AEBA76259343DCB7B /* ICalImporter.swift */,
+				E89BF7B6C864754A7FCE9375 /* KachaApp.swift */,
+				70788C2DF6DE9CD669840FBE /* KachaIntents.swift */,
+				A60F6A646D2896063281C066 /* NotificationManager.swift */,
+				D09A76D1BDF1EA7B4A016620 /* SeedData.swift */,
+				3B153E5A745042682B9C5E5E /* SoundPlayer.swift */,
+				0A39BB08C1DE304C861E6DDF /* Theme.swift */,
+				DCA239626A92C54009DA3876 /* Models */,
+				7794EB87A920DB31714B9B44 /* Services */,
+				85FDC025A46AC03BC59F7D48 /* Views */,
+			);
+			name = Sources;
+			path = Kacha/Sources;
+			sourceTree = "<group>";
+		};
+		BC00C1D28539BDF433773DA3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EF186F371A65C2693FAE07DB /* Kacha.app */,
+				4E705CE4E957781482F69C94 /* KachaTests.xctest */,
+				568EC91134F0A2F61C08DBD7 /* KachaUITests.xctest */,
+				029B899D4EF902AED4FEADCE /* KachaWidget.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DCA239626A92C54009DA3876 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				4F3B1C9D98AC15A4C6B5F359 /* ActivityLog.swift */,
+				0068BF8C4B0125A9301E4AC2 /* Booking.swift */,
+				1BF72FD87FDE3B8024079E91 /* ChecklistItem.swift */,
+				E9F988902B241B24F23EEE0E /* DeviceIntegration.swift */,
+				87C38490B5E9B7D171FDB3D8 /* Home.swift */,
+				36528C3D52714B042FBD63B8 /* HouseManual.swift */,
+				C190FF87DB232B39D1DEF742 /* MaintenanceTask.swift */,
+				02BAAC5A7F6865955238BB8D /* SecureItem.swift */,
+				05A0EDD94BEFEE28BAC81C62 /* ShareRecord.swift */,
+				BD16967AE38FC49E46E0DD01 /* SmartDevice.swift */,
+				706676D2C24D95967B5009DC /* UtilityRecord.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E23DEC3D0AE2F9637297C1D8 = {
+			isa = PBXGroup;
+			children = (
+				5CE0D5DD2354825BF498A55A /* KachaTests */,
+				FF624B2A27F1E91A6DE5972F /* KachaUITests */,
+				6C3A68C7D8BB0698CF83B363 /* KachaWidget */,
+				49EC5EF30442FA5C8BC442AC /* Resources */,
+				9E1A5DDDCF5826FF2ADD8A39 /* Sources */,
+				BC00C1D28539BDF433773DA3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FF624B2A27F1E91A6DE5972F /* KachaUITests */ = {
+			isa = PBXGroup;
+			children = (
+				2ECB4FB7EEB68F2FF93B870B /* KachaUITests.swift */,
+			);
+			path = KachaUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		180E1161DF8220F55BA39DBA /* KachaWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 94C77DE908F39C49F3480577 /* Build configuration list for PBXNativeTarget "KachaWidget" */;
+			buildPhases = (
+				ED2CD258C94F39C17BD9418D /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0C2E3D13F999A80DD8C65E6B /* PBXTargetDependency */,
+			);
+			name = KachaWidget;
+			packageProductDependencies = (
+			);
+			productName = KachaWidget;
+			productReference = 029B899D4EF902AED4FEADCE /* KachaWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		1E3909666D23A0D6AF8D33BC /* KachaTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FCB55631625BDB5896817516 /* Build configuration list for PBXNativeTarget "KachaTests" */;
+			buildPhases = (
+				33D58CB73BADA1E2D67611BD /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3E1DB491C1675663786F7081 /* PBXTargetDependency */,
+			);
+			name = KachaTests;
+			packageProductDependencies = (
+			);
+			productName = KachaTests;
+			productReference = 4E705CE4E957781482F69C94 /* KachaTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		5472A2CFB8B6FC8DE72E07AE /* KachaUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E3171D2FFBD9386BA0DA151E /* Build configuration list for PBXNativeTarget "KachaUITests" */;
+			buildPhases = (
+				33E4E9A1D987CCD25C7292CE /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F7BF5F4EEB34ED9C5900E11B /* PBXTargetDependency */,
+			);
+			name = KachaUITests;
+			packageProductDependencies = (
+			);
+			productName = KachaUITests;
+			productReference = 568EC91134F0A2F61C08DBD7 /* KachaUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		59FDAC4872D7FB61A660A3D2 /* Kacha */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9EC6965E22A27EF7C51C6D5F /* Build configuration list for PBXNativeTarget "Kacha" */;
+			buildPhases = (
+				E15766CF9847AE3412F2DBB5 /* Sources */,
+				0BF2FD95C987D09FB9428396 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Kacha;
+			packageProductDependencies = (
+			);
+			productName = Kacha;
+			productReference = EF186F371A65C2693FAE07DB /* Kacha.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0B5542499049F3EF46AF0716 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1620;
+				TargetAttributes = {
+					180E1161DF8220F55BA39DBA = {
+						DevelopmentTeam = 5BV85JW8US;
+						ProvisioningStyle = Automatic;
+					};
+					1E3909666D23A0D6AF8D33BC = {
+						DevelopmentTeam = 5BV85JW8US;
+						ProvisioningStyle = Automatic;
+					};
+					5472A2CFB8B6FC8DE72E07AE = {
+						DevelopmentTeam = 5BV85JW8US;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 59FDAC4872D7FB61A660A3D2;
+					};
+					59FDAC4872D7FB61A660A3D2 = {
+						DevelopmentTeam = 5BV85JW8US;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = A940A5701239CA9104F6892F /* Build configuration list for PBXProject "KAGI" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = E23DEC3D0AE2F9637297C1D8;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 54;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				59FDAC4872D7FB61A660A3D2 /* Kacha */,
+				1E3909666D23A0D6AF8D33BC /* KachaTests */,
+				5472A2CFB8B6FC8DE72E07AE /* KachaUITests */,
+				180E1161DF8220F55BA39DBA /* KachaWidget */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0BF2FD95C987D09FB9428396 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AC43BB3319EC47FD8B384400 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		33D58CB73BADA1E2D67611BD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0FC4C6D52A526D0A39DDB382 /* Beds24Tests.swift in Sources */,
+				E94F6AD123ACCBF0C441AD1A /* ModelTests.swift in Sources */,
+				F40C57058EABE1C1A59D4E67 /* ShareTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		33E4E9A1D987CCD25C7292CE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F54F593E23A0FF022AF4470 /* KachaUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E15766CF9847AE3412F2DBB5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A6100AB632852E7577823899 /* ActivityLog.swift in Sources */,
+				E7FB2D4224197639312B80DF /* ActivityLogView.swift in Sources */,
+				3586CBC736C3DC757ACAD60E /* AddBookingView.swift in Sources */,
+				3753DB91A24E15DBFC6CCEF7 /* AddDeviceView.swift in Sources */,
+				C7B7AC3A2393B9C777AC84C4 /* BackgroundRefresh.swift in Sources */,
+				241F0A22455D6036369FA268 /* Beds24Client.swift in Sources */,
+				5692DBECEB7B4EC1984B5E7B /* Booking.swift in Sources */,
+				90FF89A372AE781E3B5504D0 /* BookingDetailView.swift in Sources */,
+				66937C83B5120D1343E68279 /* BookingPoller.swift in Sources */,
+				64C319DAE37EE059B4F673F6 /* BookingView.swift in Sources */,
+				9870A57715DDEA01D8423448 /* CalendarView.swift in Sources */,
+				654F6D9993AE0C02836A5908 /* CelebrationEffect.swift in Sources */,
+				1945567B04ACD0105C070EE3 /* ChecklistItem.swift in Sources */,
+				202178F1E9C71356A333D319 /* ChecklistView.swift in Sources */,
+				287380B58E2EF6AC9EEC0A29 /* ContentView.swift in Sources */,
+				2E6FF3089527828110622EF7 /* CustomWebhookClient.swift in Sources */,
+				47C6016E2A32883EE332C370 /* DeviceIntegration.swift in Sources */,
+				5D29ABC7A5FD5D39490ECCE6 /* DeviceLogSyncer.swift in Sources */,
+				C0A6844731A08880AEB7CD08 /* DeviceView.swift in Sources */,
+				AF8C83C18F5EFC9CC8103DA7 /* GeofenceManager.swift in Sources */,
+				38D77CF8E8A8A2ED3377DD3E /* GuestCardView.swift in Sources */,
+				E2072AEA3954F9694168BD3F /* GuestMessageView.swift in Sources */,
+				3D60D0BD67072D7A194F026D /* GuestMessenger.swift in Sources */,
+				EA9D176F437ED6EFDD7AF58F /* Home.swift in Sources */,
+				4ED9B0D1C3597EA78F5B41C8 /* HomePagerView.swift in Sources */,
+				D4492ACE9D921DF35EF6C44F /* HomeShareView.swift in Sources */,
+				6ADFEA5BD9DA2A9115A17D76 /* HomeView.swift in Sources */,
+				5E63D765CC880A8672A332BD /* HouseManual.swift in Sources */,
+				2174615BAAFF5CFFD22141BD /* HouseManualView.swift in Sources */,
+				F463539A779177B5E82FCBB9 /* HueClient.swift in Sources */,
+				B2BE4BA6738B3A36B0C0589D /* ICalImporter.swift in Sources */,
+				22DB6CD013E4411D3ABE4CEC /* KachaApp.swift in Sources */,
+				FF2A01E15566B2171305F221 /* KachaIntents.swift in Sources */,
+				E9F45288CA6B5F76E5184540 /* KeychainBackup.swift in Sources */,
+				113A8623FC8B2F76E3E5218C /* MaintenanceTask.swift in Sources */,
+				1B7F1D50099715B07A7D7BB7 /* MaintenanceView.swift in Sources */,
+				B9FD7C5865D80BBD83CA6FF7 /* NatureRemoClient.swift in Sources */,
+				F9E7F7633747489707FB1683 /* NotificationManager.swift in Sources */,
+				6D19AEFA31DCC33349C53045 /* NukiClient.swift in Sources */,
+				39B86E19DEC577A5CBB25534 /* OnboardingView.swift in Sources */,
+				AEAA1DB38EEE0B8C238DEE63 /* PermitGuideView.swift in Sources */,
+				94D166B50EB7124EA0361B09 /* RevenueReportView.swift in Sources */,
+				7862EC0E078C9CC022633991 /* SecureItem.swift in Sources */,
+				A535489F46C28B356702DA0B /* SecurityInfoView.swift in Sources */,
+				B6F2F22A46472DBDA06B24C2 /* SeedData.swift in Sources */,
+				917C4552E16AC798887C1868 /* SesameClient.swift in Sources */,
+				66C3971587E732DD4FB143B4 /* SettingsView.swift in Sources */,
+				7CB3ABFC506E5F05E6BF3BC9 /* ShareCalendarView.swift in Sources */,
+				427C5F817BFE63A50C7E74D0 /* ShareClient.swift in Sources */,
+				D17C4025CE2547E918ADB7ED /* ShareRecord.swift in Sources */,
+				242F58D2019341A512038078 /* SmartDevice.swift in Sources */,
+				1D8DB5076F3DC8478E1BF52B /* SoundPlayer.swift in Sources */,
+				EF81C29A2AA5012CEB538248 /* SwitchBotClient.swift in Sources */,
+				3E58A61E01C56197C88A7AB8 /* Theme.swift in Sources */,
+				04CEACE6B8CA1B48B3AACDEB /* UtilityRecord.swift in Sources */,
+				FBDAA00FE3A92387E446F912 /* UtilityView.swift in Sources */,
+				2AA63BDC1959E269BF1294AE /* VaultView.swift in Sources */,
+				9BB9B10F92BDE7A06C1ACBEC /* VoiceCommandManager.swift in Sources */,
+				34E08D361F512BBFF7221760 /* VoiceControlView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ED2CD258C94F39C17BD9418D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0D538791E49E8B42EC597E5B /* KachaWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0C2E3D13F999A80DD8C65E6B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 59FDAC4872D7FB61A660A3D2 /* Kacha */;
+			targetProxy = CE4AC2C2AC96756068A4E6C8 /* PBXContainerItemProxy */;
+		};
+		3E1DB491C1675663786F7081 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 59FDAC4872D7FB61A660A3D2 /* Kacha */;
+			targetProxy = FD2B3ABC33BA0CBD925DA855 /* PBXContainerItemProxy */;
+		};
+		F7BF5F4EEB34ED9C5900E11B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 59FDAC4872D7FB61A660A3D2 /* Kacha */;
+			targetProxy = FCD6016F9C33A3842F6A6966 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		33BBD52D96D0B89607C153B5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 5BV85JW8US;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.enablerdao.kacha.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Kacha;
+			};
+			name = Debug;
+		};
+		54413577F70B828F74217B00 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 5BV85JW8US;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.enablerdao.kacha.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Kacha.app/Kacha";
+			};
+			name = Debug;
+		};
+		5502FA97F61F95109CD29E35 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 3;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 5BV85JW8US;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		60E180B0909F7FE84F93C895 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = KachaWidget/KachaWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5BV85JW8US;
+				INFOPLIST_FILE = KachaWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.enablerdao.kacha.widget;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		63B58C5C54D25946CCA613EE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Kacha/Kacha.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = Kacha/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.enablerdao.kacha;
+				PRODUCT_NAME = KAGI;
+				SDKROOT = iphoneos;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		8BBC78A881FD0724FE12C0FB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 3;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 5BV85JW8US;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		8C115E1565176C7AAEA75AAE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = KachaWidget/KachaWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5BV85JW8US;
+				INFOPLIST_FILE = KachaWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.enablerdao.kacha.widget;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		AA99948BB5557EFBA220A32A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 5BV85JW8US;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.enablerdao.kacha.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Kacha.app/Kacha";
+			};
+			name = Release;
+		};
+		DDFDFE9E3065BDE239105DC6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 5BV85JW8US;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.enablerdao.kacha.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Kacha;
+			};
+			name = Release;
+		};
+		E306EBB385C2211853954730 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Kacha/Kacha.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = Kacha/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.enablerdao.kacha;
+				PRODUCT_NAME = KAGI;
+				SDKROOT = iphoneos;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		94C77DE908F39C49F3480577 /* Build configuration list for PBXNativeTarget "KachaWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				60E180B0909F7FE84F93C895 /* Debug */,
+				8C115E1565176C7AAEA75AAE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		9EC6965E22A27EF7C51C6D5F /* Build configuration list for PBXNativeTarget "Kacha" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E306EBB385C2211853954730 /* Debug */,
+				63B58C5C54D25946CCA613EE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A940A5701239CA9104F6892F /* Build configuration list for PBXProject "KAGI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8BBC78A881FD0724FE12C0FB /* Debug */,
+				5502FA97F61F95109CD29E35 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E3171D2FFBD9386BA0DA151E /* Build configuration list for PBXNativeTarget "KachaUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				33BBD52D96D0B89607C153B5 /* Debug */,
+				DDFDFE9E3065BDE239105DC6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		FCB55631625BDB5896817516 /* Build configuration list for PBXNativeTarget "KachaTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				54413577F70B828F74217B00 /* Debug */,
+				AA99948BB5557EFBA220A32A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0B5542499049F3EF46AF0716 /* Project object */;
+}
