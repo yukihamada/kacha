@@ -662,12 +662,10 @@ struct HomeSettingsSections: View {
 
     private func useCurrentLocation() async {
         GeofenceManager.shared.requestPermission()
-        let manager = CLLocationManager()
-        manager.desiredAccuracy = kCLLocationAccuracyBest
-        manager.requestLocation()
-        // Wait briefly for location
-        try? await Task.sleep(nanoseconds: 2_000_000_000)
-        if let location = manager.location {
+        // Use GeofenceManager's location manager (has delegate set)
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
+        if let location = CLLocationManager().location {
+            // CLLocationManager().location returns cached location without needing delegate
             home.latitude = location.coordinate.latitude
             home.longitude = location.coordinate.longitude
             GeofenceManager.shared.registerGeofence(
