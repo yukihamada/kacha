@@ -200,11 +200,21 @@ struct PermitGuideView: View {
     }
 
     private func linkRow(_ title: String, _ url: String) -> some View {
-        Link(destination: URL(string: url)!) {
-            HStack(spacing: 8) {
-                Image(systemName: "arrow.up.right.square").font(.caption).foregroundColor(.kachaAccent)
-                Text(title).font(.caption).foregroundColor(.white)
-                Spacer()
+        Group {
+            if let destination = URL(string: url) {
+                Link(destination: destination) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "arrow.up.right.square").font(.caption).foregroundColor(.kachaAccent)
+                        Text(title).font(.caption).foregroundColor(.white)
+                        Spacer()
+                    }
+                }
+            } else {
+                HStack(spacing: 8) {
+                    Image(systemName: "arrow.up.right.square").font(.caption).foregroundColor(.secondary)
+                    Text(title).font(.caption).foregroundColor(.secondary)
+                    Spacer()
+                }
             }
         }
     }

@@ -33,7 +33,8 @@ class NatureRemoClient: ObservableObject {
     }
 
     private func request(_ path: String, method: String = "GET", body: [String: String]? = nil, token: String) async throws -> Data {
-        var req = URLRequest(url: URL(string: "\(base)\(path)")!)
+        guard let reqURL = URL(string: "\(base)\(path)") else { throw URLError(.badURL) }
+        var req = URLRequest(url: reqURL)
         req.httpMethod = method
         req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         if let body {

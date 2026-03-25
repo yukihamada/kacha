@@ -186,8 +186,12 @@ struct GuestCardView: View {
     private func emergencyRow(_ number: String, _ label: String) -> some View {
         HStack(spacing: 10) {
             Text(label).font(.caption).foregroundColor(.secondary).frame(width: 60, alignment: .leading)
-            Link(number, destination: URL(string: "tel:\(number)")!)
-                .font(.subheadline).bold().foregroundColor(.kachaAccent)
+            if let telURL = URL(string: "tel:\(number)") {
+                Link(number, destination: telURL)
+                    .font(.subheadline).bold().foregroundColor(.kachaAccent)
+            } else {
+                Text(number).font(.subheadline).bold().foregroundColor(.secondary)
+            }
         }
     }
 

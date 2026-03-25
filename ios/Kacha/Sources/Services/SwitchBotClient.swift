@@ -51,8 +51,9 @@ class SwitchBotClient: ObservableObject {
         isLoading = true
         defer { isLoading = false }
 
-        let url = URL(string: "\(baseURL)/devices")!
+        guard let url = URL(string: "\(baseURL)/devices") else { throw URLError(.badURL) }
         var request = URLRequest(url: url)
+        request.timeoutInterval = 15
         makeHeaders(token: token, secret: secret).forEach {
             request.setValue($1, forHTTPHeaderField: $0)
         }
@@ -70,9 +71,10 @@ class SwitchBotClient: ObservableObject {
         token: String,
         secret: String
     ) async throws {
-        let url = URL(string: "\(baseURL)/devices/\(deviceId)/commands")!
+        guard let url = URL(string: "\(baseURL)/devices/\(deviceId)/commands") else { throw URLError(.badURL) }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
+        request.timeoutInterval = 10
         makeHeaders(token: token, secret: secret).forEach {
             request.setValue($1, forHTTPHeaderField: $0)
         }
@@ -108,7 +110,7 @@ class SwitchBotClient: ObservableObject {
     }
 
     func fetchStatus(deviceId: String, token: String, secret: String) async throws -> DeviceStatus {
-        let url = URL(string: "\(baseURL)/devices/\(deviceId)/status")!
+        guard let url = URL(string: "\(baseURL)/devices/\(deviceId)/status") else { throw URLError(.badURL) }
         var request = URLRequest(url: url)
         makeHeaders(token: token, secret: secret).forEach {
             request.setValue($1, forHTTPHeaderField: $0)

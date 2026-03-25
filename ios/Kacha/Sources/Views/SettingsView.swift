@@ -177,12 +177,14 @@ struct SettingsView: View {
                     Text("対応デバイスを購入").font(.subheadline).bold().foregroundColor(.white)
                 }
                 ForEach(shopDevices, id: \.0) { name, icon, url in
-                    Link(destination: URL(string: url)!) {
-                        HStack(spacing: 10) {
-                            Image(systemName: icon).font(.caption).foregroundColor(.kacha).frame(width: 20)
-                            Text(name).font(.caption).foregroundColor(.white)
-                            Spacer()
-                            Image(systemName: "arrow.up.right").font(.caption2).foregroundColor(.secondary)
+                    if let destination = URL(string: url) {
+                        Link(destination: destination) {
+                            HStack(spacing: 10) {
+                                Image(systemName: icon).font(.caption).foregroundColor(.kacha).frame(width: 20)
+                                Text(name).font(.caption).foregroundColor(.white)
+                                Spacer()
+                                Image(systemName: "arrow.up.right").font(.caption2).foregroundColor(.secondary)
+                            }
                         }
                     }
                     if name != shopDevices.last?.0 {
@@ -1586,12 +1588,20 @@ struct ApiGuideRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Link(destination: URL(string: urlString)!) {
+            if let url = URL(string: urlString) {
+                Link(destination: url) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "arrow.up.right.square").font(.caption)
+                        Text(label).font(.caption).underline()
+                    }
+                    .foregroundColor(.kachaAccent)
+                }
+            } else {
                 HStack(spacing: 4) {
                     Image(systemName: "arrow.up.right.square").font(.caption)
                     Text(label).font(.caption).underline()
                 }
-                .foregroundColor(.kachaAccent)
+                .foregroundColor(.secondary)
             }
             Text(note).font(.caption2).foregroundColor(.secondary)
         }
@@ -1600,7 +1610,7 @@ struct ApiGuideRow: View {
 
 // MARK: - View Modifiers / Components
 
-private extension View {
+extension View {
     func actionButtonStyle(_ color: Color) -> some View {
         self
             .font(.subheadline).bold()

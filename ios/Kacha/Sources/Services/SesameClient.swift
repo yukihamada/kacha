@@ -23,7 +23,8 @@ final class SesameClient: ObservableObject {
 
     func fetchStatus(uuid: String, apiKey: String) async throws -> SesameStatus {
         guard !uuid.isEmpty, !apiKey.isEmpty else { throw SesameError.missingConfig }
-        var req = URLRequest(url: URL(string: "\(base)/\(uuid)")!)
+        guard let statusURL = URL(string: "\(base)/\(uuid)") else { throw SesameError.apiError(0) }
+        var req = URLRequest(url: statusURL)
         req.addValue(apiKey, forHTTPHeaderField: "x-api-key")
         req.timeoutInterval = 10
         let (data, _) = try await URLSession.shared.data(for: req)
@@ -34,7 +35,8 @@ final class SesameClient: ObservableObject {
 
     func sendCommand(_ command: Command, uuid: String, apiKey: String, historyTag: String = "カチャ") async throws {
         guard !uuid.isEmpty, !apiKey.isEmpty else { throw SesameError.missingConfig }
-        var req = URLRequest(url: URL(string: "\(base)/\(uuid)")!)
+        guard let cmdURL = URL(string: "\(base)/\(uuid)") else { throw SesameError.apiError(0) }
+        var req = URLRequest(url: cmdURL)
         req.httpMethod = "POST"
         req.addValue(apiKey, forHTTPHeaderField: "x-api-key")
         req.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -90,7 +92,8 @@ final class SesameClient: ObservableObject {
 
     func fetchHistory(uuid: String, apiKey: String, page: Int = 0, count: Int = 20) async throws -> [HistoryEntry] {
         guard !uuid.isEmpty, !apiKey.isEmpty else { throw SesameError.missingConfig }
-        var req = URLRequest(url: URL(string: "\(base)/\(uuid)/history?page=\(page)&lg=\(count)")!)
+        guard let histURL = URL(string: "\(base)/\(uuid)/history?page=\(page)&lg=\(count)") else { throw SesameError.apiError(0) }
+        var req = URLRequest(url: histURL)
         req.addValue(apiKey, forHTTPHeaderField: "x-api-key")
         req.timeoutInterval = 15
         let (data, resp) = try await URLSession.shared.data(for: req)

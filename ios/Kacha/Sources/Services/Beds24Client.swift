@@ -17,7 +17,8 @@ final class Beds24Client {
     /// Step 1: Invite Code → Refresh Token
     func setupWithInviteCode(_ inviteCode: String, deviceName: String = "カチャ") async throws -> String {
         guard !inviteCode.isEmpty else { throw Beds24Error.missingCode }
-        var req = URLRequest(url: URL(string: "\(base)/authentication/setup")!)
+        guard let setupURL = URL(string: "\(base)/authentication/setup") else { throw Beds24Error.apiError(0) }
+        var req = URLRequest(url: setupURL)
         req.httpMethod = "GET"
         req.addValue(inviteCode, forHTTPHeaderField: "code")
         req.addValue(deviceName, forHTTPHeaderField: "deviceName")
@@ -36,7 +37,8 @@ final class Beds24Client {
     /// Step 2: Refresh Token → API Token
     func getToken(refreshToken: String) async throws -> String {
         guard !refreshToken.isEmpty else { throw Beds24Error.missingCode }
-        var req = URLRequest(url: URL(string: "\(base)/authentication/token")!)
+        guard let tokenURL = URL(string: "\(base)/authentication/token") else { throw Beds24Error.apiError(0) }
+        var req = URLRequest(url: tokenURL)
         req.httpMethod = "GET"
         req.addValue(refreshToken, forHTTPHeaderField: "refreshToken")
         req.timeoutInterval = 15
@@ -70,7 +72,8 @@ final class Beds24Client {
         if includeGuests { urlStr += "includeGuests=true&" }
         urlStr += "includeInvoiceItems=true"
 
-        var req = URLRequest(url: URL(string: urlStr)!)
+        guard let bookingsURL = URL(string: urlStr) else { throw Beds24Error.apiError(0) }
+        var req = URLRequest(url: bookingsURL)
         req.addValue(token, forHTTPHeaderField: "token")
         req.addValue("application/json", forHTTPHeaderField: "Accept")
         req.timeoutInterval = 15
@@ -114,7 +117,8 @@ final class Beds24Client {
 
     /// 予約ステータスを更新
     func updateBookingStatus(bookId: Int, status: String, token: String) async throws {
-        var req = URLRequest(url: URL(string: "\(base)/bookings")!)
+        guard let bookingsURL = URL(string: "\(base)/bookings") else { throw Beds24Error.apiError(0) }
+        var req = URLRequest(url: bookingsURL)
         req.httpMethod = "POST"
         req.addValue(token, forHTTPHeaderField: "token")
         req.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -127,7 +131,8 @@ final class Beds24Client {
 
     /// 予約にメモを追加
     func addBookingNote(bookId: Int, note: String, token: String) async throws {
-        var req = URLRequest(url: URL(string: "\(base)/bookings")!)
+        guard let bookingsURL = URL(string: "\(base)/bookings") else { throw Beds24Error.apiError(0) }
+        var req = URLRequest(url: bookingsURL)
         req.httpMethod = "POST"
         req.addValue(token, forHTTPHeaderField: "token")
         req.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -140,7 +145,8 @@ final class Beds24Client {
 
     /// 物件情報を取得
     func fetchProperties(token: String) async throws -> [[String: Any]] {
-        var req = URLRequest(url: URL(string: "\(base)/properties")!)
+        guard let propsURL = URL(string: "\(base)/properties") else { throw Beds24Error.apiError(0) }
+        var req = URLRequest(url: propsURL)
         req.addValue(token, forHTTPHeaderField: "token")
         let (data, _) = try await URLSession.shared.data(for: req)
         guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],

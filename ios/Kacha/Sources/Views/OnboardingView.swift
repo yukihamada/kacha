@@ -188,21 +188,23 @@ struct OnboardingView: View {
                             .font(.caption).foregroundColor(.secondary)
 
                         ForEach(recommendedDevices, id: \.name) { device in
-                            Link(destination: URL(string: device.url)!) {
-                                HStack(spacing: 12) {
-                                    ZStack {
-                                        RoundedRectangle(cornerRadius: 8).fill(Color.kacha.opacity(0.1))
-                                            .frame(width: 36, height: 36)
-                                        Image(systemName: device.icon).font(.system(size: 14)).foregroundColor(.kacha)
+                            if let destination = URL(string: device.url) {
+                                Link(destination: destination) {
+                                    HStack(spacing: 12) {
+                                        ZStack {
+                                            RoundedRectangle(cornerRadius: 8).fill(Color.kacha.opacity(0.1))
+                                                .frame(width: 36, height: 36)
+                                            Image(systemName: device.icon).font(.system(size: 14)).foregroundColor(.kacha)
+                                        }
+                                        Text(device.name).font(.caption).foregroundColor(.white)
+                                        Spacer()
+                                        Image(systemName: "arrow.up.right").font(.caption2).foregroundColor(.secondary)
                                     }
-                                    Text(device.name).font(.caption).foregroundColor(.white)
-                                    Spacer()
-                                    Image(systemName: "arrow.up.right").font(.caption2).foregroundColor(.secondary)
+                                    .padding(10)
+                                    .background(Color.kachaCard)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.kachaCardBorder))
                                 }
-                                .padding(10)
-                                .background(Color.kachaCard)
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                                .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.kachaCardBorder))
                             }
                         }
                     }

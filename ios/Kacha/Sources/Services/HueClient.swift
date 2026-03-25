@@ -37,7 +37,7 @@ class HueClient: ObservableObject {
     }
 
     func register(bridgeIP: String) async throws -> String {
-        let url = URL(string: "http://\(bridgeIP)/api")!
+        guard let url = URL(string: "http://\(bridgeIP)/api") else { throw URLError(.badURL) }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.httpBody = try JSONSerialization.data(withJSONObject: ["devicetype": "kacha#iphone"])
@@ -63,7 +63,7 @@ class HueClient: ObservableObject {
         isLoading = true
         defer { isLoading = false }
 
-        let url = URL(string: "http://\(bridgeIP)/api/\(username)/lights")!
+        guard let url = URL(string: "http://\(bridgeIP)/api/\(username)/lights") else { throw URLError(.badURL) }
         let (data, _) = try await URLSession.shared.data(from: url)
         guard let dict = try? JSONSerialization.jsonObject(with: data) as? [String: [String: Any]] else {
             return []
@@ -93,7 +93,7 @@ class HueClient: ObservableObject {
         bridgeIP: String,
         username: String
     ) async throws {
-        let url = URL(string: "http://\(bridgeIP)/api/\(username)/lights/\(lightId)/state")!
+        guard let url = URL(string: "http://\(bridgeIP)/api/\(username)/lights/\(lightId)/state") else { throw URLError(.badURL) }
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")

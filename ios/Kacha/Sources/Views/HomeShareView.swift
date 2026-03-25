@@ -577,7 +577,9 @@ struct KeyRotationView: View {
         do {
             let newUsername = try await HueClient.shared.register(bridgeIP: home.hueBridgeIP)
             if !home.hueUsername.isEmpty {
-                let deleteURL = URL(string: "http://\(home.hueBridgeIP)/api/\(home.hueUsername)/config/whitelist/\(home.hueUsername)")!
+                guard let deleteURL = URL(string: "http://\(home.hueBridgeIP)/api/\(home.hueUsername)/config/whitelist/\(home.hueUsername)") else {
+                    return
+                }
                 var req = URLRequest(url: deleteURL)
                 req.httpMethod = "DELETE"
                 _ = try? await URLSession.shared.data(for: req)

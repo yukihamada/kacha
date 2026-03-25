@@ -23,7 +23,8 @@ class NukiClient: ObservableObject {
     }
 
     private func request(_ path: String, method: String = "GET", body: [String: Any]? = nil, token: String) async throws -> Data {
-        var req = URLRequest(url: URL(string: "\(base)\(path)")!)
+        guard let reqURL = URL(string: "\(base)\(path)") else { throw URLError(.badURL) }
+        var req = URLRequest(url: reqURL)
         req.httpMethod = method
         req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")

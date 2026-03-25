@@ -110,7 +110,7 @@ struct BookingView: View {
     }
 
     private func deleteBookings(at offsets: IndexSet) {
-        for index in offsets {
+        for index in offsets where index < filtered.count {
             context.delete(filtered[index])
         }
     }

@@ -27,7 +27,7 @@ struct ShareClient {
         let encryptedBase64 = combined.base64EncodedString()
 
         // 3. Upload to server
-        let url = URL(string: "\(baseURL)/api/v1/shares")!
+        guard let url = URL(string: "\(baseURL)/api/v1/shares") else { throw ShareError.uploadFailed }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -56,7 +56,7 @@ struct ShareClient {
     // MARK: - Fetch & Decrypt Share
 
     static func fetchShare(token: String, encryptionKey: String) async throws -> HomeShareData {
-        let url = URL(string: "\(baseURL)/api/v1/shares/\(token)")!
+        guard let url = URL(string: "\(baseURL)/api/v1/shares/\(token)") else { throw ShareError.networkError }
         let (data, response) = try await URLSession.shared.data(from: url)
 
         guard let http = response as? HTTPURLResponse else {
@@ -88,7 +88,7 @@ struct ShareClient {
     // MARK: - Revoke Share
 
     static func revokeShare(token: String, ownerToken: String) async throws {
-        let url = URL(string: "\(baseURL)/api/v1/shares/\(token)")!
+        guard let url = URL(string: "\(baseURL)/api/v1/shares/\(token)") else { throw ShareError.revokeFailed }
         var request = URLRequest(url: url)
         request.httpMethod = "DELETE"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
