@@ -1,4 +1,69 @@
 import AppIntents
+import Foundation
+
+// MARK: - IntentHomeStore
+// App Intents から SwiftData に直接アクセスできないため、
+// UserDefaults (App Group) 経由でHome情報をキャッシュする。
+
+enum IntentHomeStore {
+    private static let key = "kacha_intent_homes"
+
+    struct HomeSummary: Codable {
+        let id: String
+        let name: String
+        let switchBotToken: String
+        let switchBotSecret: String
+        let hueBridgeIP: String
+        let hueUsername: String
+        let sesameApiKey: String
+        let sesameDeviceUUIDs: String
+        let doorCode: String
+    }
+
+    static func loadAll() -> [HomeEntity] {
+        loadSummaries().map { HomeEntity(id: $0.id, name: $0.name) }
+    }
+
+    static func loadSummaries() -> [HomeSummary] {
+        guard let data = UserDefaults.standard.data(forKey: key),
+              let list = try? JSONDecoder().decode([HomeSummary].self, from: data)
+        else { return [] }
+        return list
+    }
+
+    static func save(_ summaries: [HomeSummary]) {
+        guard let data = try? JSONEncoder().encode(summaries) else { return }
+        UserDefaults.standard.set(data, forKey: key)
+    }
+
+    static func summary(for homeId: String) -> HomeSummary? {
+        loadSummaries().first { $0.id == homeId }
+    }
+}
+
+// MARK: - HomeEntity (AppIntents parameter type)
+
+struct HomeEntity: AppEntity, Identifiable {
+    static var typeDisplayRepresentation = TypeDisplayRepresentation(name: "物件")
+    static var defaultQuery = HomeEntityQuery()
+
+    let id: String
+    let name: String
+
+    var displayRepresentation: DisplayRepresentation {
+        DisplayRepresentation(title: "\(name)")
+    }
+}
+
+struct HomeEntityQuery: EntityQuery {
+    func entities(for identifiers: [String]) async throws -> [HomeEntity] {
+        IntentHomeStore.loadAll().filter { identifiers.contains($0.id) }
+    }
+
+    func suggestedEntities() async throws -> [HomeEntity] {
+        IntentHomeStore.loadAll()
+    }
+}
 
 // MARK: - Check-in Intent
 
