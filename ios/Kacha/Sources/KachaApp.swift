@@ -6,15 +6,24 @@ struct KachaApp: App {
     let container: ModelContainer
 
     init() {
+        let models: [any PersistentModel.Type] = [
+            Home.self, Booking.self, SmartDevice.self, DeviceIntegration.self, ShareRecord.self,
+            ChecklistItem.self, UtilityRecord.self, MaintenanceTask.self, NearbyPlace.self,
+            ActivityLog.self, HouseManual.self, SecureItem.self,
+        ]
         do {
-            container = try ModelContainer(
-                for: Home.self, Booking.self, SmartDevice.self, DeviceIntegration.self, ShareRecord.self,
-                    ChecklistItem.self, UtilityRecord.self, MaintenanceTask.self, NearbyPlace.self,
-                    ActivityLog.self, HouseManual.self, SecureItem.self,
-                configurations: ModelConfiguration()
-            )
+            container = try ModelContainer(for: Schema(models), configurations: ModelConfiguration())
         } catch {
-            fatalError("SwiftData container init failed: \(error)")
+            // Schema changed — delete old DB and retry (Keychain backup will restore data)
+            let dbURL = URL.applicationSupportDirectory.appending(path: "default.store")
+            try? FileManager.default.removeItem(at: dbURL)
+            try? FileManager.default.removeItem(at: dbURL.appendingPathExtension("wal"))
+            try? FileManager.default.removeItem(at: dbURL.appendingPathExtension("shm"))
+            do {
+                container = try ModelContainer(for: Schema(models), configurations: ModelConfiguration())
+            } catch {
+                fatalError("SwiftData container init failed after reset: \(error)")
+            }
         }
         migrateIfNeeded()
         BackgroundRefresh.register(container: container)
