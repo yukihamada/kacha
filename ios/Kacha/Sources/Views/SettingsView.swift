@@ -719,10 +719,8 @@ struct HomeSettingsSections: View {
             ) {
                 VStack(spacing: 12) {
                     SecureTokenField(label: "APIトークン", text: $home.switchBotToken)
-                        .onChange(of: home.switchBotToken) { _, val in UserDefaults.standard.set(val, forKey: "switchBotToken") }
-                    SecureTokenField(label: "シークレット", text: $home.switchBotSecret)
-                        .onChange(of: home.switchBotSecret) { _, val in UserDefaults.standard.set(val, forKey: "switchBotSecret") }
-                    Button { Task { await testSwitchBot() } } label: {
+                                            SecureTokenField(label: "シークレット", text: $home.switchBotSecret)
+                                            Button { Task { await testSwitchBot() } } label: {
                         HStack {
                             if isFetchingSwitchBot { ProgressView().tint(.kachaAccent) }
                             else { Image(systemName: "arrow.clockwise") }

@@ -89,17 +89,11 @@ final class Home {
 
     /// ホーム切替時にAppStorageへ同期（DeviceView等が引き続き動作するよう）
     func syncToAppStorage() {
+        // Only non-sensitive data in UserDefaults
+        // API keys/tokens/passwords are in SwiftData + Keychain backup only
         let d = UserDefaults.standard
         d.set(name,            forKey: "facilityName")
-        d.set(switchBotToken,  forKey: "switchBotToken")
-        d.set(switchBotSecret, forKey: "switchBotSecret")
-        d.set(hueBridgeIP,     forKey: "hueBridgeIP")
-        d.set(hueUsername,     forKey: "hueUsername")
-        d.set(doorCode,        forKey: "facilityDoorCode")
-        d.set(wifiPassword,    forKey: "facilityWifiPassword")
         d.set(address,         forKey: "facilityAddress")
-        d.set(airbnbICalURL,   forKey: "airbnbICalURL")
-        d.set(jalanICalURL,    forKey: "jalanICalURL")
         d.set(minpakuNumber,   forKey: "minpakuNumber")
         d.set(minpakuNights,   forKey: "minpakuNights")
     }
