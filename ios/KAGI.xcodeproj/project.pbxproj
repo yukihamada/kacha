@@ -12,8 +12,10 @@
 		07337588A01586E6FD2DB15C /* Expense.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BBB15FB7353B00736BFFB4 /* Expense.swift */; };
 		0D538791E49E8B42EC597E5B /* KachaWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C610E402B266A860FAA0372 /* KachaWidget.swift */; };
 		0FC4C6D52A526D0A39DDB382 /* Beds24Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDC12EF7619F952CDC5C097 /* Beds24Tests.swift */; };
+		1139C3EFC683D4DE96A5ECF2 /* TeamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75EEF33DCF83EDD8EA80E9D5 /* TeamView.swift */; };
 		113A8623FC8B2F76E3E5218C /* MaintenanceTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = C190FF87DB232B39D1DEF742 /* MaintenanceTask.swift */; };
 		14CFA2D67BC843F27E453ED4 /* RevenueHeatmapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8F1B08B635B44524D8BFB2 /* RevenueHeatmapView.swift */; };
+		14DB6665863655885FA979F1 /* GuestChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A954BB6EC3F306C8E2780D /* GuestChatView.swift */; };
 		15523C6D8F847A9DFAF4C3EA /* CloudSyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6A553743187CBEAF1279EC /* CloudSyncView.swift */; };
 		185887FB8375F715ABE61510 /* TemairaClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460C94A117D702F623FE9348 /* TemairaClient.swift */; };
 		1945567B04ACD0105C070EE3 /* ChecklistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF72FD87FDE3B8024079E91 /* ChecklistItem.swift */; };
@@ -24,10 +26,12 @@
 		202178F1E9C71356A333D319 /* ChecklistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF9F29AA36D5EA8C3C0255F /* ChecklistView.swift */; };
 		2174615BAAFF5CFFD22141BD /* HouseManualView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B006D885C4207A8CBBDDAEE /* HouseManualView.swift */; };
 		22DB6CD013E4411D3ABE4CEC /* KachaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BF7B6C864754A7FCE9375 /* KachaApp.swift */; };
+		2349A9FB2E2A3B7ADD13D109 /* KAGIBLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF4A6DF7F4D8B8F2F3F769A /* KAGIBLEManager.swift */; };
 		2397F8D011D0D555BDF79B45 /* VaultPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D622EF4A381F9287566742 /* VaultPageView.swift */; };
 		241F0A22455D6036369FA268 /* Beds24Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC08ABE8F6B17BFB01A0CAE /* Beds24Client.swift */; };
 		242F58D2019341A512038078 /* SmartDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD16967AE38FC49E46E0DD01 /* SmartDevice.swift */; };
 		275E4372B2AC45B616CCA010 /* DeviceAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065FC965E0BAA44E8C904B81 /* DeviceAlertView.swift */; };
+		27FDE4B017A58201EAA04B51 /* VaultEncryption.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7A5CFBA7C2F8466F90501D /* VaultEncryption.swift */; };
 		287380B58E2EF6AC9EEC0A29 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE953FA1594D81A67EE803E /* ContentView.swift */; };
 		2AA63BDC1959E269BF1294AE /* VaultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB18BD8350978C3E3FA4513 /* VaultView.swift */; };
 		2E6FF3089527828110622EF7 /* CustomWebhookClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D70E215F9DE7390843E2DF7 /* CustomWebhookClient.swift */; };
@@ -36,6 +40,7 @@
 		3586CBC736C3DC757ACAD60E /* AddBookingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4769D86BDFA6A76D75263DE7 /* AddBookingView.swift */; };
 		3753DB91A24E15DBFC6CCEF7 /* AddDeviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC865AA02FDC96978238EDC /* AddDeviceView.swift */; };
 		38D77CF8E8A8A2ED3377DD3E /* GuestCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E851084952E3CAFC34523A4 /* GuestCardView.swift */; };
+		38DFFD79AD90FA8022CEAD8E /* ExpenseIntegrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F257BE471448A400CA948FD0 /* ExpenseIntegrationView.swift */; };
 		39B86E19DEC577A5CBB25534 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA796739C47F10BF06AC0100 /* OnboardingView.swift */; };
 		3BBA89984CD05EF1A1751554 /* IntentHomeSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41A8CB296C488D526417E66E /* IntentHomeSync.swift */; };
 		3C0B3B977B83A8050CE237D7 /* AnalyticsDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19433A38FF73F82506EBAB25 /* AnalyticsDashboardView.swift */; };
@@ -44,6 +49,7 @@
 		424BA9FA4D52ED1C93B7CDBC /* CloudSyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3CFD5F01A6CFAE87F573EF /* CloudSyncServiceTests.swift */; };
 		427C5F817BFE63A50C7E74D0 /* ShareClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCA8C9C6D061BAB8F01581 /* ShareClient.swift */; };
 		441E8FD8EFFDEDE3C2F16F94 /* PricingSuggestionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6225C6F3C04A1B644AB513BD /* PricingSuggestionService.swift */; };
+		4434426571434D0608ABCBF5 /* CalendarAvailabilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903844E100FADD9AE75B29D3 /* CalendarAvailabilityView.swift */; };
 		46517CD149BCA7E55FF81F9D /* KachaLockAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A75E1ADB6E28C8039D87050B /* KachaLockAttributes.swift */; };
 		47C6016E2A32883EE332C370 /* DeviceIntegration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F988902B241B24F23EEE0E /* DeviceIntegration.swift */; };
 		4A274C4938D6CFA866D21802 /* AirhostClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8970A04FC2B1FBD966E965 /* AirhostClient.swift */; };
@@ -62,25 +68,33 @@
 		66C3971587E732DD4FB143B4 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBCFCDF59A790E77A47EBEA /* SettingsView.swift */; };
 		6ADFEA5BD9DA2A9115A17D76 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A514031FEF470BC9E5CE411 /* HomeView.swift */; };
 		6D19AEFA31DCC33349C53045 /* NukiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F9D70D846BC44CF5A602BC /* NukiClient.swift */; };
+		6D521A476A5E9D3330BCCA61 /* KAGISetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D149B8E7EBA2F2B2565578 /* KAGISetupView.swift */; };
 		70B670D9DA8612D9AA6F3479 /* CleaningReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9083365BC5B6DF55C0F6AF /* CleaningReport.swift */; };
+		7636A80377BF8031ACE00F38 /* ReviewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF95A801D4C24BC16633076 /* ReviewsView.swift */; };
 		770FB93DBD638FDCEFD2D63C /* KachaWidgetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9FF991C3224B0466A07F19 /* KachaWidgetProvider.swift */; };
 		7862EC0E078C9CC022633991 /* SecureItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BAAC5A7F6865955238BB8D /* SecureItem.swift */; };
 		79730FD8AA75163C8B1736C5 /* PricingRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10DE186DF18EB44D13627BC /* PricingRule.swift */; };
+		79A59580BF702C3F49DD8311 /* GuestGuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F3C68D52D9631D27CDF2043 /* GuestGuideView.swift */; };
 		7BE36E174B9E608A15C68560 /* AutomationRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B68D61A0DC9E506F2C153D8 /* AutomationRule.swift */; };
 		7CB3ABFC506E5F05E6BF3BC9 /* ShareCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08025785F422D2919C6DA942 /* ShareCalendarView.swift */; };
 		84C77081AE410C6C87AB9F8A /* DeviceMonitorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162F214A0422A7194AA90B4B /* DeviceMonitorService.swift */; };
 		8700E1EFF2794A8AEEE0D7B2 /* PricingSuggestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB22A3A833DF06FE5837B314 /* PricingSuggestionView.swift */; };
 		896C00AA94FC5AAEA9E6CC1B /* PropertyMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20BA3ADD4BA409C65FE246ED /* PropertyMapView.swift */; };
 		8D263CF05E220E96780F9D86 /* DeviceAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BABA191063F2FAE1144B2B7 /* DeviceAlert.swift */; };
+		8E7EB8F97E6FBD9956C6F137 /* KAGIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61EA27E96F21CEBBEF584299 /* KAGIService.swift */; };
 		90FF89A372AE781E3B5504D0 /* BookingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A259AED848AB4C8EA9E334F /* BookingDetailView.swift */; };
 		917C4552E16AC798887C1868 /* SesameClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0668A0574B44F66A312B807A /* SesameClient.swift */; };
 		94D166B50EB7124EA0361B09 /* RevenueReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6651802531863B94FDCF097B /* RevenueReportView.swift */; };
 		9651F421E9FAA78DC4E5463D /* KachaWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A35820CB7F24AA30DE13515 /* KachaWidget.swift */; };
 		9870A57715DDEA01D8423448 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132DA316B0CD860F60709030 /* CalendarView.swift */; };
 		9BB9B10F92BDE7A06C1ACBEC /* VoiceCommandManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EC6ABBDF8CC69A388C09BE4 /* VoiceCommandManager.swift */; };
+		9D5414FF58F03354EC5104E8 /* AutoPricingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AD228A71AB62B2F5DB3AC3 /* AutoPricingView.swift */; };
 		9EAC8CC6557D4BA12675E158 /* PMSProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB5D0A3ED2626B0E4731E02 /* PMSProvider.swift */; };
+		9EC615495DFCFB31A07104F6 /* SafetyDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE1A34B9BFCF31174A58EAA /* SafetyDashboardView.swift */; };
 		A535489F46C28B356702DA0B /* SecurityInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29E6C3F6C13060C797DE77BE /* SecurityInfoView.swift */; };
 		A6100AB632852E7577823899 /* ActivityLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3B1C9D98AC15A4C6B5F359 /* ActivityLog.swift */; };
+		A8B4D56EA95A037457DFC505 /* VaultEncryptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA1C91363D3BF72FFCAFC21 /* VaultEncryptionTests.swift */; };
+		AB1CD0A08A666523214FBDC0 /* CleaningManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A441A03544C574CF65CCE8C /* CleaningManagementView.swift */; };
 		AC43BB3319EC47FD8B384400 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 355C423920E61CBDAEF55751 /* Assets.xcassets */; };
 		AD24B31F60B6B6667BD47C16 /* WidgetDataSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD91F890DC8CA41367F16F7D /* WidgetDataSync.swift */; };
 		AD90E02B1F35222565357FB7 /* AutomationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37F90FBB9CB6FAFBB0309F35 /* AutomationView.swift */; };
@@ -91,9 +105,11 @@
 		B6F2F22A46472DBDA06B24C2 /* SeedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09A76D1BDF1EA7B4A016620 /* SeedData.swift */; };
 		B9FD7C5865D80BBD83CA6FF7 /* NatureRemoClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A7738C9B133BAD5F2D5277 /* NatureRemoClient.swift */; };
 		C0A6844731A08880AEB7CD08 /* DeviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEFDB187FC95534AEC056E23 /* DeviceView.swift */; };
+		C5422D306CB4B712E2157822 /* RevenueDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB83BE6B37284891003E58D5 /* RevenueDashboardView.swift */; };
 		C55AA517F120AC015960CDB3 /* GuestPageClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC68846A859A907B966E596F /* GuestPageClient.swift */; };
 		C7B7AC3A2393B9C777AC84C4 /* BackgroundRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFDE5DB46451C658BE8EDE3A /* BackgroundRefresh.swift */; };
 		CA5C11B1D6767FCCF7750B64 /* DeviceMonitorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDACC063DCAF9701B9DE073 /* DeviceMonitorTests.swift */; };
+		CB637F4FF456AC5A2BB336F4 /* KAGIDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 265B70DD183D503B1886CC1B /* KAGIDevice.swift */; };
 		D17C4025CE2547E918ADB7ED /* ShareRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A0EDD94BEFEE28BAC81C62 /* ShareRecord.swift */; };
 		D1DDF49E11A7217960D157A2 /* PricingSuggestionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3144195A13E2CBED2C4610 /* PricingSuggestionTests.swift */; };
 		D24AD72FB6287F5B185E8A54 /* iPadContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165A3D56ACF9557F7D227942 /* iPadContentView.swift */; };
@@ -102,10 +118,12 @@
 		D5A4F05C6BB58AD03156392D /* CleaningReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAD169465EE5DBFAE05B1B4 /* CleaningReportView.swift */; };
 		DB076CFC7F5C00FB9A1595C2 /* LiveActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35182EADA29CA205A4B0F54 /* LiveActivityManager.swift */; };
 		E2072AEA3954F9694168BD3F /* GuestMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 589873A5111678458952DDD4 /* GuestMessageView.swift */; };
+		E39E161E66933B76ADF4D437 /* PropertyListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 304DDF665C43330765C902FA /* PropertyListView.swift */; };
 		E7FB2D4224197639312B80DF /* ActivityLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9F5904D70A3FCDEB23D20C /* ActivityLogView.swift */; };
 		E94F6AD123ACCBF0C441AD1A /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B055EFE5AB8D4365917B5C4E /* ModelTests.swift */; };
 		E9F45288CA6B5F76E5184540 /* KeychainBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB4FA583B92F4007538C62DB /* KeychainBackup.swift */; };
 		EA9D176F437ED6EFDD7AF58F /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87C38490B5E9B7D171FDB3D8 /* Home.swift */; };
+		EB54952FEF635CA1FB34517A /* AutomationEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1897B19C46BB122C9FA45239 /* AutomationEngineTests.swift */; };
 		EF81C29A2AA5012CEB538248 /* SwitchBotClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D434ABEDE8CBCF81DAB40B4 /* SwitchBotClient.swift */; };
 		F2128682F1EDB21CAF812A5E /* CloudSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E374DA92146CE62CFBFE0B /* CloudSyncService.swift */; };
 		F40C57058EABE1C1A59D4E67 /* ShareTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 377E94109DEDCA4F49937DB7 /* ShareTests.swift */; };
@@ -149,6 +167,7 @@
 		06827396B74878C3BB4D53AF /* HomeShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeShareView.swift; sourceTree = "<group>"; };
 		08025785F422D2919C6DA942 /* ShareCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareCalendarView.swift; sourceTree = "<group>"; };
 		0A39BB08C1DE304C861E6DDF /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		0BA1C91363D3BF72FFCAFC21 /* VaultEncryptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultEncryptionTests.swift; sourceTree = "<group>"; };
 		0CE8733CB6FF67F0F2F96953 /* GeofenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeofenceManager.swift; sourceTree = "<group>"; };
 		129CE2203CE0D35C7D0EFE7C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		132DA316B0CD860F60709030 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
@@ -156,6 +175,7 @@
 		160015E2DF380320E342D98A /* HomePagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePagerView.swift; sourceTree = "<group>"; };
 		162F214A0422A7194AA90B4B /* DeviceMonitorService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceMonitorService.swift; sourceTree = "<group>"; };
 		165A3D56ACF9557F7D227942 /* iPadContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iPadContentView.swift; sourceTree = "<group>"; };
+		1897B19C46BB122C9FA45239 /* AutomationEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutomationEngineTests.swift; sourceTree = "<group>"; };
 		19433A38FF73F82506EBAB25 /* AnalyticsDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsDashboardView.swift; sourceTree = "<group>"; };
 		19E6CFAF993BA526C295EAF9 /* AutomationEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutomationEngine.swift; sourceTree = "<group>"; };
 		1BF72FD87FDE3B8024079E91 /* ChecklistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistItem.swift; sourceTree = "<group>"; };
@@ -163,10 +183,13 @@
 		1EDC12EF7619F952CDC5C097 /* Beds24Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Beds24Tests.swift; sourceTree = "<group>"; };
 		1FB18BD8350978C3E3FA4513 /* VaultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultView.swift; sourceTree = "<group>"; };
 		20BA3ADD4BA409C65FE246ED /* PropertyMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyMapView.swift; sourceTree = "<group>"; };
+		22D149B8E7EBA2F2B2565578 /* KAGISetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KAGISetupView.swift; sourceTree = "<group>"; };
+		265B70DD183D503B1886CC1B /* KAGIDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KAGIDevice.swift; sourceTree = "<group>"; };
 		29E6C3F6C13060C797DE77BE /* SecurityInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityInfoView.swift; sourceTree = "<group>"; };
 		2A9083365BC5B6DF55C0F6AF /* CleaningReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleaningReport.swift; sourceTree = "<group>"; };
 		2B3CFD5F01A6CFAE87F573EF /* CloudSyncServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSyncServiceTests.swift; sourceTree = "<group>"; };
 		2ECB4FB7EEB68F2FF93B870B /* KachaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KachaUITests.swift; sourceTree = "<group>"; };
+		304DDF665C43330765C902FA /* PropertyListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyListView.swift; sourceTree = "<group>"; };
 		355C423920E61CBDAEF55751 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		36528C3D52714B042FBD63B8 /* HouseManual.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseManual.swift; sourceTree = "<group>"; };
 		377E94109DEDCA4F49937DB7 /* ShareTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareTests.swift; sourceTree = "<group>"; };
@@ -179,14 +202,18 @@
 		41A8CB296C488D526417E66E /* IntentHomeSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHomeSync.swift; sourceTree = "<group>"; };
 		460C94A117D702F623FE9348 /* TemairaClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemairaClient.swift; sourceTree = "<group>"; };
 		4769D86BDFA6A76D75263DE7 /* AddBookingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBookingView.swift; sourceTree = "<group>"; };
+		4A441A03544C574CF65CCE8C /* CleaningManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleaningManagementView.swift; sourceTree = "<group>"; };
 		4E705CE4E957781482F69C94 /* KachaTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = KachaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F3B1C9D98AC15A4C6B5F359 /* ActivityLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityLog.swift; sourceTree = "<group>"; };
 		568EC91134F0A2F61C08DBD7 /* KachaUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = KachaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		589873A5111678458952DDD4 /* GuestMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestMessageView.swift; sourceTree = "<group>"; };
 		5A3025F580CDCB2BAB1C92CD /* BookingPoller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingPoller.swift; sourceTree = "<group>"; };
 		5BABA191063F2FAE1144B2B7 /* DeviceAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceAlert.swift; sourceTree = "<group>"; };
+		5BF4A6DF7F4D8B8F2F3F769A /* KAGIBLEManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KAGIBLEManager.swift; sourceTree = "<group>"; };
 		5C610E402B266A860FAA0372 /* KachaWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KachaWidget.swift; sourceTree = "<group>"; };
+		5F3C68D52D9631D27CDF2043 /* GuestGuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestGuideView.swift; sourceTree = "<group>"; };
 		608AB2A9F5F18D562E496375 /* UtilityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityView.swift; sourceTree = "<group>"; };
+		61EA27E96F21CEBBEF584299 /* KAGIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KAGIService.swift; sourceTree = "<group>"; };
 		6225C6F3C04A1B644AB513BD /* PricingSuggestionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricingSuggestionService.swift; sourceTree = "<group>"; };
 		6480544F5EE3A4BB9E3659A7 /* HueClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HueClient.swift; sourceTree = "<group>"; };
 		65411F6821DCAD885D29DB7D /* DeviceLogSyncer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceLogSyncer.swift; sourceTree = "<group>"; };
@@ -197,6 +224,7 @@
 		71A30F5AEBA76259343DCB7B /* ICalImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICalImporter.swift; sourceTree = "<group>"; };
 		72B2725C30BF13F4FCF46F46 /* LockToggleIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockToggleIntent.swift; sourceTree = "<group>"; };
 		75A7738C9B133BAD5F2D5277 /* NatureRemoClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NatureRemoClient.swift; sourceTree = "<group>"; };
+		75EEF33DCF83EDD8EA80E9D5 /* TeamView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamView.swift; sourceTree = "<group>"; };
 		7AE71E0CB6DD12F3351EC5E2 /* ReportExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportExportService.swift; sourceTree = "<group>"; };
 		7B006D885C4207A8CBBDDAEE /* HouseManualView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseManualView.swift; sourceTree = "<group>"; };
 		7B68D61A0DC9E506F2C153D8 /* AutomationRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutomationRule.swift; sourceTree = "<group>"; };
@@ -207,9 +235,11 @@
 		8A514031FEF470BC9E5CE411 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		8D434ABEDE8CBCF81DAB40B4 /* SwitchBotClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchBotClient.swift; sourceTree = "<group>"; };
 		8FC865AA02FDC96978238EDC /* AddDeviceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDeviceView.swift; sourceTree = "<group>"; };
+		903844E100FADD9AE75B29D3 /* CalendarAvailabilityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarAvailabilityView.swift; sourceTree = "<group>"; };
 		9183E03019349FA880E6457D /* CelebrationEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CelebrationEffect.swift; sourceTree = "<group>"; };
 		95E6DBDF41B9F8D5538AC3C5 /* KachaWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = KachaWidget.entitlements; sourceTree = "<group>"; };
 		9A35820CB7F24AA30DE13515 /* KachaWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KachaWidget.swift; sourceTree = "<group>"; };
+		9BE1A34B9BFCF31174A58EAA /* SafetyDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafetyDashboardView.swift; sourceTree = "<group>"; };
 		9D70E215F9DE7390843E2DF7 /* CustomWebhookClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomWebhookClient.swift; sourceTree = "<group>"; };
 		9E6A553743187CBEAF1279EC /* CloudSyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSyncView.swift; sourceTree = "<group>"; };
 		9E851084952E3CAFC34523A4 /* GuestCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestCardView.swift; sourceTree = "<group>"; };
@@ -221,6 +251,7 @@
 		B10DE186DF18EB44D13627BC /* PricingRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricingRule.swift; sourceTree = "<group>"; };
 		B8F318F2DB4D19735087A3FE /* WidgetViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetViews.swift; sourceTree = "<group>"; };
 		BAB5D0A3ED2626B0E4731E02 /* PMSProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMSProvider.swift; sourceTree = "<group>"; };
+		BB83BE6B37284891003E58D5 /* RevenueDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevenueDashboardView.swift; sourceTree = "<group>"; };
 		BD16967AE38FC49E46E0DD01 /* SmartDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartDevice.swift; sourceTree = "<group>"; };
 		BF9FF991C3224B0466A07F19 /* KachaWidgetProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KachaWidgetProvider.swift; sourceTree = "<group>"; };
 		C190FF87DB232B39D1DEF742 /* MaintenanceTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceTask.swift; sourceTree = "<group>"; };
@@ -229,14 +260,17 @@
 		CC107A395925B94DC3E39D02 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		CE9F5904D70A3FCDEB23D20C /* ActivityLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityLogView.swift; sourceTree = "<group>"; };
 		D09A76D1BDF1EA7B4A016620 /* SeedData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedData.swift; sourceTree = "<group>"; };
+		D0A954BB6EC3F306C8E2780D /* GuestChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestChatView.swift; sourceTree = "<group>"; };
 		D3A50B7FC5452D71572FBCDC /* GuestLocalization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestLocalization.swift; sourceTree = "<group>"; };
 		DAAD169465EE5DBFAE05B1B4 /* CleaningReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleaningReportView.swift; sourceTree = "<group>"; };
 		DCC08ABE8F6B17BFB01A0CAE /* Beds24Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Beds24Client.swift; sourceTree = "<group>"; };
 		DE3144195A13E2CBED2C4610 /* PricingSuggestionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricingSuggestionTests.swift; sourceTree = "<group>"; };
 		DEFDB187FC95534AEC056E23 /* DeviceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceView.swift; sourceTree = "<group>"; };
 		DF3D889890C8396509BAFE8C /* VoiceControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceControlView.swift; sourceTree = "<group>"; };
+		DF7A5CFBA7C2F8466F90501D /* VaultEncryption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultEncryption.swift; sourceTree = "<group>"; };
 		DF8F1B08B635B44524D8BFB2 /* RevenueHeatmapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevenueHeatmapView.swift; sourceTree = "<group>"; };
 		DFF9F29AA36D5EA8C3C0255F /* ChecklistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistView.swift; sourceTree = "<group>"; };
+		E3AD228A71AB62B2F5DB3AC3 /* AutoPricingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoPricingView.swift; sourceTree = "<group>"; };
 		E3E374DA92146CE62CFBFE0B /* CloudSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSyncService.swift; sourceTree = "<group>"; };
 		E6F9D70D846BC44CF5A602BC /* NukiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NukiClient.swift; sourceTree = "<group>"; };
 		E89BF7B6C864754A7FCE9375 /* KachaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KachaApp.swift; sourceTree = "<group>"; };
@@ -247,11 +281,13 @@
 		EF186F371A65C2693FAE07DB /* Kacha.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Kacha.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EFDE5DB46451C658BE8EDE3A /* BackgroundRefresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundRefresh.swift; sourceTree = "<group>"; };
 		F10694603FB4C88B8D7CC7A3 /* GuestPageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestPageTests.swift; sourceTree = "<group>"; };
+		F257BE471448A400CA948FD0 /* ExpenseIntegrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseIntegrationView.swift; sourceTree = "<group>"; };
 		F35182EADA29CA205A4B0F54 /* LiveActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityManager.swift; sourceTree = "<group>"; };
 		F42E0B7D1773EDB94A1C55CD /* BookingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingView.swift; sourceTree = "<group>"; };
 		FA796739C47F10BF06AC0100 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		FB100CD2B757485CF67CDB2C /* IntentExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentExecutor.swift; sourceTree = "<group>"; };
 		FB8970A04FC2B1FBD966E965 /* AirhostClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirhostClient.swift; sourceTree = "<group>"; };
+		FBF95A801D4C24BC16633076 /* ReviewsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -276,6 +312,7 @@
 		5CE0D5DD2354825BF498A55A /* KachaTests */ = {
 			isa = PBXGroup;
 			children = (
+				1897B19C46BB122C9FA45239 /* AutomationEngineTests.swift */,
 				1EDC12EF7619F952CDC5C097 /* Beds24Tests.swift */,
 				2B3CFD5F01A6CFAE87F573EF /* CloudSyncServiceTests.swift */,
 				3EDACC063DCAF9701B9DE073 /* DeviceMonitorTests.swift */,
@@ -283,6 +320,7 @@
 				B055EFE5AB8D4365917B5C4E /* ModelTests.swift */,
 				DE3144195A13E2CBED2C4610 /* PricingSuggestionTests.swift */,
 				377E94109DEDCA4F49937DB7 /* ShareTests.swift */,
+				0BA1C91363D3BF72FFCAFC21 /* VaultEncryptionTests.swift */,
 			);
 			path = KachaTests;
 			sourceTree = "<group>";
@@ -315,6 +353,8 @@
 				CB04048E4EB01CEF369353F2 /* GuestMessenger.swift */,
 				EC68846A859A907B966E596F /* GuestPageClient.swift */,
 				6480544F5EE3A4BB9E3659A7 /* HueClient.swift */,
+				5BF4A6DF7F4D8B8F2F3F769A /* KAGIBLEManager.swift */,
+				61EA27E96F21CEBBEF584299 /* KAGIService.swift */,
 				EB4FA583B92F4007538C62DB /* KeychainBackup.swift */,
 				F35182EADA29CA205A4B0F54 /* LiveActivityManager.swift */,
 				75A7738C9B133BAD5F2D5277 /* NatureRemoClient.swift */,
@@ -326,6 +366,7 @@
 				3BDCA8C9C6D061BAB8F01581 /* ShareClient.swift */,
 				8D434ABEDE8CBCF81DAB40B4 /* SwitchBotClient.swift */,
 				460C94A117D702F623FE9348 /* TemairaClient.swift */,
+				DF7A5CFBA7C2F8466F90501D /* VaultEncryption.swift */,
 				3EC6ABBDF8CC69A388C09BE4 /* VoiceCommandManager.swift */,
 				3B807D87BC74FD287A183C3F /* WatchConnectivityManager.swift */,
 			);
@@ -340,32 +381,44 @@
 				8FC865AA02FDC96978238EDC /* AddDeviceView.swift */,
 				19433A38FF73F82506EBAB25 /* AnalyticsDashboardView.swift */,
 				37F90FBB9CB6FAFBB0309F35 /* AutomationView.swift */,
+				E3AD228A71AB62B2F5DB3AC3 /* AutoPricingView.swift */,
 				6A259AED848AB4C8EA9E334F /* BookingDetailView.swift */,
 				F42E0B7D1773EDB94A1C55CD /* BookingView.swift */,
+				903844E100FADD9AE75B29D3 /* CalendarAvailabilityView.swift */,
 				132DA316B0CD860F60709030 /* CalendarView.swift */,
 				DFF9F29AA36D5EA8C3C0255F /* ChecklistView.swift */,
+				4A441A03544C574CF65CCE8C /* CleaningManagementView.swift */,
 				DAAD169465EE5DBFAE05B1B4 /* CleaningReportView.swift */,
 				9E6A553743187CBEAF1279EC /* CloudSyncView.swift */,
 				065FC965E0BAA44E8C904B81 /* DeviceAlertView.swift */,
 				DEFDB187FC95534AEC056E23 /* DeviceView.swift */,
+				F257BE471448A400CA948FD0 /* ExpenseIntegrationView.swift */,
 				9E851084952E3CAFC34523A4 /* GuestCardView.swift */,
+				D0A954BB6EC3F306C8E2780D /* GuestChatView.swift */,
+				5F3C68D52D9631D27CDF2043 /* GuestGuideView.swift */,
 				589873A5111678458952DDD4 /* GuestMessageView.swift */,
 				160015E2DF380320E342D98A /* HomePagerView.swift */,
 				06827396B74878C3BB4D53AF /* HomeShareView.swift */,
 				8A514031FEF470BC9E5CE411 /* HomeView.swift */,
 				7B006D885C4207A8CBBDDAEE /* HouseManualView.swift */,
 				165A3D56ACF9557F7D227942 /* iPadContentView.swift */,
+				22D149B8E7EBA2F2B2565578 /* KAGISetupView.swift */,
 				ACEEF959ED61C79789BCE531 /* MaintenanceView.swift */,
 				FA796739C47F10BF06AC0100 /* OnboardingView.swift */,
 				1C8F685D38047FF791825571 /* PermitGuideView.swift */,
 				EB22A3A833DF06FE5837B314 /* PricingSuggestionView.swift */,
+				304DDF665C43330765C902FA /* PropertyListView.swift */,
 				20BA3ADD4BA409C65FE246ED /* PropertyMapView.swift */,
+				BB83BE6B37284891003E58D5 /* RevenueDashboardView.swift */,
 				DF8F1B08B635B44524D8BFB2 /* RevenueHeatmapView.swift */,
 				6651802531863B94FDCF097B /* RevenueReportView.swift */,
+				FBF95A801D4C24BC16633076 /* ReviewsView.swift */,
+				9BE1A34B9BFCF31174A58EAA /* SafetyDashboardView.swift */,
 				29E6C3F6C13060C797DE77BE /* SecurityInfoView.swift */,
 				7DBCFCDF59A790E77A47EBEA /* SettingsView.swift */,
 				08025785F422D2919C6DA942 /* ShareCalendarView.swift */,
 				CC107A395925B94DC3E39D02 /* SidebarView.swift */,
+				75EEF33DCF83EDD8EA80E9D5 /* TeamView.swift */,
 				608AB2A9F5F18D562E496375 /* UtilityView.swift */,
 				C2D622EF4A381F9287566742 /* VaultPageView.swift */,
 				1FB18BD8350978C3E3FA4513 /* VaultView.swift */,
@@ -422,6 +475,7 @@
 				87C38490B5E9B7D171FDB3D8 /* Home.swift */,
 				36528C3D52714B042FBD63B8 /* HouseManual.swift */,
 				A75E1ADB6E28C8039D87050B /* KachaLockAttributes.swift */,
+				265B70DD183D503B1886CC1B /* KAGIDevice.swift */,
 				C190FF87DB232B39D1DEF742 /* MaintenanceTask.swift */,
 				B10DE186DF18EB44D13627BC /* PricingRule.swift */,
 				02BAAC5A7F6865955238BB8D /* SecureItem.swift */,
@@ -604,6 +658,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EB54952FEF635CA1FB34517A /* AutomationEngineTests.swift in Sources */,
 				0FC4C6D52A526D0A39DDB382 /* Beds24Tests.swift in Sources */,
 				424BA9FA4D52ED1C93B7CDBC /* CloudSyncServiceTests.swift in Sources */,
 				CA5C11B1D6767FCCF7750B64 /* DeviceMonitorTests.swift in Sources */,
@@ -611,6 +666,7 @@
 				E94F6AD123ACCBF0C441AD1A /* ModelTests.swift in Sources */,
 				D1DDF49E11A7217960D157A2 /* PricingSuggestionTests.swift in Sources */,
 				F40C57058EABE1C1A59D4E67 /* ShareTests.swift in Sources */,
+				A8B4D56EA95A037457DFC505 /* VaultEncryptionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -632,6 +688,7 @@
 				3753DB91A24E15DBFC6CCEF7 /* AddDeviceView.swift in Sources */,
 				4A274C4938D6CFA866D21802 /* AirhostClient.swift in Sources */,
 				3C0B3B977B83A8050CE237D7 /* AnalyticsDashboardView.swift in Sources */,
+				9D5414FF58F03354EC5104E8 /* AutoPricingView.swift in Sources */,
 				5F6CCA1C776F496DF43409FD /* AutomationEngine.swift in Sources */,
 				7BE36E174B9E608A15C68560 /* AutomationRule.swift in Sources */,
 				AD90E02B1F35222565357FB7 /* AutomationView.swift in Sources */,
@@ -641,10 +698,12 @@
 				90FF89A372AE781E3B5504D0 /* BookingDetailView.swift in Sources */,
 				66937C83B5120D1343E68279 /* BookingPoller.swift in Sources */,
 				64C319DAE37EE059B4F673F6 /* BookingView.swift in Sources */,
+				4434426571434D0608ABCBF5 /* CalendarAvailabilityView.swift in Sources */,
 				9870A57715DDEA01D8423448 /* CalendarView.swift in Sources */,
 				654F6D9993AE0C02836A5908 /* CelebrationEffect.swift in Sources */,
 				1945567B04ACD0105C070EE3 /* ChecklistItem.swift in Sources */,
 				202178F1E9C71356A333D319 /* ChecklistView.swift in Sources */,
+				AB1CD0A08A666523214FBDC0 /* CleaningManagementView.swift in Sources */,
 				05E437437494AB2C2B4893BB /* CleaningNotificationService.swift in Sources */,
 				70B670D9DA8612D9AA6F3479 /* CleaningReport.swift in Sources */,
 				D5A4F05C6BB58AD03156392D /* CleaningReportView.swift in Sources */,
@@ -659,8 +718,11 @@
 				84C77081AE410C6C87AB9F8A /* DeviceMonitorService.swift in Sources */,
 				C0A6844731A08880AEB7CD08 /* DeviceView.swift in Sources */,
 				07337588A01586E6FD2DB15C /* Expense.swift in Sources */,
+				38DFFD79AD90FA8022CEAD8E /* ExpenseIntegrationView.swift in Sources */,
 				AF8C83C18F5EFC9CC8103DA7 /* GeofenceManager.swift in Sources */,
 				38D77CF8E8A8A2ED3377DD3E /* GuestCardView.swift in Sources */,
+				14DB6665863655885FA979F1 /* GuestChatView.swift in Sources */,
+				79A59580BF702C3F49DD8311 /* GuestGuideView.swift in Sources */,
 				1AD04C7E0E29A2FDB7FB17B0 /* GuestLocalization.swift in Sources */,
 				E2072AEA3954F9694168BD3F /* GuestMessageView.swift in Sources */,
 				3D60D0BD67072D7A194F026D /* GuestMessenger.swift in Sources */,
@@ -675,6 +737,10 @@
 				B2BE4BA6738B3A36B0C0589D /* ICalImporter.swift in Sources */,
 				B2DD9A8E80CF0B46CA06942A /* IntentExecutor.swift in Sources */,
 				3BBA89984CD05EF1A1751554 /* IntentHomeSync.swift in Sources */,
+				2349A9FB2E2A3B7ADD13D109 /* KAGIBLEManager.swift in Sources */,
+				CB637F4FF456AC5A2BB336F4 /* KAGIDevice.swift in Sources */,
+				8E7EB8F97E6FBD9956C6F137 /* KAGIService.swift in Sources */,
+				6D521A476A5E9D3330BCCA61 /* KAGISetupView.swift in Sources */,
 				22DB6CD013E4411D3ABE4CEC /* KachaApp.swift in Sources */,
 				FF2A01E15566B2171305F221 /* KachaIntents.swift in Sources */,
 				46517CD149BCA7E55FF81F9D /* KachaLockAttributes.swift in Sources */,
@@ -691,10 +757,14 @@
 				79730FD8AA75163C8B1736C5 /* PricingRule.swift in Sources */,
 				441E8FD8EFFDEDE3C2F16F94 /* PricingSuggestionService.swift in Sources */,
 				8700E1EFF2794A8AEEE0D7B2 /* PricingSuggestionView.swift in Sources */,
+				E39E161E66933B76ADF4D437 /* PropertyListView.swift in Sources */,
 				896C00AA94FC5AAEA9E6CC1B /* PropertyMapView.swift in Sources */,
 				59F2085DE829D0E540CEB606 /* ReportExportService.swift in Sources */,
+				C5422D306CB4B712E2157822 /* RevenueDashboardView.swift in Sources */,
 				14CFA2D67BC843F27E453ED4 /* RevenueHeatmapView.swift in Sources */,
 				94D166B50EB7124EA0361B09 /* RevenueReportView.swift in Sources */,
+				7636A80377BF8031ACE00F38 /* ReviewsView.swift in Sources */,
+				9EC615495DFCFB31A07104F6 /* SafetyDashboardView.swift in Sources */,
 				7862EC0E078C9CC022633991 /* SecureItem.swift in Sources */,
 				A535489F46C28B356702DA0B /* SecurityInfoView.swift in Sources */,
 				B6F2F22A46472DBDA06B24C2 /* SeedData.swift in Sources */,
@@ -707,10 +777,12 @@
 				242F58D2019341A512038078 /* SmartDevice.swift in Sources */,
 				1D8DB5076F3DC8478E1BF52B /* SoundPlayer.swift in Sources */,
 				EF81C29A2AA5012CEB538248 /* SwitchBotClient.swift in Sources */,
+				1139C3EFC683D4DE96A5ECF2 /* TeamView.swift in Sources */,
 				185887FB8375F715ABE61510 /* TemairaClient.swift in Sources */,
 				3E58A61E01C56197C88A7AB8 /* Theme.swift in Sources */,
 				04CEACE6B8CA1B48B3AACDEB /* UtilityRecord.swift in Sources */,
 				FBDAA00FE3A92387E446F912 /* UtilityView.swift in Sources */,
+				27FDE4B017A58201EAA04B51 /* VaultEncryption.swift in Sources */,
 				2397F8D011D0D555BDF79B45 /* VaultPageView.swift in Sources */,
 				2AA63BDC1959E269BF1294AE /* VaultView.swift in Sources */,
 				9BB9B10F92BDE7A06C1ACBEC /* VoiceCommandManager.swift in Sources */,
@@ -825,7 +897,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 7;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 5BV85JW8US;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -922,7 +994,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 7;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 5BV85JW8US;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
