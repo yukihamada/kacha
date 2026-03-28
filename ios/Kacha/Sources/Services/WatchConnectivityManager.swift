@@ -30,7 +30,7 @@ final class WatchConnectivityManager: NSObject, ObservableObject {
     // MARK: - Public: Push state to Watch
 
     /// activeHomeの情報をWatchに送信する（ビューが更新されるたびに呼ぶ）
-    func updateWatch(home: Home, devices: [SmartDevice]) {
+    func updateWatch(home: Home, devices: [SmartDevice], todayCheckIns: [(guestName: String, timeLabel: String)] = [], propertyStatus: String = "") {
         guard WCSession.default.activationState == .activated else { return }
 
         let lockDevices = devices.filter { $0.type == "lock" }
@@ -40,12 +40,20 @@ final class WatchConnectivityManager: NSObject, ObservableObject {
             .filter { $0.type == "light" }
             .map { ["deviceId": $0.deviceId, "name": $0.name, "isOn": $0.isOn] }
 
-        let context: [String: Any] = [
+        let checkInInfos: [[String: Any]] = todayCheckIns.map {
+            ["guestName": $0.guestName, "timeLabel": $0.timeLabel]
+        }
+
+        var context: [String: Any] = [
             "homeName": home.name,
             "homeAddress": home.address,
             "isLocked": isLocked,
-            "lights": lightInfos
+            "lights": lightInfos,
+            "todayCheckIns": checkInInfos
         ]
+        if !propertyStatus.isEmpty {
+            context["propertyStatus"] = propertyStatus
+        }
 
         do {
             try WCSession.default.updateApplicationContext(context)

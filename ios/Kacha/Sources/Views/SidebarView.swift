@@ -109,7 +109,7 @@ struct SidebarView: View {
             }
         }
         .listStyle(.sidebar)
-        .navigationTitle("KAGI")
+        .navigationTitle("IKI")
         .navigationBarTitleDisplayMode(.large)
         .background(Color.kachaBg)
         .scrollContentBackground(.hidden)

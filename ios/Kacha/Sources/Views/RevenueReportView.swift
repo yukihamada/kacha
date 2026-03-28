@@ -57,7 +57,7 @@ struct RevenueReportView: View {
                         }
 
                         // Summary
-                        let totalRevenue = bookings.filter { $0.status != "cancelled" }.reduce(0) { $0 + $1.totalAmount } / 100
+                        let totalRevenue = bookings.filter { $0.status != "cancelled" }.reduce(0) { $0 + $1.totalAmount }
                         let totalExpenses = utilities.reduce(0) { $0 + $1.amount }
                         let totalCommission = 0 // TODO: calculate from Beds24 commission
 
@@ -73,7 +73,7 @@ struct RevenueReportView: View {
                                 Text("プラットフォーム別").font(.subheadline).bold().foregroundColor(.white)
                                 let platforms = Dictionary(grouping: bookings.filter { $0.status != "cancelled" }) { $0.platform }
                                 ForEach(platforms.sorted(by: { $0.value.count > $1.value.count }), id: \.key) { platform, pBookings in
-                                    let total = pBookings.reduce(0) { $0 + $1.totalAmount } / 100
+                                    let total = pBookings.reduce(0) { $0 + $1.totalAmount }
                                     HStack {
                                         Text(pBookings.first?.platformLabel ?? platform)
                                             .font(.subheadline).foregroundColor(.white)
@@ -118,7 +118,7 @@ struct RevenueReportView: View {
         let f = DateFormatter(); f.dateFormat = "yyyy-MM"
         return bookings.filter {
             $0.status != "cancelled" && f.string(from: $0.checkIn) == month
-        }.reduce(0) { $0 + $1.totalAmount } / 100
+        }.reduce(0) { $0 + $1.totalAmount }
     }
 
     private func expensesForMonth(_ month: String) -> Int {
@@ -143,7 +143,7 @@ struct RevenueReportView: View {
     }
 
     private func generateReportText() -> String {
-        let totalRevenue = bookings.filter { $0.status != "cancelled" }.reduce(0) { $0 + $1.totalAmount } / 100
+        let totalRevenue = bookings.filter { $0.status != "cancelled" }.reduce(0) { $0 + $1.totalAmount }
         let totalExpenses = utilities.reduce(0) { $0 + $1.amount }
         return """
         【\(home.name) 収支レポート】

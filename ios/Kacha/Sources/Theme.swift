@@ -1,7 +1,7 @@
 import SwiftUI
 
 enum KAGITheme {
-    static let appName = "KAGI"
+    static let appName = "IKI"
     static let tagline = "開いた、ウェルカム。"
 
     // Brand colors (updated, more refined)

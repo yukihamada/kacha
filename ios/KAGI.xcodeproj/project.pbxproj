@@ -8,9 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		04CEACE6B8CA1B48B3AACDEB /* UtilityRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 706676D2C24D95967B5009DC /* UtilityRecord.swift */; };
+		04F163198B7FFF6914DC7162 /* ComplicationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDC3B7711D9E5B0F9F6DE48 /* ComplicationProvider.swift */; };
 		05E437437494AB2C2B4893BB /* CleaningNotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15869D02239D08163D37B93A /* CleaningNotificationService.swift */; };
 		07337588A01586E6FD2DB15C /* Expense.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BBB15FB7353B00736BFFB4 /* Expense.swift */; };
-		0D538791E49E8B42EC597E5B /* KachaWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C610E402B266A860FAA0372 /* KachaWidget.swift */; };
+		0D5085634FA2F4BCFB49AFF4 /* HomeControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A2D76B51A3FD6A1DBFAAE6 /* HomeControlView.swift */; };
 		0FC4C6D52A526D0A39DDB382 /* Beds24Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDC12EF7619F952CDC5C097 /* Beds24Tests.swift */; };
 		1139C3EFC683D4DE96A5ECF2 /* TeamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75EEF33DCF83EDD8EA80E9D5 /* TeamView.swift */; };
 		113A8623FC8B2F76E3E5218C /* MaintenanceTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = C190FF87DB232B39D1DEF742 /* MaintenanceTask.swift */; };
@@ -34,11 +35,13 @@
 		27FDE4B017A58201EAA04B51 /* VaultEncryption.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7A5CFBA7C2F8466F90501D /* VaultEncryption.swift */; };
 		287380B58E2EF6AC9EEC0A29 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE953FA1594D81A67EE803E /* ContentView.swift */; };
 		2AA63BDC1959E269BF1294AE /* VaultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB18BD8350978C3E3FA4513 /* VaultView.swift */; };
+		2DFDEAD6AED5E0B0ECAD99BD /* BookingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9600E8BF370AEE0A44AC7807 /* BookingTests.swift */; };
 		2E6FF3089527828110622EF7 /* CustomWebhookClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D70E215F9DE7390843E2DF7 /* CustomWebhookClient.swift */; };
 		2E70630F6139CD6FD8530FFD /* WidgetViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F318F2DB4D19735087A3FE /* WidgetViews.swift */; };
 		34E08D361F512BBFF7221760 /* VoiceControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3D889890C8396509BAFE8C /* VoiceControlView.swift */; };
 		3586CBC736C3DC757ACAD60E /* AddBookingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4769D86BDFA6A76D75263DE7 /* AddBookingView.swift */; };
 		3753DB91A24E15DBFC6CCEF7 /* AddDeviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC865AA02FDC96978238EDC /* AddDeviceView.swift */; };
+		38545DED9FFD5BF4ADF288FF /* KachaWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FB5B67FA3D999266F720360 /* KachaWatchApp.swift */; };
 		38D77CF8E8A8A2ED3377DD3E /* GuestCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E851084952E3CAFC34523A4 /* GuestCardView.swift */; };
 		38DFFD79AD90FA8022CEAD8E /* ExpenseIntegrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F257BE471448A400CA948FD0 /* ExpenseIntegrationView.swift */; };
 		39B86E19DEC577A5CBB25534 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA796739C47F10BF06AC0100 /* OnboardingView.swift */; };
@@ -70,24 +73,29 @@
 		6D19AEFA31DCC33349C53045 /* NukiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F9D70D846BC44CF5A602BC /* NukiClient.swift */; };
 		6D521A476A5E9D3330BCCA61 /* KAGISetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D149B8E7EBA2F2B2565578 /* KAGISetupView.swift */; };
 		70B670D9DA8612D9AA6F3479 /* CleaningReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9083365BC5B6DF55C0F6AF /* CleaningReport.swift */; };
+		7552DFD723F3D10DB01F3AC4 /* KachaClipApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02E082516436AAAF4B5702AF /* KachaClipApp.swift */; };
 		7636A80377BF8031ACE00F38 /* ReviewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF95A801D4C24BC16633076 /* ReviewsView.swift */; };
 		770FB93DBD638FDCEFD2D63C /* KachaWidgetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9FF991C3224B0466A07F19 /* KachaWidgetProvider.swift */; };
+		7824F8DBBE714B833F6028FC /* KachaClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = E7C1EDB4B6D61877A531A963 /* KachaClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		7862EC0E078C9CC022633991 /* SecureItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BAAC5A7F6865955238BB8D /* SecureItem.swift */; };
 		79730FD8AA75163C8B1736C5 /* PricingRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10DE186DF18EB44D13627BC /* PricingRule.swift */; };
 		79A59580BF702C3F49DD8311 /* GuestGuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F3C68D52D9631D27CDF2043 /* GuestGuideView.swift */; };
 		7BE36E174B9E608A15C68560 /* AutomationRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B68D61A0DC9E506F2C153D8 /* AutomationRule.swift */; };
 		7CB3ABFC506E5F05E6BF3BC9 /* ShareCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08025785F422D2919C6DA942 /* ShareCalendarView.swift */; };
+		7EBEC5D66C41A9C3C251A9A1 /* WatchHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7E95FFA9BE8918FBF4158D /* WatchHomeView.swift */; };
 		84C77081AE410C6C87AB9F8A /* DeviceMonitorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162F214A0422A7194AA90B4B /* DeviceMonitorService.swift */; };
 		8700E1EFF2794A8AEEE0D7B2 /* PricingSuggestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB22A3A833DF06FE5837B314 /* PricingSuggestionView.swift */; };
 		896C00AA94FC5AAEA9E6CC1B /* PropertyMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20BA3ADD4BA409C65FE246ED /* PropertyMapView.swift */; };
 		8D263CF05E220E96780F9D86 /* DeviceAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BABA191063F2FAE1144B2B7 /* DeviceAlert.swift */; };
 		8E7EB8F97E6FBD9956C6F137 /* KAGIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61EA27E96F21CEBBEF584299 /* KAGIService.swift */; };
+		90BFDC67D2B1F3DC2BF4A125 /* WatchConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E0228765EAE5D3ED3CC100 /* WatchConnectivityManager.swift */; };
 		90FF89A372AE781E3B5504D0 /* BookingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A259AED848AB4C8EA9E334F /* BookingDetailView.swift */; };
 		917C4552E16AC798887C1868 /* SesameClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0668A0574B44F66A312B807A /* SesameClient.swift */; };
 		94D166B50EB7124EA0361B09 /* RevenueReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6651802531863B94FDCF097B /* RevenueReportView.swift */; };
 		9651F421E9FAA78DC4E5463D /* KachaWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A35820CB7F24AA30DE13515 /* KachaWidget.swift */; };
 		9870A57715DDEA01D8423448 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132DA316B0CD860F60709030 /* CalendarView.swift */; };
 		9BB9B10F92BDE7A06C1ACBEC /* VoiceCommandManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EC6ABBDF8CC69A388C09BE4 /* VoiceCommandManager.swift */; };
+		9CA977D45EC36D9776A9E5AE /* GuestClipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA567B91BA70BD236424051 /* GuestClipView.swift */; };
 		9D5414FF58F03354EC5104E8 /* AutoPricingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AD228A71AB62B2F5DB3AC3 /* AutoPricingView.swift */; };
 		9EAC8CC6557D4BA12675E158 /* PMSProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB5D0A3ED2626B0E4731E02 /* PMSProvider.swift */; };
 		9EC615495DFCFB31A07104F6 /* SafetyDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE1A34B9BFCF31174A58EAA /* SafetyDashboardView.swift */; };
@@ -103,8 +111,10 @@
 		B2BE4BA6738B3A36B0C0589D /* ICalImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71A30F5AEBA76259343DCB7B /* ICalImporter.swift */; };
 		B2DD9A8E80CF0B46CA06942A /* IntentExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB100CD2B757485CF67CDB2C /* IntentExecutor.swift */; };
 		B6F2F22A46472DBDA06B24C2 /* SeedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09A76D1BDF1EA7B4A016620 /* SeedData.swift */; };
+		B780364493480FF668046FFB /* ChannelSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A18158BEA6FB3B3E4284F9FB /* ChannelSettingsView.swift */; };
 		B9FD7C5865D80BBD83CA6FF7 /* NatureRemoClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A7738C9B133BAD5F2D5277 /* NatureRemoClient.swift */; };
 		C0A6844731A08880AEB7CD08 /* DeviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEFDB187FC95534AEC056E23 /* DeviceView.swift */; };
+		C1E3020FFB1DE2032F428854 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 54E33957752AEBFE450C0596 /* Assets.xcassets */; };
 		C5422D306CB4B712E2157822 /* RevenueDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB83BE6B37284891003E58D5 /* RevenueDashboardView.swift */; };
 		C55AA517F120AC015960CDB3 /* GuestPageClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC68846A859A907B966E596F /* GuestPageClient.swift */; };
 		C7B7AC3A2393B9C777AC84C4 /* BackgroundRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFDE5DB46451C658BE8EDE3A /* BackgroundRefresh.swift */; };
@@ -128,12 +138,20 @@
 		F2128682F1EDB21CAF812A5E /* CloudSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E374DA92146CE62CFBFE0B /* CloudSyncService.swift */; };
 		F40C57058EABE1C1A59D4E67 /* ShareTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 377E94109DEDCA4F49937DB7 /* ShareTests.swift */; };
 		F463539A779177B5E82FCBB9 /* HueClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6480544F5EE3A4BB9E3659A7 /* HueClient.swift */; };
+		F998305354886C544BEDC22A /* WatchLockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6344B45F7EE9BE4A7A180AC5 /* WatchLockView.swift */; };
 		F9E7F7633747489707FB1683 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60F6A646D2896063281C066 /* NotificationManager.swift */; };
 		FBDAA00FE3A92387E446F912 /* UtilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608AB2A9F5F18D562E496375 /* UtilityView.swift */; };
 		FF2A01E15566B2171305F221 /* KachaIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70788C2DF6DE9CD669840FBE /* KachaIntents.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		1F15CEC1AD3C6D4AB467D284 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B5542499049F3EF46AF0716 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 24AFDAEAD6C3F9D74416A85B;
+			remoteInfo = KachaClip;
+		};
 		CE4AC2C2AC96756068A4E6C8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0B5542499049F3EF46AF0716 /* Project object */;
@@ -157,10 +175,25 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		ADC8F0FB324CF1F2B8E8F1EA /* Embed App Clips */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/AppClips";
+			dstSubfolderSpec = 16;
+			files = (
+				7824F8DBBE714B833F6028FC /* KachaClip.app in Embed App Clips */,
+			);
+			name = "Embed App Clips";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		0068BF8C4B0125A9301E4AC2 /* Booking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Booking.swift; sourceTree = "<group>"; };
 		029B899D4EF902AED4FEADCE /* KachaWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = KachaWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		02BAAC5A7F6865955238BB8D /* SecureItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureItem.swift; sourceTree = "<group>"; };
+		02E082516436AAAF4B5702AF /* KachaClipApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KachaClipApp.swift; sourceTree = "<group>"; };
 		05A0EDD94BEFEE28BAC81C62 /* ShareRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareRecord.swift; sourceTree = "<group>"; };
 		065FC965E0BAA44E8C904B81 /* DeviceAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceAlertView.swift; sourceTree = "<group>"; };
 		0668A0574B44F66A312B807A /* SesameClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SesameClient.swift; sourceTree = "<group>"; };
@@ -178,6 +211,7 @@
 		1897B19C46BB122C9FA45239 /* AutomationEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutomationEngineTests.swift; sourceTree = "<group>"; };
 		19433A38FF73F82506EBAB25 /* AnalyticsDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsDashboardView.swift; sourceTree = "<group>"; };
 		19E6CFAF993BA526C295EAF9 /* AutomationEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutomationEngine.swift; sourceTree = "<group>"; };
+		1BDC3B7711D9E5B0F9F6DE48 /* ComplicationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationProvider.swift; sourceTree = "<group>"; };
 		1BF72FD87FDE3B8024079E91 /* ChecklistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistItem.swift; sourceTree = "<group>"; };
 		1C8F685D38047FF791825571 /* PermitGuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermitGuideView.swift; sourceTree = "<group>"; };
 		1EDC12EF7619F952CDC5C097 /* Beds24Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Beds24Tests.swift; sourceTree = "<group>"; };
@@ -205,19 +239,23 @@
 		4A441A03544C574CF65CCE8C /* CleaningManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleaningManagementView.swift; sourceTree = "<group>"; };
 		4E705CE4E957781482F69C94 /* KachaTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = KachaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F3B1C9D98AC15A4C6B5F359 /* ActivityLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityLog.swift; sourceTree = "<group>"; };
+		54E33957752AEBFE450C0596 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		568EC91134F0A2F61C08DBD7 /* KachaUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = KachaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		589873A5111678458952DDD4 /* GuestMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestMessageView.swift; sourceTree = "<group>"; };
 		5A3025F580CDCB2BAB1C92CD /* BookingPoller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingPoller.swift; sourceTree = "<group>"; };
 		5BABA191063F2FAE1144B2B7 /* DeviceAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceAlert.swift; sourceTree = "<group>"; };
 		5BF4A6DF7F4D8B8F2F3F769A /* KAGIBLEManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KAGIBLEManager.swift; sourceTree = "<group>"; };
-		5C610E402B266A860FAA0372 /* KachaWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KachaWidget.swift; sourceTree = "<group>"; };
 		5F3C68D52D9631D27CDF2043 /* GuestGuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestGuideView.swift; sourceTree = "<group>"; };
+		5FB5B67FA3D999266F720360 /* KachaWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KachaWatchApp.swift; sourceTree = "<group>"; };
+		6061AA6FF5AB39DC44768266 /* KachaWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KachaWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		608AB2A9F5F18D562E496375 /* UtilityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityView.swift; sourceTree = "<group>"; };
 		61EA27E96F21CEBBEF584299 /* KAGIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KAGIService.swift; sourceTree = "<group>"; };
 		6225C6F3C04A1B644AB513BD /* PricingSuggestionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricingSuggestionService.swift; sourceTree = "<group>"; };
+		6344B45F7EE9BE4A7A180AC5 /* WatchLockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchLockView.swift; sourceTree = "<group>"; };
 		6480544F5EE3A4BB9E3659A7 /* HueClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HueClient.swift; sourceTree = "<group>"; };
 		65411F6821DCAD885D29DB7D /* DeviceLogSyncer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceLogSyncer.swift; sourceTree = "<group>"; };
 		6651802531863B94FDCF097B /* RevenueReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevenueReportView.swift; sourceTree = "<group>"; };
+		695A807A522892868B701E7C /* KachaClip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = KachaClip.entitlements; sourceTree = "<group>"; };
 		6A259AED848AB4C8EA9E334F /* BookingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingDetailView.swift; sourceTree = "<group>"; };
 		706676D2C24D95967B5009DC /* UtilityRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityRecord.swift; sourceTree = "<group>"; };
 		70788C2DF6DE9CD669840FBE /* KachaIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KachaIntents.swift; sourceTree = "<group>"; };
@@ -231,18 +269,22 @@
 		7BE953FA1594D81A67EE803E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7DBCFCDF59A790E77A47EBEA /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		83BBB15FB7353B00736BFFB4 /* Expense.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expense.swift; sourceTree = "<group>"; };
+		86E0228765EAE5D3ED3CC100 /* WatchConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchConnectivityManager.swift; sourceTree = "<group>"; };
 		87C38490B5E9B7D171FDB3D8 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		8A514031FEF470BC9E5CE411 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		8CA567B91BA70BD236424051 /* GuestClipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestClipView.swift; sourceTree = "<group>"; };
 		8D434ABEDE8CBCF81DAB40B4 /* SwitchBotClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchBotClient.swift; sourceTree = "<group>"; };
 		8FC865AA02FDC96978238EDC /* AddDeviceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDeviceView.swift; sourceTree = "<group>"; };
 		903844E100FADD9AE75B29D3 /* CalendarAvailabilityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarAvailabilityView.swift; sourceTree = "<group>"; };
 		9183E03019349FA880E6457D /* CelebrationEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CelebrationEffect.swift; sourceTree = "<group>"; };
 		95E6DBDF41B9F8D5538AC3C5 /* KachaWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = KachaWidget.entitlements; sourceTree = "<group>"; };
+		9600E8BF370AEE0A44AC7807 /* BookingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingTests.swift; sourceTree = "<group>"; };
 		9A35820CB7F24AA30DE13515 /* KachaWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KachaWidget.swift; sourceTree = "<group>"; };
 		9BE1A34B9BFCF31174A58EAA /* SafetyDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafetyDashboardView.swift; sourceTree = "<group>"; };
 		9D70E215F9DE7390843E2DF7 /* CustomWebhookClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomWebhookClient.swift; sourceTree = "<group>"; };
 		9E6A553743187CBEAF1279EC /* CloudSyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSyncView.swift; sourceTree = "<group>"; };
 		9E851084952E3CAFC34523A4 /* GuestCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestCardView.swift; sourceTree = "<group>"; };
+		A18158BEA6FB3B3E4284F9FB /* ChannelSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelSettingsView.swift; sourceTree = "<group>"; };
 		A60F6A646D2896063281C066 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		A75E1ADB6E28C8039D87050B /* KachaLockAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KachaLockAttributes.swift; sourceTree = "<group>"; };
 		ACEEF959ED61C79789BCE531 /* MaintenanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceView.swift; sourceTree = "<group>"; };
@@ -253,9 +295,12 @@
 		BAB5D0A3ED2626B0E4731E02 /* PMSProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMSProvider.swift; sourceTree = "<group>"; };
 		BB83BE6B37284891003E58D5 /* RevenueDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevenueDashboardView.swift; sourceTree = "<group>"; };
 		BD16967AE38FC49E46E0DD01 /* SmartDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartDevice.swift; sourceTree = "<group>"; };
+		BF7E95FFA9BE8918FBF4158D /* WatchHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHomeView.swift; sourceTree = "<group>"; };
 		BF9FF991C3224B0466A07F19 /* KachaWidgetProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KachaWidgetProvider.swift; sourceTree = "<group>"; };
 		C190FF87DB232B39D1DEF742 /* MaintenanceTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceTask.swift; sourceTree = "<group>"; };
 		C2D622EF4A381F9287566742 /* VaultPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultPageView.swift; sourceTree = "<group>"; };
+		C5A2D76B51A3FD6A1DBFAAE6 /* HomeControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeControlView.swift; sourceTree = "<group>"; };
+		C962587672D02119CE474B4E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		CB04048E4EB01CEF369353F2 /* GuestMessenger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestMessenger.swift; sourceTree = "<group>"; };
 		CC107A395925B94DC3E39D02 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		CE9F5904D70A3FCDEB23D20C /* ActivityLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityLogView.swift; sourceTree = "<group>"; };
@@ -273,6 +318,7 @@
 		E3AD228A71AB62B2F5DB3AC3 /* AutoPricingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoPricingView.swift; sourceTree = "<group>"; };
 		E3E374DA92146CE62CFBFE0B /* CloudSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSyncService.swift; sourceTree = "<group>"; };
 		E6F9D70D846BC44CF5A602BC /* NukiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NukiClient.swift; sourceTree = "<group>"; };
+		E7C1EDB4B6D61877A531A963 /* KachaClip.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = KachaClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E89BF7B6C864754A7FCE9375 /* KachaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KachaApp.swift; sourceTree = "<group>"; };
 		E9F988902B241B24F23EEE0E /* DeviceIntegration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceIntegration.swift; sourceTree = "<group>"; };
 		EB22A3A833DF06FE5837B314 /* PricingSuggestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricingSuggestionView.swift; sourceTree = "<group>"; };
@@ -309,11 +355,23 @@
 			path = Kacha/Resources;
 			sourceTree = "<group>";
 		};
+		4E3613F1A039FCA00D250B0B /* KachaClip */ = {
+			isa = PBXGroup;
+			children = (
+				8CA567B91BA70BD236424051 /* GuestClipView.swift */,
+				C962587672D02119CE474B4E /* Info.plist */,
+				695A807A522892868B701E7C /* KachaClip.entitlements */,
+				02E082516436AAAF4B5702AF /* KachaClipApp.swift */,
+			);
+			path = KachaClip;
+			sourceTree = "<group>";
+		};
 		5CE0D5DD2354825BF498A55A /* KachaTests */ = {
 			isa = PBXGroup;
 			children = (
 				1897B19C46BB122C9FA45239 /* AutomationEngineTests.swift */,
 				1EDC12EF7619F952CDC5C097 /* Beds24Tests.swift */,
+				9600E8BF370AEE0A44AC7807 /* BookingTests.swift */,
 				2B3CFD5F01A6CFAE87F573EF /* CloudSyncServiceTests.swift */,
 				3EDACC063DCAF9701B9DE073 /* DeviceMonitorTests.swift */,
 				F10694603FB4C88B8D7CC7A3 /* GuestPageTests.swift */,
@@ -330,7 +388,6 @@
 			children = (
 				129CE2203CE0D35C7D0EFE7C /* Info.plist */,
 				95E6DBDF41B9F8D5538AC3C5 /* KachaWidget.entitlements */,
-				5C610E402B266A860FAA0372 /* KachaWidget.swift */,
 				E581FC7BF0FBE03C997C2247 /* Sources */,
 			);
 			path = KachaWidget;
@@ -386,6 +443,7 @@
 				F42E0B7D1773EDB94A1C55CD /* BookingView.swift */,
 				903844E100FADD9AE75B29D3 /* CalendarAvailabilityView.swift */,
 				132DA316B0CD860F60709030 /* CalendarView.swift */,
+				A18158BEA6FB3B3E4284F9FB /* ChannelSettingsView.swift */,
 				DFF9F29AA36D5EA8C3C0255F /* ChecklistView.swift */,
 				4A441A03544C574CF65CCE8C /* CleaningManagementView.swift */,
 				DAAD169465EE5DBFAE05B1B4 /* CleaningReportView.swift */,
@@ -454,11 +512,21 @@
 			isa = PBXGroup;
 			children = (
 				EF186F371A65C2693FAE07DB /* Kacha.app */,
+				E7C1EDB4B6D61877A531A963 /* KachaClip.app */,
 				4E705CE4E957781482F69C94 /* KachaTests.xctest */,
 				568EC91134F0A2F61C08DBD7 /* KachaUITests.xctest */,
+				6061AA6FF5AB39DC44768266 /* KachaWatch.app */,
 				029B899D4EF902AED4FEADCE /* KachaWidget.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		C58176CBDC4AAE4B92188B3D /* KachaWatch */ = {
+			isa = PBXGroup;
+			children = (
+				54E33957752AEBFE450C0596 /* Assets.xcassets */,
+			);
+			path = KachaWatch;
 			sourceTree = "<group>";
 		};
 		DCA239626A92C54009DA3876 /* Models */ = {
@@ -489,11 +557,14 @@
 		E23DEC3D0AE2F9637297C1D8 = {
 			isa = PBXGroup;
 			children = (
+				4E3613F1A039FCA00D250B0B /* KachaClip */,
 				5CE0D5DD2354825BF498A55A /* KachaTests */,
 				FF624B2A27F1E91A6DE5972F /* KachaUITests */,
+				C58176CBDC4AAE4B92188B3D /* KachaWatch */,
 				6C3A68C7D8BB0698CF83B363 /* KachaWidget */,
 				49EC5EF30442FA5C8BC442AC /* Resources */,
 				9E1A5DDDCF5826FF2ADD8A39 /* Sources */,
+				F6EAD4BEE54001B9CB074F63 /* Sources */,
 				BC00C1D28539BDF433773DA3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -507,6 +578,20 @@
 				B8F318F2DB4D19735087A3FE /* WidgetViews.swift */,
 			);
 			path = Sources;
+			sourceTree = "<group>";
+		};
+		F6EAD4BEE54001B9CB074F63 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				1BDC3B7711D9E5B0F9F6DE48 /* ComplicationProvider.swift */,
+				C5A2D76B51A3FD6A1DBFAAE6 /* HomeControlView.swift */,
+				5FB5B67FA3D999266F720360 /* KachaWatchApp.swift */,
+				86E0228765EAE5D3ED3CC100 /* WatchConnectivityManager.swift */,
+				BF7E95FFA9BE8918FBF4158D /* WatchHomeView.swift */,
+				6344B45F7EE9BE4A7A180AC5 /* WatchLockView.swift */,
+			);
+			name = Sources;
+			path = KachaWatch/Sources;
 			sourceTree = "<group>";
 		};
 		FF624B2A27F1E91A6DE5972F /* KachaUITests */ = {
@@ -556,6 +641,41 @@
 			productReference = 4E705CE4E957781482F69C94 /* KachaTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		24AFDAEAD6C3F9D74416A85B /* KachaClip */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 39FFB6827715EA3498A91880 /* Build configuration list for PBXNativeTarget "KachaClip" */;
+			buildPhases = (
+				4EE15609B8141CCD4198DA74 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = KachaClip;
+			packageProductDependencies = (
+			);
+			productName = KachaClip;
+			productReference = E7C1EDB4B6D61877A531A963 /* KachaClip.app */;
+			productType = "com.apple.product-type.application.on-demand-install-capable";
+		};
+		4D0AF71DB34F3556F74B4483 /* KachaWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D488276D15DD7AACA898C0EB /* Build configuration list for PBXNativeTarget "KachaWatch" */;
+			buildPhases = (
+				FEA93A5FA55603F74C8E0292 /* Sources */,
+				3FC2699D26DD1AA4749D92FC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = KachaWatch;
+			packageProductDependencies = (
+			);
+			productName = KachaWatch;
+			productReference = 6061AA6FF5AB39DC44768266 /* KachaWatch.app */;
+			productType = "com.apple.product-type.application";
+		};
 		5472A2CFB8B6FC8DE72E07AE /* KachaUITests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E3171D2FFBD9386BA0DA151E /* Build configuration list for PBXNativeTarget "KachaUITests" */;
@@ -580,10 +700,12 @@
 			buildPhases = (
 				E15766CF9847AE3412F2DBB5 /* Sources */,
 				0BF2FD95C987D09FB9428396 /* Resources */,
+				ADC8F0FB324CF1F2B8E8F1EA /* Embed App Clips */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				6599A105A3F9C1485FB21E5E /* PBXTargetDependency */,
 			);
 			name = Kacha;
 			packageProductDependencies = (
@@ -606,6 +728,14 @@
 						ProvisioningStyle = Automatic;
 					};
 					1E3909666D23A0D6AF8D33BC = {
+						DevelopmentTeam = 5BV85JW8US;
+						ProvisioningStyle = Automatic;
+					};
+					24AFDAEAD6C3F9D74416A85B = {
+						DevelopmentTeam = 5BV85JW8US;
+						ProvisioningStyle = Automatic;
+					};
+					4D0AF71DB34F3556F74B4483 = {
 						DevelopmentTeam = 5BV85JW8US;
 						ProvisioningStyle = Automatic;
 					};
@@ -635,8 +765,10 @@
 			projectRoot = "";
 			targets = (
 				59FDAC4872D7FB61A660A3D2 /* Kacha */,
+				24AFDAEAD6C3F9D74416A85B /* KachaClip */,
 				1E3909666D23A0D6AF8D33BC /* KachaTests */,
 				5472A2CFB8B6FC8DE72E07AE /* KachaUITests */,
+				4D0AF71DB34F3556F74B4483 /* KachaWatch */,
 				180E1161DF8220F55BA39DBA /* KachaWidget */,
 			);
 		};
@@ -651,6 +783,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3FC2699D26DD1AA4749D92FC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1E3020FFB1DE2032F428854 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -660,6 +800,7 @@
 			files = (
 				EB54952FEF635CA1FB34517A /* AutomationEngineTests.swift in Sources */,
 				0FC4C6D52A526D0A39DDB382 /* Beds24Tests.swift in Sources */,
+				2DFDEAD6AED5E0B0ECAD99BD /* BookingTests.swift in Sources */,
 				424BA9FA4D52ED1C93B7CDBC /* CloudSyncServiceTests.swift in Sources */,
 				CA5C11B1D6767FCCF7750B64 /* DeviceMonitorTests.swift in Sources */,
 				57361277C31B79754DA683FE /* GuestPageTests.swift in Sources */,
@@ -675,6 +816,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F54F593E23A0FF022AF4470 /* KachaUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4EE15609B8141CCD4198DA74 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9CA977D45EC36D9776A9E5AE /* GuestClipView.swift in Sources */,
+				7552DFD723F3D10DB01F3AC4 /* KachaClipApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -701,6 +851,7 @@
 				4434426571434D0608ABCBF5 /* CalendarAvailabilityView.swift in Sources */,
 				9870A57715DDEA01D8423448 /* CalendarView.swift in Sources */,
 				654F6D9993AE0C02836A5908 /* CelebrationEffect.swift in Sources */,
+				B780364493480FF668046FFB /* ChannelSettingsView.swift in Sources */,
 				1945567B04ACD0105C070EE3 /* ChecklistItem.swift in Sources */,
 				202178F1E9C71356A333D319 /* ChecklistView.swift in Sources */,
 				AB1CD0A08A666523214FBDC0 /* CleaningManagementView.swift in Sources */,
@@ -797,11 +948,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0D538791E49E8B42EC597E5B /* KachaWidget.swift in Sources */,
 				9651F421E9FAA78DC4E5463D /* KachaWidget.swift in Sources */,
 				770FB93DBD638FDCEFD2D63C /* KachaWidgetProvider.swift in Sources */,
 				57BAAE50E0C9FAA6AF763493 /* LockToggleIntent.swift in Sources */,
 				2E70630F6139CD6FD8530FFD /* WidgetViews.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FEA93A5FA55603F74C8E0292 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04F163198B7FFF6914DC7162 /* ComplicationProvider.swift in Sources */,
+				0D5085634FA2F4BCFB49AFF4 /* HomeControlView.swift in Sources */,
+				38545DED9FFD5BF4ADF288FF /* KachaWatchApp.swift in Sources */,
+				90BFDC67D2B1F3DC2BF4A125 /* WatchConnectivityManager.swift in Sources */,
+				7EBEC5D66C41A9C3C251A9A1 /* WatchHomeView.swift in Sources */,
+				F998305354886C544BEDC22A /* WatchLockView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -817,6 +980,11 @@
 			isa = PBXTargetDependency;
 			target = 59FDAC4872D7FB61A660A3D2 /* Kacha */;
 			targetProxy = FD2B3ABC33BA0CBD925DA855 /* PBXContainerItemProxy */;
+		};
+		6599A105A3F9C1485FB21E5E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 24AFDAEAD6C3F9D74416A85B /* KachaClip */;
+			targetProxy = 1F15CEC1AD3C6D4AB467D284 /* PBXContainerItemProxy */;
 		};
 		F7BF5F4EEB34ED9C5900E11B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -915,10 +1083,10 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.9;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = Release;
 		};
@@ -958,6 +1126,26 @@
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
+		};
+		6AC47A9AF4225E288CCCB1E9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = KachaClip/KachaClip.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5BV85JW8US;
+				INFOPLIST_FILE = KachaClip/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.enablerdao.kacha.Clip;
+				PRODUCT_NAME = KachaClip;
+				SDKROOT = iphoneos;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = 1;
+				_EXPERIENCEKIT_IDENTIFIER = com.enablerdao.kacha.Clip;
+			};
+			name = Debug;
 		};
 		8BBC78A881FD0724FE12C0FB /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1019,10 +1207,10 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.9;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = Debug;
 		};
@@ -1044,6 +1232,26 @@
 			};
 			name = Release;
 		};
+		8F3A47D4DB6C2B2DD45A5B15 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = KachaClip/KachaClip.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5BV85JW8US;
+				INFOPLIST_FILE = KachaClip/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.enablerdao.kacha.Clip;
+				PRODUCT_NAME = KachaClip;
+				SDKROOT = iphoneos;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = 1;
+				_EXPERIENCEKIT_IDENTIFIER = com.enablerdao.kacha.Clip;
+			};
+			name = Release;
+		};
 		AA99948BB5557EFBA220A32A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1059,6 +1267,38 @@
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Kacha.app/Kacha";
+			};
+			name = Release;
+		};
+		AE5DA88F464E84E0AFB05C93 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5BV85JW8US;
+				INFOPLIST_FILE = KachaWatch/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.enablerdao.kacha.watchkitapp;
+				PRODUCT_NAME = KachaWatch;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = 4;
+			};
+			name = Debug;
+		};
+		DCA77DE18771D91788C235AF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5BV85JW8US;
+				INFOPLIST_FILE = KachaWatch/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.enablerdao.kacha.watchkitapp;
+				PRODUCT_NAME = KachaWatch;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = 4;
 			};
 			name = Release;
 		};
@@ -1102,6 +1342,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		39FFB6827715EA3498A91880 /* Build configuration list for PBXNativeTarget "KachaClip" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6AC47A9AF4225E288CCCB1E9 /* Debug */,
+				8F3A47D4DB6C2B2DD45A5B15 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		94C77DE908F39C49F3480577 /* Build configuration list for PBXNativeTarget "KachaWidget" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1125,6 +1374,15 @@
 			buildConfigurations = (
 				8BBC78A881FD0724FE12C0FB /* Debug */,
 				5502FA97F61F95109CD29E35 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D488276D15DD7AACA898C0EB /* Build configuration list for PBXNativeTarget "KachaWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AE5DA88F464E84E0AFB05C93 /* Debug */,
+				DCA77DE18771D91788C235AF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

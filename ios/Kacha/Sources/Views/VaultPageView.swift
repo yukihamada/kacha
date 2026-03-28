@@ -214,7 +214,7 @@ struct VaultPageView: View {
 
                     // Copy password (Universal Clipboard → Mac)
                     Button {
-                        copyToUniversalClipboard(item.encryptedValue, itemId: item.id)
+                        copyToUniversalClipboard(VaultEncryption.decrypt(item.encryptedValue), itemId: item.id)
                     } label: {
                         HStack(spacing: 4) {
                             Image(systemName: isCopied ? "checkmark" : "doc.on.doc")
@@ -244,7 +244,7 @@ struct VaultPageView: View {
                 // Revealed password
                 if isRevealed {
                     HStack {
-                        Text(item.encryptedValue)
+                        Text(VaultEncryption.decrypt(item.encryptedValue))
                             .font(.system(.caption, design: .monospaced))
                             .foregroundColor(.kacha)
                             .textSelection(.enabled)
@@ -289,7 +289,7 @@ struct VaultPageView: View {
         }
         .contextMenu {
             Button {
-                copyToUniversalClipboard(item.encryptedValue, itemId: item.id)
+                copyToUniversalClipboard(VaultEncryption.decrypt(item.encryptedValue), itemId: item.id)
             } label: {
                 Label("パスワードをコピー (Mac対応)", systemImage: "doc.on.doc")
             }

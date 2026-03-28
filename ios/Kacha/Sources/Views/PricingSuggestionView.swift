@@ -413,7 +413,7 @@ struct PricingSuggestionView: View {
                     departure: fmt.string(from: b.checkOut),
                     firstName: nil, lastName: nil, email: nil, phone: nil,
                     numAdult: nil, numChild: nil,
-                    price: Double(b.totalAmount) / 100.0,
+                    price: Double(b.totalAmount),
                     commission: nil, referer: nil, channel: b.platform,
                     apiReference: nil, comments: nil, notes: nil
                 )
@@ -454,7 +454,7 @@ struct PricingSuggestionView: View {
                     departure: fmt.string(from: b.checkOut),
                     firstName: nil, lastName: nil, email: nil, phone: nil,
                     numAdult: nil, numChild: nil,
-                    price: Double(b.totalAmount) / 100.0,
+                    price: Double(b.totalAmount),
                     commission: nil, referer: nil, channel: b.platform,
                     apiReference: nil, comments: nil, notes: nil
                 )

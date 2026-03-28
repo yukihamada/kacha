@@ -13,13 +13,18 @@ struct GuestMessenger {
         guard UserDefaults.standard.bool(forKey: "autoGuestMessage_\(home.id)") else { return }
 
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date()) ?? Date()
-        let bookings = (try? context.fetch(FetchDescriptor<Booking>())) ?? []
+        let startOfTomorrow = Calendar.current.startOfDay(for: tomorrow)
+        let endOfTomorrow = Calendar.current.date(byAdding: .day, value: 1, to: startOfTomorrow) ?? tomorrow
+        let homeId = home.id
 
-        let tomorrowBookings = bookings.filter {
-            $0.homeId == home.id &&
-            $0.status == "upcoming" &&
-            Calendar.current.isDate($0.checkIn, inSameDayAs: tomorrow)
+        var descriptor = FetchDescriptor<Booking>()
+        descriptor.predicate = #Predicate<Booking> { booking in
+            booking.homeId == homeId &&
+            booking.status == "upcoming" &&
+            booking.checkIn >= startOfTomorrow &&
+            booking.checkIn < endOfTomorrow
         }
+        let tomorrowBookings = (try? context.fetch(descriptor)) ?? []
 
         for booking in tomorrowBookings {
             let message = buildMessage(home: home, booking: booking)
@@ -88,13 +93,18 @@ struct CleanerNotifier {
         guard UserDefaults.standard.bool(forKey: "autoCleanerNotify_\(home.id)") else { return }
 
         let today = Date()
-        let bookings = (try? context.fetch(FetchDescriptor<Booking>())) ?? []
+        let startOfToday = Calendar.current.startOfDay(for: today)
+        let endOfToday = Calendar.current.date(byAdding: .day, value: 1, to: startOfToday) ?? today
+        let homeId = home.id
 
-        let todayCheckouts = bookings.filter {
-            $0.homeId == home.id &&
-            $0.status == "active" &&
-            Calendar.current.isDate($0.checkOut, inSameDayAs: today)
+        var descriptor = FetchDescriptor<Booking>()
+        descriptor.predicate = #Predicate<Booking> { booking in
+            booking.homeId == homeId &&
+            booking.status == "active" &&
+            booking.checkOut >= startOfToday &&
+            booking.checkOut < endOfToday
         }
+        let todayCheckouts = (try? context.fetch(descriptor)) ?? []
 
         for booking in todayCheckouts {
             let content = UNMutableNotificationContent()

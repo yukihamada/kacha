@@ -62,7 +62,7 @@ struct ReportExportService {
                 .font: UIFont.boldSystemFont(ofSize: 20),
                 .foregroundColor: UIColor.black
             ]
-            "KAGI 月次レポート".draw(at: CGPoint(x: 32, y: 20), withAttributes: titleAttrs)
+            "IKI 月次レポート".draw(at: CGPoint(x: 32, y: 20), withAttributes: titleAttrs)
 
             var y: CGFloat = 84
 
@@ -165,7 +165,7 @@ struct ReportExportService {
 
     static func sharePDF(report: MonthlyReport, from viewController: UIViewController) {
         let data = generatePDF(report: report)
-        let filename = "KAGI_Report_\(report.period).pdf"
+        let filename = "IKI_Report_\(report.period).pdf"
         let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
         try? data.write(to: url)
         let vc = UIActivityViewController(activityItems: [url], applicationActivities: nil)
@@ -175,7 +175,7 @@ struct ReportExportService {
 
     static func shareCSV(reports: [MonthlyReport], homeName: String, from viewController: UIViewController) {
         let csv = generateCSV(reports: reports, homeName: homeName)
-        let filename = "KAGI_\(homeName)_確定申告.csv"
+        let filename = "IKI_\(homeName)_確定申告.csv"
         let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
         try? csv.data(using: .utf8)?.write(to: url)
         let vc = UIActivityViewController(activityItems: [url], applicationActivities: nil)

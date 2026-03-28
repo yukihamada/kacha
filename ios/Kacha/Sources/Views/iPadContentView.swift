@@ -471,7 +471,7 @@ private struct iPadHomeDetailView: View {
                                                 .font(.caption2).foregroundColor(.secondary)
                                             Spacer()
                                             if booking.totalAmount > 0 {
-                                                Text("¥\(booking.totalAmount / 100)")
+                                                Text("¥\(booking.totalAmount.formatted())")
                                                     .font(.caption).bold().foregroundColor(.kacha)
                                             }
                                         }

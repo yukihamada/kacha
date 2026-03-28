@@ -5,6 +5,57 @@ extension Notification.Name {
     static let switchToDashboard = Notification.Name("switchToDashboard")
 }
 
+// MARK: - Image thumbnail cache (プロセス内共有)
+// UIImage(data:) は高コストなため、同一 Data を繰り返しデコードしないようにキャッシュする。
+// NSCache は自動でメモリ警告時に解放されるためリーク不要。
+
+final class ThumbnailCache {
+    static let shared = ThumbnailCache()
+    private let cache = NSCache<NSString, UIImage>()
+
+    private init() {
+        cache.countLimit = 50
+        cache.totalCostLimit = 10 * 1024 * 1024  // 10 MB
+    }
+
+    func thumbnail(for data: Data, id: String, size: CGFloat) -> UIImage? {
+        let key = "\(id)-\(Int(size))" as NSString
+        if let cached = cache.object(forKey: key) { return cached }
+        guard let src = UIImage(data: data) else { return nil }
+        let scale = UIScreen.main.scale
+        let px = size * scale
+        let ratio = min(px / src.size.width, px / src.size.height)
+        let newSize = CGSize(width: src.size.width * ratio, height: src.size.height * ratio)
+        let renderer = UIGraphicsImageRenderer(size: newSize)
+        let resized = renderer.image { _ in src.draw(in: CGRect(origin: .zero, size: newSize)) }
+        let cost = Int(newSize.width * newSize.height * 4)
+        cache.setObject(resized, forKey: key, cost: cost)
+        return resized
+    }
+}
+
+// MARK: - Home thumbnail icon (キャッシュ経由でデコード)
+
+struct HomeThumbView: View {
+    let home: Home
+    let size: CGFloat
+
+    var body: some View {
+        if let data = home.backgroundImageData,
+           let uiImage = ThumbnailCache.shared.thumbnail(for: data, id: home.id, size: size) {
+            Image(uiImage: uiImage)
+                .resizable().scaledToFill()
+                .frame(width: size, height: size)
+                .clipShape(Circle())
+        } else {
+            ZStack {
+                Circle().fill(Color.kacha.opacity(0.15)).frame(width: size, height: size)
+                Image(systemName: "house.fill").font(.caption).foregroundColor(.kacha)
+            }
+        }
+    }
+}
+
 // MARK: - Swipeable Home Pager
 // [Dashboard] [Home 1] [Home 2] [Home 3] ...
 // Default: Home 1 (index 1). Swipe left → Dashboard. Swipe right → next home.
@@ -23,7 +74,11 @@ struct HomePagerView: View {
 
             if homes.isEmpty {
                 HomeView()
+            } else if homes.count >= 4 {
+                // Many properties: show list with drill-down
+                PropertyListView()
             } else {
+                // Few properties: keep pager experience
                 TabView(selection: $currentPage) {
                     // Page 0: Dashboard
                     DashboardView(currentPage: $currentPage)
@@ -38,14 +93,12 @@ struct HomePagerView: View {
                                     activeHomeId = home.id
                                     home.syncToAppStorage()
                                 }
-                                // Sync business mode per-home
                                 minpakuModeEnabled = (home.businessType != "none")
                             }
                     }
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
 
-                // Page indicator
                 VStack {
                     Spacer()
                     pageIndicator
@@ -101,7 +154,7 @@ struct DashboardView: View {
     @Query(sort: \Home.sortOrder) private var homes: [Home]
     @Query(sort: \Booking.checkIn) private var bookings: [Booking]
     @Query(sort: \ShareRecord.validFrom) private var shares: [ShareRecord]
-    @Query(sort: \ActivityLog.timestamp, order: .reverse) private var logs: [ActivityLog]
+    @Query(sort: \ActivityLog.timestamp, order: .reverse) private var allLogs: [ActivityLog]
 
     private var upcomingBookings: [Booking] {
         bookings.filter { $0.status == "upcoming" || $0.status == "active" }
@@ -117,6 +170,11 @@ struct DashboardView: View {
 
     private var activeShares: [ShareRecord] {
         shares.filter(\.isActive)
+    }
+
+    /// Limit logs to first 20 to avoid performance issues in dashboard
+    private var logs: [ActivityLog] {
+        Array(allLogs.prefix(20))
     }
 
     private var recentLogs: [ActivityLog] {
@@ -164,10 +222,7 @@ struct DashboardView: View {
                                         withAnimation { currentPage = index + 1 }
                                     } label: {
                                     HStack(spacing: 12) {
-                                        ZStack {
-                                            Circle().fill(Color.kacha.opacity(0.15)).frame(width: 36, height: 36)
-                                            Image(systemName: "house.fill").font(.caption).foregroundColor(.kacha)
-                                        }
+                                        HomeThumbView(home: home, size: 36)
                                         VStack(alignment: .leading, spacing: 2) {
                                             Text(home.name).font(.subheadline).bold().foregroundColor(.white).lineLimit(2)
                                             if !home.address.isEmpty {
@@ -205,17 +260,7 @@ struct DashboardView: View {
                                     ForEach(recentNewBookings.prefix(5)) { booking in
                                         let matchedHome = homes.first { $0.id == booking.homeId }
                                         let homeName = matchedHome?.name ?? "不明"
-                                        Button {
-                                            // Switch to this home and go to its page
-                                            if let h = matchedHome {
-                                                activeHomeId = h.id
-                                                h.syncToAppStorage()
-                                                minpakuModeEnabled = (h.businessType != "none")
-                                                if let idx = homes.firstIndex(where: { $0.id == h.id }) {
-                                                    withAnimation { currentPage = idx + 1 }
-                                                }
-                                            }
-                                        } label: {
+                                        NavigationLink(destination: BookingDetailView(booking: booking)) {
                                             HStack(spacing: 10) {
                                                 VStack(alignment: .leading, spacing: 2) {
                                                     HStack(spacing: 6) {
@@ -228,10 +273,12 @@ struct DashboardView: View {
                                                     }
                                                     Text("\(booking.checkIn.formatted(date: .abbreviated, time: .omitted)) → \(booking.checkOut.formatted(date: .abbreviated, time: .omitted)) · \(homeName)")
                                                         .font(.caption2).foregroundColor(.secondary)
+                                                    Text("\(booking.createdAt.formatted(.relative(presentation: .named)))に追加")
+                                                        .font(.system(size: 10)).foregroundColor(.secondary.opacity(0.7))
                                                 }
                                                 Spacer()
                                                 if booking.totalAmount > 0 {
-                                                    Text("¥\(booking.totalAmount / 100)")
+                                                    Text("¥\(booking.totalAmount.formatted())")
                                                         .font(.caption).bold().foregroundColor(.kacha)
                                                 }
                                                 Image(systemName: "chevron.right").font(.caption2).foregroundColor(.secondary)

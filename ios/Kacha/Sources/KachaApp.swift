@@ -1,15 +1,45 @@
 import SwiftUI
 import SwiftData
+import UIKit
+import UserNotifications
+
+// MARK: - AppDelegate for APNs token
+
+class KachaAppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+    /// APNsデバイストークン（サーバー登録用）
+    static var apnsToken: String?
+
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let token = deviceToken.map { String(format: "%02x", $0) }.joined()
+        Self.apnsToken = token
+        #if DEBUG
+        print("[APNs] Device token: \(token)")
+        #endif
+    }
+
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        #if DEBUG
+        print("[APNs] Registration failed: \(error)")
+        #endif
+    }
+
+    // フォアグラウンドで通知を表示
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
+        [.banner, .badge, .sound]
+    }
+}
 
 @main
 struct KachaApp: App {
+    @UIApplicationDelegateAdaptor(KachaAppDelegate.self) var appDelegate
     let container: ModelContainer
 
     init() {
         let models: [any PersistentModel.Type] = [
             Home.self, Booking.self, SmartDevice.self, DeviceIntegration.self, ShareRecord.self,
             ChecklistItem.self, UtilityRecord.self, MaintenanceTask.self, NearbyPlace.self,
-            ActivityLog.self, HouseManual.self, SecureItem.self,
+            ActivityLog.self, HouseManual.self, SecureItem.self, PropertyExpense.self,
+            GuestReview.self,
         ]
         do {
             container = try ModelContainer(for: Schema(models), configurations: ModelConfiguration())
@@ -22,7 +52,13 @@ struct KachaApp: App {
             do {
                 container = try ModelContainer(for: Schema(models), configurations: ModelConfiguration())
             } catch {
-                fatalError("SwiftData container init failed after reset: \(error)")
+                // In-memory fallback to avoid crash (data will not persist)
+                #if DEBUG
+                print("[Kacha] Falling back to in-memory ModelContainer: \(error)")
+                #endif
+                let inMemoryConfig = ModelConfiguration(isStoredInMemoryOnly: true)
+                // swiftlint:disable:next force_try
+                container = try! ModelContainer(for: Schema(models), configurations: inMemoryConfig)
             }
         }
         migrateIfNeeded()
@@ -43,45 +79,61 @@ struct KachaApp: App {
                     if restored { print("[Kacha] Restored from Keychain backup") }
                     #endif
 
-                    #if DEBUG
-                    SeedData.insert(into: container.mainContext)
-                    #endif
+                    // SeedData は初回のみ（既存データがある場合はスキップ）
+                    // #if DEBUG
+                    // SeedData.insert(into: container.mainContext)
+                    // #endif
                     #if !targetEnvironment(simulator)
                     Task { await NotificationManager.shared.requestPermission() }
+                    // リモート通知登録（APNsトークン取得）
+                    UNUserNotificationCenter.current().delegate = appDelegate
+                    UIApplication.shared.registerForRemoteNotifications()
                     #endif
                     GeofenceManager.registerNotificationCategory()
 
-                    // Backup to Keychain on every launch
-                    KeychainBackup.backup(context: container.mainContext)
+                    // Backup to Keychain on every launch (skip if just restored to avoid overwriting)
+                    if !restored {
+                        KeychainBackup.backup(context: container.mainContext)
+                    }
 
-                    // Schedule background refresh
+                    // Schedule background refresh (lightweight, no delay)
                     BackgroundRefresh.scheduleNext()
+                }
+                .task {
+                    // Defer heavy network operations to not block UI launch
+                    try? await Task.sleep(for: .seconds(1.5))
 
-                    // Poll Beds24 for new bookings + schedule notifications
-                    Task {
-                        var homes = (try? container.mainContext.fetch(FetchDescriptor<Home>())) ?? []
+                    var homes = (try? container.mainContext.fetch(FetchDescriptor<Home>())) ?? []
 
-                        // Auto-detect new Beds24 properties
-                        var checkedTokens = Set<String>()
-                        for home in homes where !home.beds24RefreshToken.isEmpty {
-                            if !checkedTokens.contains(home.beds24RefreshToken) {
-                                checkedTokens.insert(home.beds24RefreshToken)
-                                let created = await BookingPoller.autoDetectProperties(context: container.mainContext, home: home)
-                                if created > 0 {
-                                    homes = (try? container.mainContext.fetch(FetchDescriptor<Home>())) ?? []
-                                }
+                    // Auto-detect new Beds24 properties
+                    var checkedTokens = Set<String>()
+                    for home in homes where !home.beds24RefreshToken.isEmpty {
+                        if !checkedTokens.contains(home.beds24RefreshToken) {
+                            checkedTokens.insert(home.beds24RefreshToken)
+                            let created = await BookingPoller.autoDetectProperties(context: container.mainContext, home: home)
+                            if created > 0 {
+                                homes = (try? container.mainContext.fetch(FetchDescriptor<Home>())) ?? []
                             }
                         }
+                    }
 
-                        // Poll Beds24 once per unique refreshToken (avoid duplicate fetches)
-                        var polledTokens = Set<String>()
-                        for home in homes {
-                            if !home.beds24RefreshToken.isEmpty && !polledTokens.contains(home.beds24RefreshToken) {
-                                polledTokens.insert(home.beds24RefreshToken)
-                                let _ = await BookingPoller.pollAndNotify(context: container.mainContext, home: home, allHomes: homes)
-                            }
-                            GuestMessenger.scheduleMessages(context: container.mainContext, home: home)
-                            CleanerNotifier.scheduleCleaningNotifications(context: container.mainContext, home: home)
+                    // Poll Beds24 once per unique refreshToken
+                    var polledTokens = Set<String>()
+                    for home in homes {
+                        if !home.beds24RefreshToken.isEmpty && !polledTokens.contains(home.beds24RefreshToken) {
+                            polledTokens.insert(home.beds24RefreshToken)
+                            let _ = await BookingPoller.pollAndNotify(context: container.mainContext, home: home, allHomes: homes)
+                        }
+                        GuestMessenger.scheduleMessages(context: container.mainContext, home: home)
+                        CleanerNotifier.scheduleCleaningNotifications(context: container.mainContext, home: home)
+                    }
+
+                    // APNs registration
+                    if let apnsToken = KachaAppDelegate.apnsToken {
+                        for home in homes where !home.beds24RefreshToken.isEmpty {
+                            await Beds24PushRegistrar.register(
+                                userId: home.id, refreshToken: home.beds24RefreshToken, pushToken: apnsToken
+                            )
                         }
                     }
                 }
@@ -133,6 +185,7 @@ struct KachaApp: App {
 
         let home = Home(name: shareData.name, sortOrder: existing.count)
         home.address           = shareData.address
+        home.sharedRole        = shareData.role  // Save the shared role
         home.switchBotToken    = shareData.switchBotToken
         home.switchBotSecret   = shareData.switchBotSecret
         home.hueBridgeIP       = shareData.hueBridgeIP
@@ -182,6 +235,11 @@ struct KachaApp: App {
         context.insert(home)
         try? context.save()
         d.set(home.id, forKey: "activeHomeId")
+
+        // Clean up legacy secret keys from UserDefaults
+        for key in ["switchBotToken", "switchBotSecret", "facilityDoorCode", "facilityWifiPassword"] {
+            d.removeObject(forKey: key)
+        }
     }
 }
 

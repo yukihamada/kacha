@@ -36,7 +36,9 @@ struct SettingsView: View {
                         } else {
                             emptyState
                         }
+                        backupSection
                         appInfoSection
+                        ikiSection
                         helpSection
                         deviceShopSection
                         Spacer(minLength: 40)
@@ -139,6 +141,81 @@ struct SettingsView: View {
         .presentationDetents([.medium])
     }
 
+    // MARK: - Backup & Cloud Sync
+
+    @State private var showCloudSync = false
+    @State private var lastBackup = KeychainBackup.lastBackupDate()
+    @State private var backupMessage = ""
+
+    private var backupSection: some View {
+        KachaCard {
+            VStack(spacing: 12) {
+                HStack {
+                    Image(systemName: "icloud.and.arrow.up").foregroundColor(.kacha)
+                    Text("バックアップ").font(.subheadline).fontWeight(.semibold)
+                    Spacer()
+                    if let date = lastBackup {
+                        Text(date, style: .relative).font(.caption).foregroundColor(.secondary)
+                    }
+                }
+
+                // Keychain バックアップ状態
+                HStack {
+                    Circle()
+                        .fill(lastBackup != nil ? Color.green : Color.red)
+                        .frame(width: 8, height: 8)
+                    Text(lastBackup != nil ? "ローカルバックアップ: 有効" : "バックアップなし")
+                        .font(.caption).foregroundColor(.secondary)
+                    Spacer()
+                }
+
+                // 手動バックアップボタン
+                Button {
+                    KeychainBackup.backup(context: modelContext)
+                    lastBackup = KeychainBackup.lastBackupDate()
+                    backupMessage = "バックアップ完了"
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) { backupMessage = "" }
+                } label: {
+                    HStack {
+                        Image(systemName: "arrow.clockwise")
+                        Text(backupMessage.isEmpty ? "今すぐバックアップ" : backupMessage)
+                    }
+                    .font(.caption).fontWeight(.medium)
+                    .frame(maxWidth: .infinity)
+                    .padding(10)
+                    .background(Color.kacha.opacity(0.1))
+                    .foregroundColor(.kacha)
+                    .cornerRadius(10)
+                }
+
+                Divider().background(Color.white.opacity(0.06))
+
+                // クラウド同期
+                Button {
+                    showCloudSync = true
+                } label: {
+                    HStack {
+                        Image(systemName: "lock.icloud").foregroundColor(.kacha)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("クラウドバックアップ").font(.caption).fontWeight(.medium)
+                            Text("メールアドレスで暗号化バックアップ").font(.caption2).foregroundColor(.secondary)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right").font(.caption).foregroundColor(.secondary)
+                    }
+                    .padding(10)
+                    .background(Color.white.opacity(0.03))
+                    .cornerRadius(10)
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(16)
+        }
+        .sheet(isPresented: $showCloudSync) {
+            CloudSyncView()
+        }
+    }
+
     // MARK: - App Info
 
     private var appInfoSection: some View {
@@ -193,6 +270,33 @@ struct SettingsView: View {
                 }
             }
             .padding(16)
+        }
+    }
+
+    // MARK: - IKI Safety
+
+    @State private var showIKI = false
+
+    private var ikiSection: some View {
+        KachaCard {
+            VStack(spacing: 12) {
+                SettingsHeader(icon: "lungs.fill", title: "IKI 息", color: .kachaAccent)
+                Button { showIKI = true } label: {
+                    HStack(spacing: 10) {
+                        Image(systemName: "heart.text.square.fill").foregroundColor(.kachaDanger).frame(width: 20)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("安否確認ダッシュボード").font(.subheadline).foregroundColor(.white)
+                            Text("大切な人のIKIデバイスをモニタリング").font(.caption2).foregroundColor(.secondary)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right").font(.caption).foregroundColor(.secondary)
+                    }
+                }
+            }
+            .padding(16)
+        }
+        .sheet(isPresented: $showIKI) {
+            NavigationStack { SafetyDashboardView() }
         }
     }
 
@@ -297,6 +401,7 @@ struct HomeSettingsSections: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var bookings: [Booking]
     @Query private var allIntegrations: [DeviceIntegration]
+    @Query private var allHomes: [Home]
 
     @State private var isDiscoveringBridge = false
     @State private var isRegisteringBridge = false
@@ -873,6 +978,10 @@ struct HomeSettingsSections: View {
     @State private var isConnectingBeds24 = false
     @State private var beds24Error: String?
     @State private var beds24InviteInput = ""
+    /// propId → 取得済み画像データ（UIImage→JPEG圧縮済み）
+    @State private var beds24PropImageCache: [Int: Data] = [:]
+    /// 画像ダウンロード中の propId セット
+    @State private var beds24FetchingImages: Set<Int> = []
     // showBeds24PropertyModal removed — inline display
 
     private var beds24Section: some View {
@@ -975,31 +1084,50 @@ struct HomeSettingsSections: View {
                         }
                     }
 
-                    ForEach(0..<beds24Properties.count, id: \.self) { idx in
-                        let prop = beds24Properties[idx]
+                    // 全ホームの関連付け済みBeds24物件IDを収集
+                    let linkedPropIds: Set<Int> = Set(allHomes.compactMap { Int($0.beds24ApiKey) })
+
+                    ForEach(Array(beds24Properties.enumerated()), id: \.offset) { _, prop in
                         let propId = prop["id"] as? Int ?? 0
                         let propName = prop["name"] as? String ?? "物件 \(propId)"
-                        let isLinked = home.beds24ApiKey.contains("|\(propId)") || home.beds24ApiKey == "\(propId)"
+                        let isLinked = linkedPropIds.contains(propId)
+                        let imageURL = Beds24Client.extractImageURL(from: prop)
+                        if !isLinked {
                         VStack(spacing: 8) {
+                            // サムネイル + 物件名行
                             HStack(spacing: 10) {
-                                Image(systemName: isLinked ? "checkmark.circle.fill" : "building.2")
-                                    .foregroundColor(isLinked ? .kachaSuccess : Color(hex: "0066CC"))
-                                VStack(alignment: .leading, spacing: 1) {
-                                    HStack(spacing: 6) {
-                                        Text(propName).font(.caption).bold().foregroundColor(.white).lineLimit(2)
-                                        if isLinked {
-                                            Text("関連付け済み").font(.system(size: 9)).bold()
-                                                .padding(.horizontal, 5).padding(.vertical, 1)
-                                                .background(Color.kachaSuccess.opacity(0.2))
-                                                .foregroundColor(.kachaSuccess)
-                                                .clipShape(Capsule())
-                                        }
+                                // 画像サムネイル
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 6)
+                                        .fill(Color.kachaCard)
+                                        .frame(width: 44, height: 44)
+                                    if let imgData = beds24PropImageCache[propId],
+                                       let uiImg = UIImage(data: imgData) {
+                                        Image(uiImage: uiImg)
+                                            .resizable().scaledToFill()
+                                            .frame(width: 44, height: 44)
+                                            .clipShape(RoundedRectangle(cornerRadius: 6))
+                                    } else if beds24FetchingImages.contains(propId) {
+                                        ProgressView().frame(width: 44, height: 44)
+                                    } else if let imageURL {
+                                        Image(systemName: "photo")
+                                            .foregroundColor(.secondary)
+                                            .frame(width: 44, height: 44)
+                                            .onAppear {
+                                                Task { await fetchBeds24PropImage(propId: propId, urlStr: imageURL) }
+                                            }
+                                    } else {
+                                        Image(systemName: "building.2")
+                                            .foregroundColor(Color(hex: "0066CC"))
+                                            .frame(width: 44, height: 44)
                                     }
+                                }
+                                VStack(alignment: .leading, spacing: 1) {
+                                    Text(propName).font(.caption).bold().foregroundColor(.white).lineLimit(2)
                                     Text("ID: \(propId)").font(.caption2).foregroundColor(.secondary)
                                 }
                                 Spacer()
                             }
-                            if !isLinked {
                                 HStack(spacing: 8) {
                                     Button {
                                         linkBeds24Property(propId: propId, propName: propName, toCurrentHome: true)
@@ -1023,17 +1151,17 @@ struct HomeSettingsSections: View {
                                         }
                                         .font(.caption2).bold()
                                         .foregroundColor(.kacha)
-                                    .frame(maxWidth: .infinity).padding(.vertical, 8)
-                                    .background(Color.kacha.opacity(0.1))
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                        .frame(maxWidth: .infinity).padding(.vertical, 8)
+                                        .background(Color.kacha.opacity(0.1))
+                                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    }
                                 }
-                            }
-                            } // end if !isLinked
                         }
                         .padding(10)
                         .background(Color.kachaCard)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                         .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.kachaCardBorder))
+                        } // end if !isLinked
                     }
                 }
 
@@ -1383,6 +1511,29 @@ struct HomeSettingsSections: View {
         beds24Properties = (try? await Beds24Client.shared.fetchProperties(token: token)) ?? []
     }
 
+    /// 物件画像を非同期でダウンロードしキャッシュに格納する。
+    /// URLが不正・ダウンロード失敗時は何もしない（UIフォールバックはアイコン表示）。
+    private func fetchBeds24PropImage(propId: Int, urlStr: String) async {
+        guard !beds24FetchingImages.contains(propId),
+              beds24PropImageCache[propId] == nil else { return }
+        beds24FetchingImages.insert(propId)
+        defer { beds24FetchingImages.remove(propId) }
+        guard let url = URL(string: urlStr) else { return }
+        guard let (data, resp) = try? await URLSession.shared.data(from: url),
+              (resp as? HTTPURLResponse)?.statusCode == 200,
+              let uiImg = UIImage(data: data),
+              let jpeg = uiImg.jpegData(compressionQuality: 0.75) else { return }
+        beds24PropImageCache[propId] = jpeg
+    }
+
+    /// キャッシュ済みの物件画像を現在のホームの背景画像として適用する。
+    private func applyBeds24ImageToHome(propId: Int) {
+        guard let jpeg = beds24PropImageCache[propId] else { return }
+        home.backgroundImageData = jpeg
+        try? modelContext.save()
+        showAlertMsg(title: "設定完了", message: "Beds24の物件画像をホーム背景に設定しました")
+    }
+
     private func syncBeds24() async {
         isSyncingBeds24 = true
         defer { isSyncingBeds24 = false }
@@ -1399,35 +1550,81 @@ struct HomeSettingsSections: View {
             let b24Bookings = try await Beds24Client.shared.fetchBookings(token: token)
 
             var imported = 0
-            let existingExtIDs = Set(bookings.map { $0.externalId })
+            var updated = 0
+            var deleted = 0
+            let existingByExtId: [String: Booking] = Dictionary(
+                bookings.compactMap { b in b.externalId.isEmpty ? nil : (b.externalId, b) },
+                uniquingKeysWith: { _, last in last }
+            )
             let df = DateFormatter(); df.dateFormat = "yyyy-MM-dd"
             // Build propertyId→homeId map from all homes
-            let allHomes = (try? modelContext.fetch(FetchDescriptor<Home>())) ?? []
+            let fetchedHomes = (try? modelContext.fetch(FetchDescriptor<Home>())) ?? []
             let propMap: [Int: String] = Dictionary(uniqueKeysWithValues:
-                allHomes.compactMap { h in Int(h.beds24ApiKey).map { ($0, h.id) } }
+                fetchedHomes.compactMap { h in Int(h.beds24ApiKey).map { ($0, h.id) } }
             )
+
+            var remoteExtIds = Set<String>()
+
             for b24 in b24Bookings {
                 let extId = "beds24-\(b24.effectiveId)"
-                guard !existingExtIDs.contains(extId) else { continue }
+                remoteExtIds.insert(extId)
+
                 guard let cin = b24.arrival.flatMap({ df.date(from: $0) }),
                       let cout = b24.departure.flatMap({ df.date(from: $0) }) else { continue }
                 let resolvedHomeId = b24.propertyId.flatMap { propMap[$0] } ?? home.id
-                let statusMap = ["cancelled": "cancelled", "request": "upcoming", "new": "upcoming"]
-                let booking = Booking(
-                    guestName: b24.guestFullName,
-                    guestEmail: b24.email ?? "",
-                    guestPhone: b24.phone ?? "",
-                    platform: b24.platformKey,
-                    homeId: resolvedHomeId,
-                    externalId: extId,
-                    checkIn: cin, checkOut: cout,
-                    totalAmount: Int((b24.price ?? 0) * 100),
-                    status: statusMap[b24.status ?? ""] ?? "upcoming"
-                )
-                modelContext.insert(booking)
-                imported += 1
+                let newStatus = Booking.mapBeds24Status(b24.status, checkIn: cin, checkOut: cout)
+                let newAmount = Int(b24.price ?? 0)
+
+                if let existing = existingByExtId[extId] {
+                    // 既存予約の更新
+                    var changed = false
+                    if existing.status != newStatus { existing.status = newStatus; changed = true }
+                    if existing.totalAmount != newAmount { existing.totalAmount = newAmount; changed = true }
+                    if existing.guestName != b24.guestFullName { existing.guestName = b24.guestFullName; changed = true }
+                    if existing.guestEmail != (b24.email ?? "") { existing.guestEmail = b24.email ?? ""; changed = true }
+                    if existing.guestPhone != (b24.phone ?? "") { existing.guestPhone = b24.phone ?? ""; changed = true }
+                    if existing.checkIn != cin { existing.checkIn = cin; changed = true }
+                    if existing.checkOut != cout { existing.checkOut = cout; changed = true }
+                    if let na = b24.numAdult, existing.numAdults != na { existing.numAdults = na; changed = true }
+                    if let nc = b24.numChild, existing.numChildren != nc { existing.numChildren = nc; changed = true }
+                    if changed { updated += 1 }
+                } else {
+                    // 新規予約
+                    let booking = Booking(
+                        guestName: b24.guestFullName,
+                        guestEmail: b24.email ?? "",
+                        guestPhone: b24.phone ?? "",
+                        platform: b24.platformKey,
+                        homeId: resolvedHomeId,
+                        externalId: extId,
+                        checkIn: cin, checkOut: cout,
+                        totalAmount: newAmount,
+                        numAdults: b24.numAdult ?? 1,
+                        numChildren: b24.numChild ?? 0,
+                        roomId: b24.roomId.map { String($0) } ?? "",
+                        commission: Int(b24.commission ?? 0),
+                        guestNotes: b24.comments ?? "",
+                        status: newStatus
+                    )
+                    modelContext.insert(booking)
+                    imported += 1
+                }
             }
-            showAlertMsg(title: "同期完了", message: "\(imported)件インポート")
+
+            // 削除同期: Beds24に存在しない予約を削除
+            let homeIds = Set(propMap.values)
+            for booking in bookings {
+                guard booking.externalId.hasPrefix("beds24-"),
+                      homeIds.contains(booking.homeId) || booking.homeId == home.id,
+                      !remoteExtIds.contains(booking.externalId) else { continue }
+                modelContext.delete(booking)
+                deleted += 1
+            }
+
+            var msg = "\(imported)件追加"
+            if updated > 0 { msg += "・\(updated)件更新" }
+            if deleted > 0 { msg += "・\(deleted)件削除" }
+            showAlertMsg(title: "同期完了", message: msg)
         } catch {
             showAlertMsg(title: "同期エラー", message: error.localizedDescription)
         }

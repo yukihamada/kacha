@@ -53,6 +53,15 @@ final class Home {
     var businessType: String
     var minpakuNumber: String
     var minpakuNights: Int
+    var permitProgress: String  // JSON: {"step1":true,"step2":false,...} for permit application tracking
+
+    // Shared role: "owner" (default), "admin", "manager", "cleaner", "guest"
+    // Empty or "owner" = this is the user's own home
+    var sharedRole: String
+
+    // Background image (stored as JPEG data)
+    var backgroundImageData: Data?
+    var backgroundImageURL: String
 
     init(name: String, sortOrder: Int = 0) {
         self.id = UUID().uuidString
@@ -85,6 +94,38 @@ final class Home {
         self.businessType = "none"
         self.minpakuNumber = ""
         self.minpakuNights = 0
+        self.permitProgress = ""
+        self.sharedRole = ""
+        self.backgroundImageData = nil
+        self.backgroundImageURL = ""
+    }
+
+    // MARK: - Role Helpers
+
+    /// True if this home was shared to the user (not their own)
+    var isShared: Bool { !sharedRole.isEmpty && sharedRole != "owner" }
+
+    /// True if user can control devices (manager or admin)
+    var canControlDevices: Bool { !isShared || sharedRole == "admin" || sharedRole == "manager" }
+
+    /// True if user can view/manage bookings
+    var canViewBookings: Bool { !isShared || sharedRole == "admin" || sharedRole == "manager" }
+
+    /// True if user has full admin access
+    var isAdmin: Bool { !isShared || sharedRole == "admin" }
+
+    /// True if user can see door code and WiFi
+    var canSeeDoorInfo: Bool { !isShared || sharedRole != "cleaner" }
+
+    /// Display label for the role
+    var roleLabel: String {
+        switch sharedRole {
+        case "admin": return "オーナー代理"
+        case "manager": return "マネージャー"
+        case "cleaner": return "清掃スタッフ"
+        case "guest": return "ゲスト"
+        default: return "オーナー"
+        }
     }
 
     /// ホーム切替時にAppStorageへ同期（DeviceView等が引き続き動作するよう）

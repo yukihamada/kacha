@@ -198,13 +198,18 @@ final class CloudSyncService: ObservableObject {
         await MainActor.run { syncState = .syncing }
 
         // 1. Download
-        var urlComponents = URLComponents(string: "\(baseURL)/api/v1/auth/backup/\(appId)")!
+        guard var urlComponents = URLComponents(string: "\(baseURL)/api/v1/auth/backup/\(appId)") else {
+            throw SyncError.network
+        }
         urlComponents.queryItems = [
             URLQueryItem(name: "user_id", value: uid),
             URLQueryItem(name: "session_token", value: token),
         ]
+        guard let requestURL = urlComponents.url else {
+            throw SyncError.network
+        }
 
-        let (data, response) = try await URLSession.shared.data(from: urlComponents.url!)
+        let (data, response) = try await URLSession.shared.data(from: requestURL)
         guard let http = response as? HTTPURLResponse, http.statusCode == 200 else {
             throw SyncError.noBackupFound
         }
@@ -426,6 +431,7 @@ final class CloudSyncService: ObservableObject {
             home.airbnbICalURL = hp.airbnbICalURL
             home.jalanICalURL = hp.jalanICalURL
             home.backgroundImageURL = hp.backgroundImageURL
+            if let role = hp.sharedRole { home.sharedRole = role }
             context.insert(home)
 
             // Auto-download background image from URL
@@ -452,6 +458,9 @@ final class CloudSyncService: ObservableObject {
                 guestPhone: bp.guestPhone, platform: bp.platform, homeId: bp.homeId,
                 externalId: bp.externalId, checkIn: bp.checkIn, checkOut: bp.checkOut,
                 roomCount: bp.roomCount, totalAmount: bp.totalAmount,
+                numAdults: bp.numAdults ?? 1, numChildren: bp.numChildren ?? 0,
+                roomId: bp.roomId ?? "", commission: bp.commission ?? 0,
+                guestNotes: bp.guestNotes ?? "",
                 status: bp.status, notes: bp.notes,
                 autoUnlock: bp.autoUnlock, autoLight: bp.autoLight,
                 cleaningDone: bp.cleaningDone
@@ -573,6 +582,7 @@ struct HomePayload: Codable {
     let minpakuNights: Int
     let airbnbICalURL, jalanICalURL: String
     let backgroundImageURL: String
+    let sharedRole: String?
 
     init(home: Home) {
         id = home.id; name = home.name; address = home.address; sortOrder = home.sortOrder
@@ -589,6 +599,7 @@ struct HomePayload: Codable {
         minpakuNumber = home.minpakuNumber; minpakuNights = home.minpakuNights
         airbnbICalURL = home.airbnbICalURL; jalanICalURL = home.jalanICalURL
         backgroundImageURL = home.backgroundImageURL
+        sharedRole = home.sharedRole
     }
 }
 
@@ -597,6 +608,11 @@ struct BookingPayload: Codable {
     let platform, externalId, status, notes: String
     let checkIn, checkOut: Date
     let roomCount, totalAmount: Int
+    let numAdults: Int?
+    let numChildren: Int?
+    let roomId: String?
+    let commission: Int?
+    let guestNotes: String?
     let autoUnlock, autoLight, cleaningDone: Bool
 
     init(booking: Booking) {
@@ -606,6 +622,8 @@ struct BookingPayload: Codable {
         status = booking.status; notes = booking.notes
         checkIn = booking.checkIn; checkOut = booking.checkOut
         roomCount = booking.roomCount; totalAmount = booking.totalAmount
+        numAdults = booking.numAdults; numChildren = booking.numChildren
+        roomId = booking.roomId; commission = booking.commission; guestNotes = booking.guestNotes
         autoUnlock = booking.autoUnlock; autoLight = booking.autoLight
         cleaningDone = booking.cleaningDone
     }

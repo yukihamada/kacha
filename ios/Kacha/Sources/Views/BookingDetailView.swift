@@ -1,12 +1,16 @@
 import SwiftUI
+import SwiftData
 
 struct BookingDetailView: View {
     @Bindable var booking: Booking
+    @Query private var homes: [Home]
 
-    @AppStorage("switchBotToken") private var switchBotToken = ""
-    @AppStorage("switchBotSecret") private var switchBotSecret = ""
-    @AppStorage("hueBridgeIP") private var hueBridgeIP = ""
-    @AppStorage("hueUsername") private var hueUsername = ""
+    // Resolve the home this booking belongs to for device tokens
+    private var home: Home? { homes.first { $0.id == booking.homeId } ?? homes.first }
+    private var switchBotToken: String { home?.switchBotToken ?? "" }
+    private var switchBotSecret: String { home?.switchBotSecret ?? "" }
+    private var hueBridgeIP: String { home?.hueBridgeIP ?? "" }
+    private var hueUsername: String { home?.hueUsername ?? "" }
 
     @State private var isUnlocking = false
     @State private var isLocking = false
@@ -93,6 +97,18 @@ struct BookingDetailView: View {
                     infoRow(icon: "phone.fill", label: "電話", value: booking.guestPhone)
                 }
                 infoRow(icon: "globe", label: "プラットフォーム", value: booking.platformLabel)
+                if booking.guestCount > 0 {
+                    infoRow(icon: "person.2.fill", label: "人数",
+                            value: booking.numChildren > 0
+                                ? "大人\(booking.numAdults)名 + 子ども\(booking.numChildren)名（計\(booking.guestCount)名）"
+                                : "\(booking.numAdults)名")
+                }
+                if booking.commission > 0 {
+                    infoRow(icon: "yensign.circle", label: "手数料", value: "¥\(booking.commission.formatted())")
+                }
+                if !booking.guestNotes.isEmpty {
+                    infoRow(icon: "text.bubble", label: "ゲストメモ", value: booking.guestNotes)
+                }
             }
             .padding(16)
         }

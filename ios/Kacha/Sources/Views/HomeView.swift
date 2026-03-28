@@ -4,17 +4,23 @@ import WidgetKit
 
 struct HomeView: View {
     @Environment(\.modelContext) private var context
-    @Query private var bookings: [Booking]
+    @Query(filter: #Predicate<Booking> { $0.status != "completed" && $0.status != "cancelled" },
+           sort: \Booking.checkIn) private var allBookings: [Booking]
     @Query private var homes: [Home]
 
-    @AppStorage("facilityName") private var facilityName = "私の家"
-    @AppStorage("switchBotToken") private var switchBotToken = ""
-    @AppStorage("switchBotSecret") private var switchBotSecret = ""
-    @AppStorage("hueBridgeIP") private var hueBridgeIP = ""
-    @AppStorage("hueUsername") private var hueUsername = ""
-    @AppStorage("minpakuNights") private var minpakuNights = 0
+    /// Bookings filtered to active home only
+    private var bookings: [Booking] { allBookings.filter { $0.homeId == activeHomeId } }
+
     @AppStorage("minpakuModeEnabled") private var minpakuModeEnabled = false
     @AppStorage("activeHomeId") private var activeHomeId = ""
+
+    // Device tokens are read from activeHome, NOT from global AppStorage
+    private var facilityName: String { activeHome?.name ?? "私の家" }
+    private var switchBotToken: String { activeHome?.switchBotToken ?? "" }
+    private var switchBotSecret: String { activeHome?.switchBotSecret ?? "" }
+    private var hueBridgeIP: String { activeHome?.hueBridgeIP ?? "" }
+    private var hueUsername: String { activeHome?.hueUsername ?? "" }
+    private var minpakuNights: Int { activeHome?.minpakuNights ?? 0 }
 
     @StateObject private var switchBot = SwitchBotClient.shared
     @StateObject private var hue = HueClient.shared
@@ -37,6 +43,10 @@ struct HomeView: View {
     @State private var autolockSuccess = false
     @State private var isRunningScene = false
     @State private var showVoiceControl = false
+    @State private var showGuestGuide = false
+    @State private var showExpenses = false
+    @State private var showChannelSettings = false
+    @State private var showReviews = false
 
     private var activeHome: Home? { homes.first { $0.id == activeHomeId } }
 
@@ -130,6 +140,18 @@ struct HomeView: View {
             .sheet(isPresented: $showVault) {
                 if let home = activeHome { VaultView(home: home) }
             }
+            .sheet(isPresented: $showGuestGuide) {
+                if let home = activeHome { GuestGuideView(home: home) }
+            }
+            .sheet(isPresented: $showExpenses) {
+                if let home = activeHome { ExpenseIntegrationView(home: home) }
+            }
+            .sheet(isPresented: $showChannelSettings) {
+                if let home = activeHome { ChannelSettingsView(home: home) }
+            }
+            .sheet(isPresented: $showReviews) {
+                if let home = activeHome { ReviewsView(home: home) }
+            }
             .overlay(alignment: .bottomTrailing) {
                 FloatingMicButton(showVoiceControl: $showVoiceControl)
                     .padding(.trailing, 20)
@@ -221,30 +243,51 @@ struct HomeView: View {
                                 .font(.caption).foregroundColor(.secondary)
                         }
                     }
-                    Text(minpakuModeEnabled ? "開いた、ウェルカム。" : "おかえりなさい。")
-                        .font(.caption).foregroundColor(.kacha)
+                    HStack(spacing: 6) {
+                        if let h = activeHome, h.isShared {
+                            Text(h.roleLabel)
+                                .font(.system(size: 10, weight: .semibold))
+                                .padding(.horizontal, 6).padding(.vertical, 2)
+                                .background(Color.kachaAccent.opacity(0.2))
+                                .foregroundColor(.kachaAccent)
+                                .clipShape(Capsule())
+                        }
+                        Text(minpakuModeEnabled ? "開いた、ウェルカム。" : "おかえりなさい。")
+                            .font(.caption).foregroundColor(.kacha)
+                    }
                 }
             }
             Spacer()
             HStack(spacing: 14) {
-                Button { showActivityLog = true } label: {
-                    Image(systemName: "list.bullet.rectangle")
-                        .font(.system(size: 18))
-                        .foregroundColor(.kacha.opacity(0.6))
-                }
-                Button { showKeyRotation = true } label: {
-                    Image(systemName: "key.rotate")
-                        .font(.system(size: 20))
-                        .foregroundColor(.kacha.opacity(0.7))
-                }
-                Button { showShare = true } label: {
-                    Image(systemName: "person.badge.plus")
-                        .font(.system(size: 22))
-                        .foregroundColor(.kacha)
+                if activeHome?.isAdmin ?? true {
+                    Button { showActivityLog = true } label: {
+                        Image(systemName: "list.bullet.rectangle")
+                            .font(.system(size: 18))
+                            .foregroundColor(.kacha.opacity(0.6))
+                    }
+                    .accessibilityLabel("操作ログ")
+                    .accessibilityHint("操作履歴を表示します")
+
+                    Button { showKeyRotation = true } label: {
+                        Image(systemName: "key.rotate")
+                            .font(.system(size: 20))
+                            .foregroundColor(.kacha.opacity(0.7))
+                    }
+                    .accessibilityLabel("鍵のローテーション")
+                    .accessibilityHint("アクセスキーを更新します")
+
+                    Button { showShare = true } label: {
+                        Image(systemName: "person.badge.plus")
+                            .font(.system(size: 22))
+                            .foregroundColor(.kacha)
+                    }
+                    .accessibilityLabel("メンバー招待")
+                    .accessibilityHint("物件にメンバーを招待します")
                 }
                 Image(systemName: "door.left.hand.open")
                     .font(.system(size: 28))
                     .foregroundColor(.kacha.opacity(0.4))
+                    .accessibilityHidden(true)
             }
         }
         .padding(.top, 8)
@@ -285,6 +328,9 @@ struct HomeView: View {
             }
         }
         .disabled(isPressingAutolock)
+        .accessibilityLabel(autolockSuccess ? "オートロック解除済み" : "オートロック解除")
+        .accessibilityHint("エントランスのオートロックを遠隔で解除します")
+        .accessibilityAddTraits(.isButton)
     }
 
     private func pressAutolockBot() async {
@@ -325,13 +371,11 @@ struct HomeView: View {
         if minpakuModeEnabled {
             actions.append(("wifi", "ゲストカード", .kachaAccent, { showGuestCard = true }))
             actions.append(("checklist", "チェックリスト", .kachaSuccess, { showChecklist = true }))
+            actions.append(("text.bubble.fill", "ゲストガイド", .kacha, { showGuestGuide = true }))
+            actions.append(("yensign.circle.fill", "経費管理", .kachaWarn, { showExpenses = true }))
+            actions.append(("antenna.radiowaves.left.and.right", "チャネル", .kachaAccent, { showChannelSettings = true }))
+            actions.append(("star.bubble.fill", "口コミ", .kachaWarn, { showReviews = true }))
         }
-        // Beta features — under "もっと見る" in settings
-        // ("bolt.fill", "光熱費") → 設定から
-        // ("wrench.and.screwdriver", "家の管理") → 設定から
-        // ("key.fill", "パスワード") → 設定から
-        // ("book.fill", "マニュアル") → 設定から
-        // ("chart.bar.fill", "収支") → 設定から
         return LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
             ForEach(actions, id: \.1) { icon, label, color, action in
                 Button(action: action) {
@@ -347,6 +391,7 @@ struct HomeView: View {
                         .padding(12)
                     }
                 }
+                .accessibilityLabel(label)
             }
         }
     }
@@ -479,7 +524,7 @@ struct HomeView: View {
                 HStack {
                     Text("残り \(remainingNights)泊 利用可能").font(.caption).foregroundColor(progressColor)
                     Spacer()
-                    Button("+ 泊数追加") { minpakuNights = min(180, minpakuNights + 1) }
+                    Button("+ 泊数追加") { activeHome?.minpakuNights = min(180, (activeHome?.minpakuNights ?? 0) + 1) }
                         .font(.caption).foregroundColor(.kacha)
                 }
             }
@@ -623,6 +668,10 @@ struct SceneCard: View {
             .clipShape(RoundedRectangle(cornerRadius: 14))
         }
         .disabled(loading)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(label)シーン、\(subtitle)")
+        .accessibilityHint("ダブルタップで\(label)シーンを実行します")
+        .accessibilityAddTraits(.isButton)
     }
 }
 

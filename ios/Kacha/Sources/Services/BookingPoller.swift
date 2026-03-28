@@ -49,14 +49,23 @@ struct BookingPoller {
 
     // MARK: - Poll Bookings
 
-    /// Beds24から最新予約を取得し、新規があれば通知
+    /// Beds24から最新予約を取得し、新規追加・既存更新・削除同期を行う
     /// allHomes: propertyIdからhomeIdを解決するために全ホームを渡す
     static func pollAndNotify(context: ModelContext, home: Home, allHomes: [Home] = []) async -> Int {
         guard !home.beds24RefreshToken.isEmpty else { return 0 }
         guard let token = try? await Beds24Client.shared.getToken(refreshToken: home.beds24RefreshToken) else { return 0 }
         guard let b24Bookings = try? await Beds24Client.shared.fetchBookings(token: token) else { return 0 }
 
-        let existingExtIDs = Set(((try? context.fetch(FetchDescriptor<Booking>())) ?? []).map { $0.externalId })
+        let allBookings: [Booking] = {
+            // Fetch all bookings then filter in-memory (Set.contains in #Predicate can crash on iOS 17.0-17.3)
+            let homeIds = Set((allHomes.isEmpty ? [home] : allHomes).map(\.id))
+            let all = (try? context.fetch(FetchDescriptor<Booking>())) ?? []
+            return all.filter { homeIds.contains($0.homeId) }
+        }()
+        let existingByExtId: [String: Booking] = Dictionary(
+            allBookings.compactMap { b in b.externalId.isEmpty ? nil : (b.externalId, b) },
+            uniquingKeysWith: { _, last in last }
+        )
         let df = DateFormatter(); df.dateFormat = "yyyy-MM-dd"
         var imported = 0
 
@@ -72,39 +81,81 @@ struct BookingPoller {
             return map
         }()
 
+        // Beds24側の予約IDセット（削除検知用）
+        var remoteExtIds = Set<String>()
+
         for b24 in b24Bookings {
             let extId = "beds24-\(b24.effectiveId)"
-            guard !existingExtIDs.contains(extId) else { continue }
+            remoteExtIds.insert(extId)
+
             guard let cin = b24.arrival.flatMap({ df.date(from: $0) }),
                   let cout = b24.departure.flatMap({ df.date(from: $0) }) else { continue }
 
-            // Resolve homeId from propertyId
             let resolvedHomeId = b24.propertyId.flatMap { propIdToHomeId[$0] } ?? home.id
+            let newStatus = Booking.mapBeds24Status(b24.status, checkIn: cin, checkOut: cout)
+            let newAmount = Int(b24.price ?? 0)
 
-            let booking = Booking(
-                guestName: b24.guestFullName,
-                guestEmail: b24.email ?? "",
-                guestPhone: b24.phone ?? "",
-                platform: b24.platformKey,
-                homeId: resolvedHomeId,
-                externalId: extId,
-                checkIn: cin, checkOut: cout,
-                totalAmount: Int((b24.price ?? 0) * 100),
-                status: b24.status == "cancelled" ? "cancelled" : "upcoming"
-            )
-            context.insert(booking)
-            imported += 1
+            if let existing = existingByExtId[extId] {
+                // --- 既存予約の更新 ---
+                var changed = false
+                if existing.status != newStatus { existing.status = newStatus; changed = true }
+                if existing.totalAmount != newAmount { existing.totalAmount = newAmount; changed = true }
+                if existing.guestName != b24.guestFullName { existing.guestName = b24.guestFullName; changed = true }
+                if existing.guestEmail != (b24.email ?? "") { existing.guestEmail = b24.email ?? ""; changed = true }
+                if existing.guestPhone != (b24.phone ?? "") { existing.guestPhone = b24.phone ?? ""; changed = true }
+                if existing.checkIn != cin { existing.checkIn = cin; changed = true }
+                if existing.checkOut != cout { existing.checkOut = cout; changed = true }
+                if let na = b24.numAdult, existing.numAdults != na { existing.numAdults = na; changed = true }
+                if let nc = b24.numChild, existing.numChildren != nc { existing.numChildren = nc; changed = true }
+                if let rid = b24.roomId, existing.roomId != String(rid) { existing.roomId = String(rid); changed = true }
+                if let com = b24.commission, existing.commission != Int(com) { existing.commission = Int(com); changed = true }
+                if let notes = b24.comments, existing.guestNotes != notes { existing.guestNotes = notes; changed = true }
+                #if DEBUG
+                if changed { print("[Beds24] Updated booking \(extId)") }
+                #endif
+            } else {
+                // --- 新規予約 ---
+                let booking = Booking(
+                    guestName: b24.guestFullName,
+                    guestEmail: b24.email ?? "",
+                    guestPhone: b24.phone ?? "",
+                    platform: b24.platformKey,
+                    homeId: resolvedHomeId,
+                    externalId: extId,
+                    checkIn: cin, checkOut: cout,
+                    totalAmount: newAmount,
+                    numAdults: b24.numAdult ?? 1,
+                    numChildren: b24.numChild ?? 0,
+                    roomId: b24.roomId.map { String($0) } ?? "",
+                    commission: Int(b24.commission ?? 0),
+                    guestNotes: b24.comments ?? "",
+                    status: newStatus
+                )
+                context.insert(booking)
+                imported += 1
 
-            // Push notification for new booking
-            // Find correct home name for notification
-            let homeName = allHomes.first { $0.id == resolvedHomeId }?.name ?? home.name
-            sendNewBookingNotification(
-                guestName: b24.guestFullName,
-                homeName: homeName,
-                checkIn: b24.arrival ?? "",
-                platform: b24.platformKey
-            )
+                let homeName = allHomes.first { $0.id == resolvedHomeId }?.name ?? home.name
+                sendNewBookingNotification(
+                    guestName: b24.guestFullName,
+                    homeName: homeName,
+                    checkIn: b24.arrival ?? "",
+                    platform: b24.platformKey
+                )
+            }
         }
+
+        // --- 削除同期: Beds24に存在しない予約を削除 ---
+        let homeIds = Set(propIdToHomeId.values)
+        for booking in allBookings {
+            guard booking.externalId.hasPrefix("beds24-"),
+                  homeIds.contains(booking.homeId) || booking.homeId == home.id,
+                  !remoteExtIds.contains(booking.externalId) else { continue }
+            #if DEBUG
+            print("[Beds24] Removing deleted booking \(booking.externalId)")
+            #endif
+            context.delete(booking)
+        }
+
         try? context.save()
         return imported
     }

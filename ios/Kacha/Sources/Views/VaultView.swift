@@ -157,7 +157,7 @@ struct VaultView: View {
                     Spacer()
                     // Copy button
                     Button {
-                        UIPasteboard.general.string = item.encryptedValue
+                        UIPasteboard.general.string = VaultEncryption.decrypt(item.encryptedValue)
                         UIImpactFeedbackGenerator(style: .light).impactOccurred()
                     } label: {
                         Image(systemName: "doc.on.doc").font(.caption).foregroundColor(.kachaAccent)
@@ -175,7 +175,7 @@ struct VaultView: View {
                 }
 
                 if isRevealed {
-                    Text(item.encryptedValue)
+                    Text(VaultEncryption.decrypt(item.encryptedValue))
                         .font(.system(.caption, design: .monospaced))
                         .foregroundColor(.kacha)
                         .textSelection(.enabled)
@@ -201,7 +201,7 @@ struct VaultView: View {
             }
         }
         .contextMenu {
-            Button { UIPasteboard.general.string = item.encryptedValue } label: {
+            Button { UIPasteboard.general.string = VaultEncryption.decrypt(item.encryptedValue) } label: {
                 Label("パスワードをコピー", systemImage: "doc.on.doc")
             }
             if !item.username.isEmpty {
@@ -352,7 +352,7 @@ struct VaultItemEditor: View {
                     title = item.title
                     category = item.category
                     username = item.username
-                    password = item.encryptedValue
+                    password = VaultEncryption.decrypt(item.encryptedValue)
                     url = item.url
                     note = item.note
                 }
@@ -373,7 +373,7 @@ struct VaultItemEditor: View {
         secureItem.title = title
         secureItem.category = category
         secureItem.username = username
-        secureItem.encryptedValue = password
+        secureItem.encryptedValue = VaultEncryption.encrypt(password)
         secureItem.url = url
         secureItem.note = note
         secureItem.updatedAt = Date()

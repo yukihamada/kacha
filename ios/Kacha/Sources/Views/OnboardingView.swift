@@ -17,7 +17,7 @@ struct OnboardingView: View {
     private let pages: [(icon: String, title: String, subtitle: String, features: [(String, String)], color: Color)] = [
         (
             icon: "house.fill",
-            title: "KAGI",
+            title: "IKI",
             subtitle: "開いた、ウェルカム。",
             features: [
                 ("lock.fill", "スマートロックを遠隔操作"),

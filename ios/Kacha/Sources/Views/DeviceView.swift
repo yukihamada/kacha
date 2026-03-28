@@ -5,13 +5,15 @@ struct DeviceView: View {
     @Query private var devices: [SmartDevice]
     @Environment(\.modelContext) private var context
 
-    @AppStorage("switchBotToken") private var switchBotToken = ""
-    @AppStorage("switchBotSecret") private var switchBotSecret = ""
-    @AppStorage("hueBridgeIP") private var hueBridgeIP = ""
-    @AppStorage("hueUsername") private var hueUsername = ""
     @AppStorage("activeHomeId") private var activeHomeId = ""
 
     @Query private var homes: [Home]
+
+    // Device tokens from activeHome, not global AppStorage
+    private var switchBotToken: String { activeHome?.switchBotToken ?? "" }
+    private var switchBotSecret: String { activeHome?.switchBotSecret ?? "" }
+    private var hueBridgeIP: String { activeHome?.hueBridgeIP ?? "" }
+    private var hueUsername: String { activeHome?.hueUsername ?? "" }
     @StateObject private var hue = HueClient.shared
     @StateObject private var switchBot = SwitchBotClient.shared
     @StateObject private var sesame = SesameClient.shared

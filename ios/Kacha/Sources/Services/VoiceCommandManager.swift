@@ -248,7 +248,7 @@ class VoiceCommandManager: ObservableObject {
     private var voiceprintSamples: [(pitch: Float, duration: Float)] = []
 
     func startVoiceprintSample() {
-        // Record a short sample of user saying "KAGI"
+        // Record a short sample of user saying "IKI"
         // We measure average pitch from the audio buffer
         startListeningForVoiceprint()
     }

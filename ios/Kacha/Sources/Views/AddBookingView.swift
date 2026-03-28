@@ -2,6 +2,7 @@ import SwiftUI
 import SwiftData
 
 struct AddBookingView: View {
+    var home: Home?
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
 
@@ -12,6 +13,8 @@ struct AddBookingView: View {
     @State private var checkIn = Date()
     @State private var checkOut = Calendar.current.date(byAdding: .day, value: 2, to: Date()) ?? Date()
     @State private var totalAmount = ""
+    @State private var numAdults = 1
+    @State private var numChildren = 0
     @State private var notes = ""
     @State private var autoUnlock = true
     @State private var autoLight = true
@@ -36,6 +39,7 @@ struct AddBookingView: View {
                         platformSection
                         datesSection
                         amountSection
+                        guestCountSection
                         autoActionsSection
                         notesSection
                         Spacer(minLength: 40)
@@ -174,6 +178,37 @@ struct AddBookingView: View {
         }
     }
 
+    private var guestCountSection: some View {
+        KachaCard {
+            VStack(spacing: 12) {
+                HStack {
+                    Image(systemName: "person.2.fill").foregroundColor(.kacha)
+                    Text("人数").font(.subheadline).bold().foregroundColor(.white)
+                    Spacer()
+                    Text("合計 \(numAdults + numChildren)名")
+                        .font(.caption).foregroundColor(.secondary)
+                }
+
+                HStack {
+                    Text("大人").font(.subheadline).foregroundColor(.white)
+                    Spacer()
+                    Stepper("\(numAdults)名", value: $numAdults, in: 1...50)
+                        .foregroundColor(.white)
+                }
+
+                Divider().background(Color.kachaCardBorder)
+
+                HStack {
+                    Text("子ども").font(.subheadline).foregroundColor(.white)
+                    Spacer()
+                    Stepper("\(numChildren)名", value: $numChildren, in: 0...50)
+                        .foregroundColor(.white)
+                }
+            }
+            .padding(16)
+        }
+    }
+
     private var autoActionsSection: some View {
         KachaCard {
             VStack(spacing: 12) {
@@ -252,14 +287,18 @@ struct AddBookingView: View {
     }
 
     private func saveBooking() {
+        let df = DateFormatter.pmsDateFormatter
         let booking = Booking(
             guestName: guestName.trimmingCharacters(in: .whitespaces),
             guestEmail: guestEmail,
             guestPhone: guestPhone,
             platform: platform,
+            homeId: home?.id ?? "",
             checkIn: checkIn,
             checkOut: checkOut,
             totalAmount: Int(totalAmount) ?? 0,
+            numAdults: numAdults,
+            numChildren: numChildren,
             notes: notes,
             autoUnlock: autoUnlock,
             autoLight: autoLight
@@ -270,6 +309,42 @@ struct AddBookingView: View {
             NotificationManager.shared.scheduleCheckInReminder(booking: booking)
             NotificationManager.shared.scheduleCheckOutReminder(booking: booking)
             NotificationManager.shared.scheduleCleaningReminder(booking: booking)
+        }
+
+        // Also create on Beds24 if connected
+        if let home = home, !home.beds24RefreshToken.isEmpty {
+            let nameParts = guestName.trimmingCharacters(in: .whitespaces).split(separator: " ", maxSplits: 1)
+            var b24 = Beds24BookingCreate(
+                propertyId: Int(home.beds24ApiKey) ?? 0,
+                roomId: nil,
+                arrival: df.string(from: checkIn),
+                departure: df.string(from: checkOut)
+            )
+            b24.lastName = nameParts.first.map(String.init)
+            b24.firstName = nameParts.count > 1 ? String(nameParts[1]) : nil
+            b24.email = guestEmail.isEmpty ? nil : guestEmail
+            b24.phone = guestPhone.isEmpty ? nil : guestPhone
+            b24.numAdult = numAdults
+            b24.numChild = numChildren > 0 ? numChildren : nil
+            b24.price = Double(Int(totalAmount) ?? 0)
+            b24.status = "confirmed"
+
+            Task {
+                do {
+                    let token = try await Beds24Client.shared.getToken(refreshToken: home.beds24RefreshToken)
+                    if let bookId = try await Beds24Client.shared.createBooking(booking: b24, token: token) {
+                        await MainActor.run {
+                            booking.externalId = "beds24-\(bookId)"
+                            booking.platform = "beds24"
+                            try? context.save()
+                        }
+                    }
+                } catch {
+                    #if DEBUG
+                    print("[Beds24] Create booking failed: \(error)")
+                    #endif
+                }
+            }
         }
 
         dismiss()

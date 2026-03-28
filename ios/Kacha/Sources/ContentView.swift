@@ -1,34 +1,51 @@
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
     @AppStorage("minpakuModeEnabled") private var minpakuModeEnabled = false
+    @AppStorage("activeHomeId") private var activeHomeId = ""
+    @Query private var homes: [Home]
+
+    private var activeHome: Home? {
+        homes.first { $0.id == activeHomeId } ?? homes.first
+    }
 
     var body: some View {
+        let home = activeHome
+        let hasHomes = !homes.isEmpty
+        let canViewBookings = hasHomes && (home?.canViewBookings ?? true)
+        let isAdmin = hasHomes && (home?.isAdmin ?? true)
+
         TabView {
             HomePagerView()
                 .tabItem {
                     Label("ホーム", systemImage: "house.fill")
                 }
 
-            CalendarView()
-                .tabItem {
-                    Label("カレンダー", systemImage: "calendar")
-                }
+            if canViewBookings {
+                CalendarView()
+                    .tabItem {
+                        Label("カレンダー", systemImage: "calendar")
+                    }
+            }
 
-            if minpakuModeEnabled {
+            if minpakuModeEnabled && canViewBookings {
                 BookingView()
                     .tabItem {
                         Label("予約", systemImage: "list.clipboard")
                     }
             }
 
-            SettingsView()
-                .tabItem {
-                    Label("設定", systemImage: "gearshape.fill")
-                }
+            if isAdmin {
+                SettingsView()
+                    .tabItem {
+                        Label("設定", systemImage: "gearshape.fill")
+                    }
+            }
         }
         .accentColor(.kacha)
         .background(Color.kachaBg)
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
     }
 }
 

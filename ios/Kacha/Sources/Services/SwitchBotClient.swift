@@ -11,6 +11,10 @@ class SwitchBotClient: ObservableObject {
 
     private let baseURL = "https://api.switch-bot.com/v1.1"
 
+    /// Debounce: skip commands issued within 2 seconds of the last one
+    private var lastCommandTime: Date?
+    private let debounceInterval: TimeInterval = 2.0
+
     struct SwitchBotDevice: Codable, Identifiable {
         let deviceId: String
         let deviceName: String
@@ -71,6 +75,15 @@ class SwitchBotClient: ObservableObject {
         token: String,
         secret: String
     ) async throws {
+        // Debounce: ignore rapid duplicate commands (within 2 seconds)
+        if let last = lastCommandTime, Date().timeIntervalSince(last) < debounceInterval {
+            #if DEBUG
+            print("[SwitchBot] Command debounced: \(command) for \(deviceId)")
+            #endif
+            return
+        }
+        lastCommandTime = Date()
+
         guard let url = URL(string: "\(baseURL)/devices/\(deviceId)/commands") else { throw URLError(.badURL) }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"

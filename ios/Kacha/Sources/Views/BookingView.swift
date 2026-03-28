@@ -4,13 +4,18 @@ import SwiftData
 struct BookingView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: \Booking.checkIn) private var bookings: [Booking]
+    @Query private var homes: [Home]
+    @AppStorage("activeHomeId") private var activeHomeId = ""
 
     @State private var showAddBooking = false
     @State private var filterStatus: String = "all"
 
+    private var activeHome: Home? { homes.first { $0.id == activeHomeId } ?? homes.first }
+
     private let statusFilters = [
         ("all", "すべて"),
         ("upcoming", "予定"),
+        ("confirmed", "確定"),
         ("active", "滞在中"),
         ("completed", "完了")
     ]
@@ -46,10 +51,11 @@ struct BookingView: View {
                             .foregroundColor(.kacha)
                             .font(.title3)
                     }
+                    .accessibilityLabel("予約を追加")
                 }
             }
             .sheet(isPresented: $showAddBooking) {
-                AddBookingView()
+                AddBookingView(home: activeHome)
             }
         }
     }
@@ -151,6 +157,11 @@ struct BookingRow: View {
                         Text("\(booking.nights)泊")
                             .font(.caption)
                             .foregroundColor(.secondary)
+                        if booking.guestCount > 0 {
+                            Text("\(booking.guestCount)名")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
                     }
                 }
 
@@ -167,6 +178,21 @@ struct BookingRow: View {
             }
             .padding(14)
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(bookingAccessibilityLabel)
+    }
+
+    private var bookingAccessibilityLabel: String {
+        let dateStr = booking.checkIn.formatted(.dateTime.month(.abbreviated).day())
+        var label = "\(booking.guestName)、\(dateStr)、\(booking.nights)泊"
+        if booking.guestCount > 0 {
+            label += "、\(booking.guestCount)名"
+        }
+        label += "、\(booking.statusLabel)"
+        if booking.totalAmount > 0 {
+            label += "、\(booking.totalAmount.formatted())円"
+        }
+        return label
     }
 }
 
@@ -178,6 +204,8 @@ struct StatusBadge: View {
         switch status {
         case "active": return .kachaSuccess
         case "upcoming": return .kachaAccent
+        case "confirmed": return .kacha
+        case "request": return .kachaWarn
         case "completed": return .secondary
         case "cancelled": return .kachaDanger
         default: return .secondary

@@ -28,22 +28,27 @@ struct BackgroundRefresh {
         scheduleNext()
 
         let workTask = Task {
-            let context = ModelContext(container)
-            let homes = (try? context.fetch(FetchDescriptor<Home>())) ?? []
+            // SwiftData ModelContext must be accessed on MainActor
+            let (context, homes) = await MainActor.run {
+                let ctx = ModelContext(container)
+                let h = (try? ctx.fetch(FetchDescriptor<Home>())) ?? []
+                return (ctx, h)
+            }
 
-            var totalNew = 0
             var polledTokens = Set<String>()
 
             for home in homes where !home.beds24RefreshToken.isEmpty {
                 if !polledTokens.contains(home.beds24RefreshToken) {
                     polledTokens.insert(home.beds24RefreshToken)
                     let _ = await BookingPoller.autoDetectProperties(context: context, home: home)
-                    let refreshedHomes = (try? context.fetch(FetchDescriptor<Home>())) ?? homes
-                    totalNew += await BookingPoller.pollAndNotify(context: context, home: home, allHomes: refreshedHomes)
+                    let refreshedHomes = await MainActor.run {
+                        (try? context.fetch(FetchDescriptor<Home>())) ?? homes
+                    }
+                    let _ = await BookingPoller.pollAndNotify(context: context, home: home, allHomes: refreshedHomes)
                 }
             }
 
-            KeychainBackup.backup(context: context)
+            await MainActor.run { KeychainBackup.backup(context: context) }
         }
 
         task.expirationHandler = {

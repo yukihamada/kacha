@@ -86,7 +86,7 @@ struct AnalyticsDashboardView: View {
     }
 
     private func revenue(_ home: Home) -> Int {
-        bookings(for: home).reduce(0) { $0 + $1.totalAmount } / 100
+        bookings(for: home).reduce(0) { $0 + $1.totalAmount }
     }
 
     private func totalExpensesAmount(_ home: Home) -> Int {
@@ -128,7 +128,7 @@ struct AnalyticsDashboardView: View {
 
             let rev = allBookings.filter {
                 $0.homeId == home.id && $0.status != "cancelled" && f.string(from: $0.checkIn) == key
-            }.reduce(0) { $0 + $1.totalAmount } / 100
+            }.reduce(0) { $0 + $1.totalAmount }
 
             let exp = allExpenses.filter { $0.homeId == home.id && $0.month == key }
                 .reduce(0) { $0 + $1.amount }
