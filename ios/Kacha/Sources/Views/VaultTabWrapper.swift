@@ -179,24 +179,25 @@ struct VaultTabWrapper: View {
     }
 
     private func iconFor(_ c: String) -> String {
-        switch c {
-        case "password": return "key.fill"
-        case "apikey": return "chevron.left.forwardslash.chevron.right"
-        case "wifi": return "wifi"
-        case "pin": return "lock.fill"
-        case "card": return "creditcard.fill"
-        case "note": return "note.text"
-        default: return "key.fill"
-        }
+        SecureItem.categories.first { $0.key == c }?.icon ?? "key.fill"
     }
     private func colorFor(_ c: String) -> Color {
         switch c {
-        case "apikey": return .blue
         case "password": return .orange
+        case "apikey": return .blue
         case "wifi": return .green
         case "pin": return .red
         case "card": return .purple
-        case "note": return .cyan
+        case "bank": return .indigo
+        case "ssh": return .gray
+        case "token": return .teal
+        case "license": return .mint
+        case "email": return .pink
+        case "server": return .brown
+        case "social": return .cyan
+        case "crypto": return .yellow
+        case "id": return .secondary
+        case "note": return .mint
         default: return .orange
         }
     }
@@ -209,7 +210,7 @@ struct VaultItemSheet: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @State private var title = ""
-    @State private var category = "apikey"
+    @State private var category = "password"
     @State private var username = ""
     @State private var value = ""
     @State private var url = ""
@@ -219,58 +220,166 @@ struct VaultItemSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("基本情報") {
-                    TextField("名前", text: $title).autocorrectionDisabled()
-                    Picker("カテゴリ", selection: $category) {
-                        Label("APIキー", systemImage: "chevron.left.forwardslash.chevron.right").tag("apikey")
-                        Label("パスワード", systemImage: "key.fill").tag("password")
-                        Label("Wi-Fi", systemImage: "wifi").tag("wifi")
-                        Label("暗証番号", systemImage: "lock.fill").tag("pin")
-                        Label("カード", systemImage: "creditcard.fill").tag("card")
-                        Label("メモ", systemImage: "note.text").tag("note")
-                    }
-                }
-                Section("値") {
-                    if ["password", "wifi"].contains(category) {
-                        TextField("ユーザー名 / SSID", text: $username)
-                            .autocorrectionDisabled().textInputAutocapitalization(.never)
-                    }
-                    HStack {
-                        Group {
-                            if showValue { TextField("値", text: $value) }
-                            else { SecureField("値", text: $value) }
-                        }.autocorrectionDisabled().textInputAutocapitalization(.never)
-                        Button { showValue.toggle() } label: {
-                            Image(systemName: showValue ? "eye.slash" : "eye").foregroundColor(.secondary)
+                // Category picker (grid of icons)
+                Section {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 70))], spacing: 8) {
+                        ForEach(SecureItem.categories, id: \.key) { cat in
+                            Button {
+                                withAnimation { category = cat.key }
+                            } label: {
+                                VStack(spacing: 4) {
+                                    Image(systemName: cat.icon)
+                                        .font(.system(size: 18))
+                                        .frame(width: 36, height: 36)
+                                        .background(category == cat.key ? Color.orange : Color(.tertiarySystemGroupedBackground))
+                                        .foregroundColor(category == cat.key ? .black : .secondary)
+                                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    Text(cat.label)
+                                        .font(.system(size: 9))
+                                        .foregroundColor(category == cat.key ? .primary : .secondary)
+                                        .lineLimit(1)
+                                }
+                            }
+                            .buttonStyle(.plain)
                         }
                     }
-                }
+                    .padding(.vertical, 4)
+                } header: { Text("カテゴリ") }
+
+                // Name
                 Section {
-                    TextField("URL (任意)", text: $url).keyboardType(.URL).autocorrectionDisabled().textInputAutocapitalization(.never)
+                    TextField(placeholderFor(category), text: $title)
+                        .autocorrectionDisabled()
+                } header: { Text("名前") }
+
+                // Category-specific fields
+                Section {
+                    switch category {
+                    case "password", "email", "social":
+                        TextField("ユーザー名 / メール", text: $username)
+                            .autocorrectionDisabled().textInputAutocapitalization(.never)
+                        secureValueField("パスワード")
+
+                    case "wifi":
+                        TextField("SSID (ネットワーク名)", text: $username)
+                            .autocorrectionDisabled()
+                        secureValueField("パスワード")
+
+                    case "apikey", "token", "license":
+                        secureValueField("キー / トークン")
+
+                    case "ssh":
+                        TextField("ホスト / ユーザー", text: $username)
+                            .autocorrectionDisabled().textInputAutocapitalization(.never)
+                        secureValueField("秘密鍵 / パスフレーズ")
+
+                    case "card", "bank":
+                        TextField(category == "card" ? "カード番号" : "口座番号", text: $username)
+                            .keyboardType(.numberPad)
+                        secureValueField(category == "card" ? "セキュリティコード" : "暗証番号")
+
+                    case "pin":
+                        secureValueField("暗証番号").keyboardType(.numberPad)
+
+                    case "server":
+                        TextField("ホスト:ポート", text: $username)
+                            .autocorrectionDisabled().textInputAutocapitalization(.never)
+                        secureValueField("パスワード / 接続文字列")
+
+                    case "crypto":
+                        TextField("ウォレットアドレス", text: $username)
+                            .autocorrectionDisabled().textInputAutocapitalization(.never)
+                        secureValueField("シードフレーズ / 秘密鍵")
+
+                    case "id":
+                        TextField("ID番号", text: $username)
+                            .autocorrectionDisabled()
+                        secureValueField("関連パスワード (任意)")
+
+                    default: // note
+                        secureValueField("内容")
+                    }
+                } header: { Text("認証情報") }
+
+                // URL + notes (common)
+                Section {
+                    TextField("URL (任意)", text: $url)
+                        .keyboardType(.URL).autocorrectionDisabled().textInputAutocapitalization(.never)
                     TextField("メモ (任意)", text: $note)
-                }
+                } header: { Text("その他") }
             }
             .navigationTitle(item == nil ? "追加" : "編集")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("キャンセル") { dismiss() } }
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("キャンセル") { dismiss() }
+                }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("保存") { save() }.bold().disabled(title.isEmpty || value.isEmpty)
+                    Button("保存") { save() }.bold().disabled(title.isEmpty)
                 }
             }
             .onAppear {
                 if let item {
-                    title = item.title; category = item.category; username = item.username
-                    value = VaultEncryption.decrypt(item.encryptedValue); url = item.url; note = item.note
+                    title = item.title
+                    category = item.category
+                    username = item.username
+                    value = VaultEncryption.decrypt(item.encryptedValue)
+                    url = item.url
+                    note = item.note
                 }
             }
         }
     }
 
+    @ViewBuilder
+    private func secureValueField(_ placeholder: String) -> some View {
+        HStack {
+            Group {
+                if showValue {
+                    TextField(placeholder, text: $value)
+                } else {
+                    SecureField(placeholder, text: $value)
+                }
+            }
+            .autocorrectionDisabled()
+            .textInputAutocapitalization(.never)
+            Button { showValue.toggle() } label: {
+                Image(systemName: showValue ? "eye.slash" : "eye")
+                    .foregroundColor(.secondary)
+            }
+        }
+    }
+
+    private func placeholderFor(_ cat: String) -> String {
+        switch cat {
+        case "password": return "サービス名 (例: GitHub)"
+        case "apikey": return "キー名 (例: FLY_API_TOKEN)"
+        case "wifi": return "ネットワーク名"
+        case "pin": return "用途 (例: 玄関ロック)"
+        case "card": return "カード名 (例: VISA ****1234)"
+        case "bank": return "銀行名 (例: 三菱UFJ)"
+        case "ssh": return "サーバー名"
+        case "token": return "トークン名"
+        case "license": return "ソフトウェア名"
+        case "email": return "メールアドレス"
+        case "server": return "サーバー名 / DB名"
+        case "social": return "SNS名 (例: X, Instagram)"
+        case "crypto": return "ウォレット名"
+        case "id": return "ID種別 (例: パスポート)"
+        case "note": return "タイトル"
+        default: return "名前"
+        }
+    }
+
     private func save() {
         let t = item ?? SecureItem(homeId: "global", title: title, category: category)
-        t.title = title; t.category = category; t.username = username
-        t.encryptedValue = VaultEncryption.encrypt(value); t.url = url; t.note = note; t.updatedAt = Date()
+        t.title = title
+        t.category = category
+        t.username = username
+        t.encryptedValue = VaultEncryption.encrypt(value)
+        t.url = url
+        t.note = note
+        t.updatedAt = Date()
         if item == nil { context.insert(t) }
         dismiss()
     }

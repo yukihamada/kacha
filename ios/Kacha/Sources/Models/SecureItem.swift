@@ -34,7 +34,16 @@ final class SecureItem {
         ("apikey", "APIキー", "chevron.left.forwardslash.chevron.right"),
         ("wifi", "Wi-Fi", "wifi"),
         ("pin", "暗証番号", "lock.fill"),
-        ("card", "カード", "creditcard.fill"),
-        ("note", "メモ", "note.text"),
+        ("card", "クレジットカード", "creditcard.fill"),
+        ("bank", "銀行口座", "building.columns.fill"),
+        ("ssh", "SSH鍵", "terminal.fill"),
+        ("token", "トークン / シークレット", "shield.checkered"),
+        ("license", "ライセンスキー", "checkmark.seal.fill"),
+        ("email", "メールアカウント", "envelope.fill"),
+        ("server", "サーバー / DB", "server.rack"),
+        ("social", "SNSアカウント", "person.crop.circle.fill"),
+        ("crypto", "暗号通貨ウォレット", "bitcoinsign.circle.fill"),
+        ("id", "本人確認 / ID", "person.text.rectangle.fill"),
+        ("note", "セキュアメモ", "note.text"),
     ]
 }
