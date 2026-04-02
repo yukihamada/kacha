@@ -129,6 +129,7 @@
 		D17C4025CE2547E918ADB7ED /* ShareRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A0EDD94BEFEE28BAC81C62 /* ShareRecord.swift */; };
 		D1DDF49E11A7217960D157A2 /* PricingSuggestionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3144195A13E2CBED2C4610 /* PricingSuggestionTests.swift */; };
 		D24AD72FB6287F5B185E8A54 /* iPadContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165A3D56ACF9557F7D227942 /* iPadContentView.swift */; };
+		D2B2E50F17B090F7C5FB7DD5 /* VaultImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B480CDB5D65DBFBB8A000 /* VaultImportView.swift */; };
 		D3D161FFBB8591EC0CACD99A /* WatchConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B807D87BC74FD287A183C3F /* WatchConnectivityManager.swift */; };
 		D4492ACE9D921DF35EF6C44F /* HomeShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06827396B74878C3BB4D53AF /* HomeShareView.swift */; };
 		D5A4F05C6BB58AD03156392D /* CleaningReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAD169465EE5DBFAE05B1B4 /* CleaningReportView.swift */; };
@@ -267,6 +268,7 @@
 		86E0228765EAE5D3ED3CC100 /* WatchConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchConnectivityManager.swift; sourceTree = "<group>"; };
 		871FE5A982756AE75248115C /* GeminiReplyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeminiReplyService.swift; sourceTree = "<group>"; };
 		87C38490B5E9B7D171FDB3D8 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
+		8A1B480CDB5D65DBFBB8A000 /* VaultImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultImportView.swift; sourceTree = "<group>"; };
 		8A514031FEF470BC9E5CE411 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		8CA567B91BA70BD236424051 /* GuestClipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestClipView.swift; sourceTree = "<group>"; };
 		8D434ABEDE8CBCF81DAB40B4 /* SwitchBotClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchBotClient.swift; sourceTree = "<group>"; };
@@ -487,6 +489,7 @@
 				36FD86D0592B03028A03873B /* SubscriptionView.swift */,
 				75EEF33DCF83EDD8EA80E9D5 /* TeamView.swift */,
 				608AB2A9F5F18D562E496375 /* UtilityView.swift */,
+				8A1B480CDB5D65DBFBB8A000 /* VaultImportView.swift */,
 				C2D622EF4A381F9287566742 /* VaultPageView.swift */,
 				D77AD7D7C7CB083362A631FC /* VaultTabWrapper.swift */,
 				1FB18BD8350978C3E3FA4513 /* VaultView.swift */,
@@ -953,6 +956,7 @@
 				04CEACE6B8CA1B48B3AACDEB /* UtilityRecord.swift in Sources */,
 				FBDAA00FE3A92387E446F912 /* UtilityView.swift in Sources */,
 				27FDE4B017A58201EAA04B51 /* VaultEncryption.swift in Sources */,
+				D2B2E50F17B090F7C5FB7DD5 /* VaultImportView.swift in Sources */,
 				2397F8D011D0D555BDF79B45 /* VaultPageView.swift in Sources */,
 				B1A45B58765CAF7A47AF6E56 /* VaultTabWrapper.swift in Sources */,
 				2AA63BDC1959E269BF1294AE /* VaultView.swift in Sources */,

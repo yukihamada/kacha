@@ -19,14 +19,15 @@ enum VaultEncryption {
     static func encrypt(_ plaintext: String) -> String {
         guard let key = loadOrCreateKey(),
               let data = plaintext.data(using: .utf8) else {
-            return plaintext
+            // Key creation should never fail — if it does, prefix with marker
+            return "⚠PLAIN:" + plaintext
         }
         do {
             let sealedBox = try AES.GCM.seal(data, using: key)
-            guard let combined = sealedBox.combined else { return plaintext }
+            guard let combined = sealedBox.combined else { return "⚠PLAIN:" + plaintext }
             return combined.base64EncodedString()
         } catch {
-            return plaintext
+            return "⚠PLAIN:" + plaintext
         }
     }
 

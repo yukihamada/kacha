@@ -9,6 +9,7 @@ struct VaultTabWrapper: View {
     @State private var searchText = ""
     @State private var selectedCategory = "all"
     @State private var showAdd = false
+    @State private var showImport = false
     @State private var editingItem: SecureItem?
     @State private var revealedIds = Set<String>()
     @State private var copiedId: String?
@@ -58,13 +59,23 @@ struct VaultTabWrapper: View {
             .searchable(text: $searchText, prompt: "検索")
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    Button { showAdd = true } label: {
+                    Menu {
+                        Button { showAdd = true } label: {
+                            Label("新規追加", systemImage: "plus")
+                        }
+                        Button { showImport = true } label: {
+                            Label("1Password / CSVからインポート", systemImage: "square.and.arrow.down")
+                        }
+                    } label: {
                         Image(systemName: "plus")
                     }
                 }
             }
             .sheet(isPresented: $showAdd) {
                 VaultItemSheet(item: nil)
+            }
+            .sheet(isPresented: $showImport) {
+                VaultImportView()
             }
             .sheet(item: $editingItem) { item in
                 VaultItemSheet(item: item)
@@ -165,7 +176,10 @@ struct VaultTabWrapper: View {
                     Image(systemName: revealed ? "eye.slash" : "eye").font(.caption).foregroundColor(.secondary).frame(width: 32, height: 32)
                 }.buttonStyle(.plain)
                 Button {
-                    UIPasteboard.general.string = VaultEncryption.decrypt(item.encryptedValue)
+                    let decrypted = VaultEncryption.decrypt(item.encryptedValue)
+                    UIPasteboard.general.setItems([[UIPasteboard.typeAutomatic: decrypted]], options: [
+                        .expirationDate: Date().addingTimeInterval(30) // Auto-clear after 30s
+                    ])
                     UIImpactFeedbackGenerator(style: .light).impactOccurred()
                     withAnimation { copiedId = item.id }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
