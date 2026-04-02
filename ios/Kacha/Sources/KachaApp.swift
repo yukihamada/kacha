@@ -34,7 +34,10 @@ struct KachaApp: App {
     @UIApplicationDelegateAdaptor(KachaAppDelegate.self) var appDelegate
     let container: ModelContainer
 
+    @State private var crashAlert: String?
+
     init() {
+        CrashLogger.install()
         let models: [any PersistentModel.Type] = [
             Home.self, Booking.self, SmartDevice.self, DeviceIntegration.self, ShareRecord.self,
             ChecklistItem.self, UtilityRecord.self, MaintenanceTask.self, NearbyPlace.self,
@@ -72,7 +75,21 @@ struct KachaApp: App {
             RootView()
                 .modelContainer(container)
                 .preferredColorScheme(.dark)
+                .alert("前回のクラッシュ情報", isPresented: Binding(get: { crashAlert != nil }, set: { if !$0 { crashAlert = nil } })) {
+                    Button("コピー") {
+                        UIPasteboard.general.string = crashAlert ?? ""
+                        CrashLogger.clearCrash()
+                        crashAlert = nil
+                    }
+                    Button("OK") { CrashLogger.clearCrash(); crashAlert = nil }
+                } message: {
+                    Text(crashAlert ?? "")
+                }
                 .onAppear {
+                    // Show crash info from previous run
+                    if let crash = CrashLogger.lastCrash() {
+                        crashAlert = crash
+                    }
                     // Restore from Keychain if fresh install
                     let restored = KeychainBackup.restoreIfNeeded(context: container.mainContext)
                     #if DEBUG

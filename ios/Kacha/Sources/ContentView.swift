@@ -38,7 +38,7 @@ struct ContentView: View {
             }
 
             if vaultEnabled {
-                VaultView()
+                VaultTabWrapper()
                     .tabItem {
                         Label("鍵管理", systemImage: "key.fill")
                     }

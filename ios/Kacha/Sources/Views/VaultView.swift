@@ -31,9 +31,10 @@ struct VaultView: View {
     }
 
     var body: some View {
+        let needsAuth = home != nil  // Tab mode: auth handled by wrapper
         ZStack {
             Color.kachaBg.ignoresSafeArea()
-            if !isUnlocked {
+            if needsAuth && !isUnlocked {
                 lockScreen
             } else {
                 NavigationStack {
@@ -67,8 +68,10 @@ struct VaultView: View {
             ChatWebSyncSheet(items: items, syncStatus: $syncStatus)
         }
         .task {
-            try? await Task.sleep(for: .milliseconds(500))
-            authenticate()
+            if needsAuth {
+                try? await Task.sleep(for: .milliseconds(500))
+                authenticate()
+            }
         }
     }
 
