@@ -12,6 +12,8 @@ struct VaultView: View {
     @State private var searchText = ""
     @State private var selectedCategory = "all"
     @State private var revealedIds = Set<String>()
+    @State private var showChatWebSync = false
+    @State private var syncStatus = ""
 
     private var items: [SecureItem] {
         var filtered = allItems.filter { $0.homeId == home.id }
@@ -46,14 +48,22 @@ struct VaultView: View {
                 }
                 if isUnlocked {
                     ToolbarItem(placement: .primaryAction) {
-                        Button { showAdd = true } label: {
-                            Image(systemName: "plus.circle.fill").foregroundColor(.kacha)
+                        HStack(spacing: 12) {
+                            Button { showChatWebSync = true } label: {
+                                Image(systemName: "arrow.triangle.2.circlepath").foregroundColor(.kacha)
+                            }
+                            Button { showAdd = true } label: {
+                                Image(systemName: "plus.circle.fill").foregroundColor(.kacha)
+                            }
                         }
                     }
                 }
             }
             .sheet(isPresented: $showAdd) {
                 VaultItemEditor(home: home, item: nil)
+            }
+            .sheet(isPresented: $showChatWebSync) {
+                ChatWebSyncSheet(items: items, syncStatus: $syncStatus)
             }
         }
         .onAppear { authenticate() }

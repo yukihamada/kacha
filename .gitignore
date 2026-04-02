@@ -17,3 +17,9 @@ node_modules/
 .keys/
 *.p8
 *.p12
+
+# ESP-IDF build artifacts (large binaries)
+firmware/.embuild/
+firmware/target/
+firmware-band/.embuild/
+firmware-band/target/

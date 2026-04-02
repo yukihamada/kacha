@@ -65,6 +65,7 @@
 		5D29ABC7A5FD5D39490ECCE6 /* DeviceLogSyncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65411F6821DCAD885D29DB7D /* DeviceLogSyncer.swift */; };
 		5E63D765CC880A8672A332BD /* HouseManual.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36528C3D52714B042FBD63B8 /* HouseManual.swift */; };
 		5F6CCA1C776F496DF43409FD /* AutomationEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E6CFAF993BA526C295EAF9 /* AutomationEngine.swift */; };
+		60D13596C7D4AC6DBDE5B557 /* ChatWebVaultSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4333C80AC4DC0E2D0D634B /* ChatWebVaultSync.swift */; };
 		64C319DAE37EE059B4F673F6 /* BookingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42E0B7D1773EDB94A1C55CD /* BookingView.swift */; };
 		654F6D9993AE0C02836A5908 /* CelebrationEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9183E03019349FA880E6457D /* CelebrationEffect.swift */; };
 		66937C83B5120D1343E68279 /* BookingPoller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3025F580CDCB2BAB1C92CD /* BookingPoller.swift */; };
@@ -113,6 +114,7 @@
 		B2DD9A8E80CF0B46CA06942A /* IntentExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB100CD2B757485CF67CDB2C /* IntentExecutor.swift */; };
 		B6F2F22A46472DBDA06B24C2 /* SeedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09A76D1BDF1EA7B4A016620 /* SeedData.swift */; };
 		B780364493480FF668046FFB /* ChannelSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A18158BEA6FB3B3E4284F9FB /* ChannelSettingsView.swift */; };
+		B7F5BF8223E04621E7D6BB43 /* ChatWebSyncSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E7645B6944042DF9A58259 /* ChatWebSyncSheet.swift */; };
 		B9FD7C5865D80BBD83CA6FF7 /* NatureRemoClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A7738C9B133BAD5F2D5277 /* NatureRemoClient.swift */; };
 		C0A20ABFE84E381EAEF7F37A /* ReplySuggestionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32158B774C086E21BC995178 /* ReplySuggestionService.swift */; };
 		C0A6844731A08880AEB7CD08 /* DeviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEFDB187FC95534AEC056E23 /* DeviceView.swift */; };
@@ -246,6 +248,7 @@
 		6651802531863B94FDCF097B /* RevenueReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevenueReportView.swift; sourceTree = "<group>"; };
 		695A807A522892868B701E7C /* KachaClip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = KachaClip.entitlements; sourceTree = "<group>"; };
 		6A259AED848AB4C8EA9E334F /* BookingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingDetailView.swift; sourceTree = "<group>"; };
+		6B4333C80AC4DC0E2D0D634B /* ChatWebVaultSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatWebVaultSync.swift; sourceTree = "<group>"; };
 		706676D2C24D95967B5009DC /* UtilityRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityRecord.swift; sourceTree = "<group>"; };
 		70788C2DF6DE9CD669840FBE /* KachaIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KachaIntents.swift; sourceTree = "<group>"; };
 		71A30F5AEBA76259343DCB7B /* ICalImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICalImporter.swift; sourceTree = "<group>"; };
@@ -291,6 +294,7 @@
 		C190FF87DB232B39D1DEF742 /* MaintenanceTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceTask.swift; sourceTree = "<group>"; };
 		C2D622EF4A381F9287566742 /* VaultPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultPageView.swift; sourceTree = "<group>"; };
 		C5A2D76B51A3FD6A1DBFAAE6 /* HomeControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeControlView.swift; sourceTree = "<group>"; };
+		C5E7645B6944042DF9A58259 /* ChatWebSyncSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatWebSyncSheet.swift; sourceTree = "<group>"; };
 		C962587672D02119CE474B4E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		CB04048E4EB01CEF369353F2 /* GuestMessenger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestMessenger.swift; sourceTree = "<group>"; };
 		CC107A395925B94DC3E39D02 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
@@ -393,6 +397,7 @@
 				EFDE5DB46451C658BE8EDE3A /* BackgroundRefresh.swift */,
 				DCC08ABE8F6B17BFB01A0CAE /* Beds24Client.swift */,
 				5A3025F580CDCB2BAB1C92CD /* BookingPoller.swift */,
+				6B4333C80AC4DC0E2D0D634B /* ChatWebVaultSync.swift */,
 				15869D02239D08163D37B93A /* CleaningNotificationService.swift */,
 				E3E374DA92146CE62CFBFE0B /* CloudSyncService.swift */,
 				9D70E215F9DE7390843E2DF7 /* CustomWebhookClient.swift */,
@@ -441,6 +446,7 @@
 				903844E100FADD9AE75B29D3 /* CalendarAvailabilityView.swift */,
 				132DA316B0CD860F60709030 /* CalendarView.swift */,
 				A18158BEA6FB3B3E4284F9FB /* ChannelSettingsView.swift */,
+				C5E7645B6944042DF9A58259 /* ChatWebSyncSheet.swift */,
 				DFF9F29AA36D5EA8C3C0255F /* ChecklistView.swift */,
 				4A441A03544C574CF65CCE8C /* CleaningManagementView.swift */,
 				DAAD169465EE5DBFAE05B1B4 /* CleaningReportView.swift */,
@@ -849,6 +855,8 @@
 				9870A57715DDEA01D8423448 /* CalendarView.swift in Sources */,
 				654F6D9993AE0C02836A5908 /* CelebrationEffect.swift in Sources */,
 				B780364493480FF668046FFB /* ChannelSettingsView.swift in Sources */,
+				B7F5BF8223E04621E7D6BB43 /* ChatWebSyncSheet.swift in Sources */,
+				60D13596C7D4AC6DBDE5B557 /* ChatWebVaultSync.swift in Sources */,
 				1945567B04ACD0105C070EE3 /* ChecklistItem.swift in Sources */,
 				202178F1E9C71356A333D319 /* ChecklistView.swift in Sources */,
 				AB1CD0A08A666523214FBDC0 /* CleaningManagementView.swift in Sources */,
