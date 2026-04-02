@@ -43,8 +43,10 @@ struct VaultView: View {
             .navigationTitle("パスワード管理")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("閉じる") { dismiss() }.foregroundStyle(.secondary)
+                if home != nil {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("閉じる") { dismiss() }.foregroundStyle(.secondary)
+                    }
                 }
                 if isUnlocked {
                     ToolbarItem(placement: .primaryAction) {
@@ -66,7 +68,12 @@ struct VaultView: View {
                 ChatWebSyncSheet(items: items, syncStatus: $syncStatus)
             }
         }
-        .onAppear { authenticate() }
+        .onAppear {
+            // Delay auth slightly to avoid crash when view is still appearing
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                authenticate()
+            }
+        }
     }
 
     // MARK: - Lock Screen
