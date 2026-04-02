@@ -3,7 +3,7 @@ import SwiftData
 import LocalAuthentication
 
 struct VaultView: View {
-    let home: Home
+    var home: Home? = nil  // Optional: nil = show all items across all homes
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @Query(sort: \SecureItem.sortOrder) private var allItems: [SecureItem]
@@ -16,7 +16,7 @@ struct VaultView: View {
     @State private var syncStatus = ""
 
     private var items: [SecureItem] {
-        var filtered = allItems.filter { $0.homeId == home.id }
+        var filtered = home != nil ? allItems.filter { $0.homeId == home!.id } : allItems
         if selectedCategory != "all" {
             filtered = filtered.filter { $0.category == selectedCategory }
         }
@@ -60,7 +60,7 @@ struct VaultView: View {
                 }
             }
             .sheet(isPresented: $showAdd) {
-                VaultItemEditor(home: home, item: nil)
+                VaultItemEditor(home: home, item: nil, globalMode: home == nil)
             }
             .sheet(isPresented: $showChatWebSync) {
                 ChatWebSyncSheet(items: items, syncStatus: $syncStatus)
@@ -259,8 +259,9 @@ struct VaultView: View {
 // MARK: - Vault Item Editor
 
 struct VaultItemEditor: View {
-    let home: Home
+    var home: Home? = nil
     let item: SecureItem?
+    var globalMode: Bool = false
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @State private var title = ""
@@ -379,7 +380,7 @@ struct VaultItemEditor: View {
     }
 
     private func save() {
-        let secureItem = item ?? SecureItem(homeId: home.id, title: title, category: category)
+        let secureItem = item ?? SecureItem(homeId: home?.id ?? "global", title: title, category: category)
         secureItem.title = title
         secureItem.category = category
         secureItem.username = username

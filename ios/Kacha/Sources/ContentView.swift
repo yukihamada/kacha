@@ -3,6 +3,7 @@ import SwiftData
 
 struct ContentView: View {
     @AppStorage("minpakuModeEnabled") private var minpakuModeEnabled = false
+    @AppStorage("vaultEnabled") private var vaultEnabled = false
     @AppStorage("activeHomeId") private var activeHomeId = ""
     @Query private var homes: [Home]
 
@@ -33,6 +34,13 @@ struct ContentView: View {
                 BookingView()
                     .tabItem {
                         Label("予約", systemImage: "list.clipboard")
+                    }
+            }
+
+            if vaultEnabled {
+                VaultView()
+                    .tabItem {
+                        Label("鍵管理", systemImage: "key.fill")
                     }
             }
 

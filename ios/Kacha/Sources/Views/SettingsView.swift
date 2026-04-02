@@ -9,6 +9,7 @@ struct SettingsView: View {
     @Query(sort: \Home.sortOrder) private var homes: [Home]
     @AppStorage("activeHomeId") private var activeHomeId = ""
     @AppStorage("minpakuModeEnabled") private var minpakuModeEnabled = false
+    @AppStorage("vaultEnabled") private var vaultEnabled = false
     @Environment(\.modelContext) private var modelContext
 
     @State private var showAddHome = false
@@ -41,6 +42,25 @@ struct SettingsView: View {
                             emptyState
                         }
                         subscriptionSection
+                        // 鍵管理 toggle
+                        KachaCard {
+                            VStack(alignment: .leading, spacing: 12) {
+                                HStack(spacing: 12) {
+                                    ZStack {
+                                        Circle().fill(Color.kacha.opacity(0.15)).frame(width: 36, height: 36)
+                                        Image(systemName: "key.fill").font(.system(size: 16)).foregroundColor(.kacha)
+                                    }
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text("鍵・パスワード管理").font(.subheadline).bold().foregroundColor(.white)
+                                        Text("APIキー、パスワード、Wi-Fi等を暗号化して管理").font(.caption2).foregroundColor(.secondary)
+                                    }
+                                    Spacer()
+                                    Toggle("", isOn: $vaultEnabled).labelsHidden()
+                                        .tint(.kacha)
+                                }
+                            }
+                            .padding(14)
+                        }
                         aiSettingsSection
                         backupSection
                         appInfoSection
