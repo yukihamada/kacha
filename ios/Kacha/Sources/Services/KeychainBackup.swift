@@ -126,12 +126,25 @@ struct KeychainBackup {
         let sortOrder: Int
     }
 
+    struct SecureItemBackupData: Codable {
+        let id: String
+        let homeId: String
+        let title: String
+        let category: String
+        let username: String
+        let encryptedValue: String
+        let url: String
+        let note: String
+        let sortOrder: Int
+    }
+
     struct AppBackupData: Codable {
-        let version: Int  // バックアップバージョン（将来の互換性用）
+        let version: Int
         let homes: [HomeBackupData]
         let devices: [DeviceBackupData]
         let bookings: [BookingBackupData]
         let checklists: [ChecklistBackupData]
+        var secureItems: [SecureItemBackupData]?  // v3: パスワード/APIキー
         let activeHomeId: String
         let hasCompletedOnboarding: Bool
         let minpakuModeEnabled: Bool
@@ -203,12 +216,24 @@ struct KeychainBackup {
             )
         }
 
+        // SecureItems (パスワード/APIキー)
+        let secureItems = (try? context.fetch(FetchDescriptor<SecureItem>())) ?? []
+        let backupSecureItems = secureItems.map { s in
+            SecureItemBackupData(
+                id: s.id, homeId: s.homeId, title: s.title,
+                category: s.category, username: s.username,
+                encryptedValue: s.encryptedValue, url: s.url,
+                note: s.note, sortOrder: s.sortOrder
+            )
+        }
+
         let backup = AppBackupData(
-            version: 2,
+            version: 3,
             homes: backupHomes,
             devices: backupDevices,
             bookings: backupBookings,
             checklists: backupChecklists,
+            secureItems: backupSecureItems,
             activeHomeId: UserDefaults.standard.string(forKey: "activeHomeId") ?? "",
             hasCompletedOnboarding: UserDefaults.standard.bool(forKey: "hasCompletedOnboarding"),
             minpakuModeEnabled: UserDefaults.standard.bool(forKey: "minpakuModeEnabled"),
@@ -218,7 +243,7 @@ struct KeychainBackup {
         if let data = try? JSONEncoder().encode(backup) {
             save(key: "app_backup", data: data)
             #if DEBUG
-            print("[KeychainBackup] saved: \(homes.count) homes, \(devices.count) devices, \(bookings.count) bookings, \(checklists.count) checklists (\(data.count) bytes)")
+            print("[KeychainBackup] saved: \(homes.count) homes, \(devices.count) devices, \(bookings.count) bookings, \(checklists.count) checklists, \(secureItems.count) secrets (\(data.count) bytes)")
             #endif
         }
     }
@@ -341,6 +366,20 @@ struct KeychainBackup {
             context.insert(item)
         }
 
+        // SecureItems (v3+)
+        if let secureItems = backup.secureItems {
+            for bs in secureItems {
+                let item = SecureItem(homeId: bs.homeId, title: bs.title, category: bs.category)
+                item.id = bs.id
+                item.username = bs.username
+                item.encryptedValue = bs.encryptedValue
+                item.url = bs.url
+                item.note = bs.note
+                item.sortOrder = bs.sortOrder
+                context.insert(item)
+            }
+        }
+
         try? context.save()
 
         // Settings
@@ -353,7 +392,7 @@ struct KeychainBackup {
         }
 
         #if DEBUG
-        print("[KeychainBackup] restored: \(backup.homes.count) homes, \(backup.devices.count) devices, \(backup.bookings.count) bookings, \(backup.checklists.count) checklists")
+        print("[KeychainBackup] restored: \(backup.homes.count) homes, \(backup.devices.count) devices, \(backup.bookings.count) bookings, \(backup.checklists.count) checklists, \(backup.secureItems?.count ?? 0) secrets")
         #endif
 
         return true
