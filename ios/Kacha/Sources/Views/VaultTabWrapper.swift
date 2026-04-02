@@ -8,6 +8,7 @@ struct VaultTabWrapper: View {
     @Query(sort: \SecureItem.sortOrder) private var items: [SecureItem]
     @AppStorage("vaultAutoLockSeconds") private var autoLockSeconds = 60
     @State private var showAdd = false
+    @State private var showTransfer = false
     @State private var revealedId: String?
     @State private var copiedId: String?
     @State private var lastActive = Date()
@@ -47,14 +48,26 @@ struct VaultTabWrapper: View {
                         }
                     }
                     ToolbarItem(placement: .topBarLeading) {
-                        Button { locked = true; revealedId = nil } label: {
-                            Image(systemName: "lock.fill").font(.caption)
+                        Menu {
+                            Button { locked = true; revealedId = nil } label: {
+                                Label("ロック", systemImage: "lock.fill")
+                            }
+                            if !items.isEmpty {
+                                Button { showTransfer = true } label: {
+                                    Label("ChatWebに送る", systemImage: "arrow.right.circle")
+                                }
+                            }
+                        } label: {
+                            Image(systemName: "ellipsis.circle").font(.caption)
                         }
                     }
                 }
             }
             .sheet(isPresented: $showAdd) {
                 AddItemView()
+            }
+            .sheet(isPresented: $showTransfer) {
+                TransferView(items: Array(items))
             }
         }
         .onChange(of: scenePhase) { _, p in

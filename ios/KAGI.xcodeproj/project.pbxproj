@@ -133,6 +133,7 @@
 		D3D161FFBB8591EC0CACD99A /* WatchConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B807D87BC74FD287A183C3F /* WatchConnectivityManager.swift */; };
 		D4492ACE9D921DF35EF6C44F /* HomeShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06827396B74878C3BB4D53AF /* HomeShareView.swift */; };
 		D5A4F05C6BB58AD03156392D /* CleaningReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAD169465EE5DBFAE05B1B4 /* CleaningReportView.swift */; };
+		D81F65388EDE13FDEE1C6B86 /* TransferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24F8E2A209071DFF8AD5F88 /* TransferView.swift */; };
 		DB076CFC7F5C00FB9A1595C2 /* LiveActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35182EADA29CA205A4B0F54 /* LiveActivityManager.swift */; };
 		DF02CB5CD38B4F6BE262E861 /* LINEMessagingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178648ECA30DFCA16AB4A9D2 /* LINEMessagingClient.swift */; };
 		E2072AEA3954F9694168BD3F /* GuestMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 589873A5111678458952DDD4 /* GuestMessageView.swift */; };
@@ -284,6 +285,7 @@
 		9E851084952E3CAFC34523A4 /* GuestCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestCardView.swift; sourceTree = "<group>"; };
 		A0A0CB51626228DF521362F6 /* SentMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentMessage.swift; sourceTree = "<group>"; };
 		A18158BEA6FB3B3E4284F9FB /* ChannelSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelSettingsView.swift; sourceTree = "<group>"; };
+		A24F8E2A209071DFF8AD5F88 /* TransferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferView.swift; sourceTree = "<group>"; };
 		A60F6A646D2896063281C066 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		A75E1ADB6E28C8039D87050B /* KachaLockAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KachaLockAttributes.swift; sourceTree = "<group>"; };
 		ACEEF959ED61C79789BCE531 /* MaintenanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceView.swift; sourceTree = "<group>"; };
@@ -488,6 +490,7 @@
 				CC107A395925B94DC3E39D02 /* SidebarView.swift */,
 				36FD86D0592B03028A03873B /* SubscriptionView.swift */,
 				75EEF33DCF83EDD8EA80E9D5 /* TeamView.swift */,
+				A24F8E2A209071DFF8AD5F88 /* TransferView.swift */,
 				608AB2A9F5F18D562E496375 /* UtilityView.swift */,
 				8A1B480CDB5D65DBFBB8A000 /* VaultImportView.swift */,
 				C2D622EF4A381F9287566742 /* VaultPageView.swift */,
@@ -953,6 +956,7 @@
 				1139C3EFC683D4DE96A5ECF2 /* TeamView.swift in Sources */,
 				185887FB8375F715ABE61510 /* TemairaClient.swift in Sources */,
 				3E58A61E01C56197C88A7AB8 /* Theme.swift in Sources */,
+				D81F65388EDE13FDEE1C6B86 /* TransferView.swift in Sources */,
 				04CEACE6B8CA1B48B3AACDEB /* UtilityRecord.swift in Sources */,
 				FBDAA00FE3A92387E446F912 /* UtilityView.swift in Sources */,
 				27FDE4B017A58201EAA04B51 /* VaultEncryption.swift in Sources */,

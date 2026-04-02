@@ -149,6 +149,14 @@ fn init_db(conn: &Connection) {
             updated_at  TEXT NOT NULL DEFAULT (datetime('now')),
             UNIQUE(user_email, key_name)
         );
+        -- Transfer: one-time key transfer (30s expiry)
+        CREATE TABLE IF NOT EXISTS transfers (
+            code        TEXT PRIMARY KEY,
+            encrypted_data TEXT NOT NULL,
+            expires_at  INTEGER NOT NULL,
+            claimed     INTEGER NOT NULL DEFAULT 0,
+            created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+        );
         -- チャリン連携: APNsプッシュトークン
         CREATE TABLE IF NOT EXISTS charin_push_tokens (
             id          INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -763,6 +771,9 @@ async fn main() {
         .route("/api/v1/vault/list", post(vault_list))
         .route("/api/v1/vault/get", post(vault_get))
         .route("/api/v1/vault/delete", post(vault_delete))
+        // Transfer: one-time code for KAGI→ChatWeb key transfer
+        .route("/api/v1/transfer/create", post(transfer_create))
+        .route("/api/v1/transfer/claim", post(transfer_claim))
         // Beds24予約通知
         .route("/api/v1/beds24/register", post(beds24_register))
         .route("/api/v1/beds24/unregister", post(beds24_unregister))
@@ -2233,4 +2244,57 @@ async fn vault_delete(State(s): State<Arc<AppState>>, Json(body): Json<VaultDele
         rusqlite::params![email, body.key_name],
     ).ok();
     Json(serde_json::json!({"ok": true})).into_response()
+}
+
+// ── Transfer: one-time key exchange ──
+// iPhone (KAGI) creates a transfer with a 6-digit code
+// Browser (ChatWeb) claims it with the code to get the keys
+// Code = encryption passphrase (server only stores encrypted blob)
+// 30 second expiry, single-use
+
+#[derive(Deserialize)]
+struct TransferCreateReq {
+    code: String,            // 6-digit code (client-generated, also used as encryption key via SHA256)
+    encrypted_data: String,  // AES-GCM encrypted with SHA256(code)
+}
+
+#[derive(Deserialize)]
+struct TransferClaimReq {
+    code: String,
+}
+
+async fn transfer_create(State(s): State<Arc<AppState>>, Json(body): Json<TransferCreateReq>) -> impl IntoResponse {
+    if body.code.len() != 6 || body.encrypted_data.is_empty() {
+        return (StatusCode::BAD_REQUEST, Json(serde_json::json!({"error":"invalid"}))).into_response();
+    }
+    let expires = chrono::Utc::now().timestamp() + 30;
+    let db = s.db.lock().unwrap();
+    db.execute("DELETE FROM transfers WHERE expires_at < ?1", rusqlite::params![chrono::Utc::now().timestamp()]).ok();
+    db.execute(
+        "INSERT OR REPLACE INTO transfers (code, encrypted_data, expires_at, claimed) VALUES (?1, ?2, ?3, 0)",
+        rusqlite::params![body.code, body.encrypted_data, expires],
+    ).ok();
+    Json(serde_json::json!({"ok": true, "expires_in": 30})).into_response()
+}
+
+async fn transfer_claim(State(s): State<Arc<AppState>>, Json(body): Json<TransferClaimReq>) -> impl IntoResponse {
+    let db = s.db.lock().unwrap();
+    let now = chrono::Utc::now().timestamp();
+
+    let result: Option<String> = db.query_row(
+        "SELECT encrypted_data FROM transfers WHERE code = ?1 AND expires_at > ?2 AND claimed = 0",
+        rusqlite::params![body.code, now],
+        |r| r.get(0),
+    ).ok();
+
+    match result {
+        Some(data) => {
+            // Mark as claimed (single use)
+            db.execute("UPDATE transfers SET claimed = 1 WHERE code = ?1", rusqlite::params![body.code]).ok();
+            Json(serde_json::json!({ "encrypted_data": data })).into_response()
+        }
+        None => {
+            (StatusCode::NOT_FOUND, Json(serde_json::json!({ "error": "invalid_or_expired" }))).into_response()
+        }
+    }
 }
