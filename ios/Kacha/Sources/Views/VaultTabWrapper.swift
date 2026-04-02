@@ -101,7 +101,6 @@ struct VaultTabWrapper: View {
             }
         }
         // Auto-lock on background
-        .modifier(ScreenCaptureGuard(isProtected: !isLocked))
         .onChange(of: scenePhase) { _, phase in
             if phase == .background || phase == .inactive {
                 lastActiveDate = Date()
@@ -450,9 +449,6 @@ struct VaultItemSheet: View {
         }
     }
 
-    @State private var breachCount: Int?
-    @State private var isCheckingBreach = false
-
     @ViewBuilder
     private func secureValueField(_ placeholder: String) -> some View {
         HStack {
@@ -469,48 +465,6 @@ struct VaultItemSheet: View {
                 Image(systemName: showValue ? "eye.slash" : "eye")
                     .foregroundColor(.secondary)
             }
-        }
-        // Password strength
-        if !value.isEmpty && ["password", "wifi", "email", "social"].contains(category) {
-            let strength = VaultEncryption.passwordStrength(value)
-            HStack(spacing: 4) {
-                ForEach(0..<4, id: \.self) { i in
-                    RoundedRectangle(cornerRadius: 2)
-                        .fill(i < strength.score ? strengthColor(strength.score) : Color.secondary.opacity(0.2))
-                        .frame(height: 3)
-                }
-                Text(strength.feedback)
-                    .font(.system(size: 10))
-                    .foregroundColor(strengthColor(strength.score))
-            }
-        }
-        // Breach check
-        if !value.isEmpty && ["password", "email", "social"].contains(category) {
-            Button {
-                isCheckingBreach = true
-                Task {
-                    breachCount = await VaultEncryption.checkBreach(value)
-                    isCheckingBreach = false
-                }
-            } label: {
-                HStack(spacing: 4) {
-                    if isCheckingBreach {
-                        ProgressView().scaleEffect(0.7)
-                    } else if let count = breachCount {
-                        if count > 0 {
-                            Image(systemName: "exclamationmark.triangle.fill").foregroundColor(.red)
-                            Text("この値は\(count)回の漏洩で確認されています").font(.caption).foregroundColor(.red)
-                        } else {
-                            Image(systemName: "checkmark.shield.fill").foregroundColor(.green)
-                            Text("漏洩なし").font(.caption).foregroundColor(.green)
-                        }
-                    } else {
-                        Image(systemName: "shield.checkered").foregroundColor(.secondary)
-                        Text("漏洩チェック").font(.caption).foregroundColor(.secondary)
-                    }
-                }
-            }
-            .buttonStyle(.plain)
         }
     }
 
@@ -532,16 +486,6 @@ struct VaultItemSheet: View {
         case "id": return "ID種別 (例: パスポート)"
         case "note": return "タイトル"
         default: return "名前"
-        }
-    }
-
-    private func strengthColor(_ score: Int) -> Color {
-        switch score {
-        case 0: return .red
-        case 1: return .orange
-        case 2: return .yellow
-        case 3: return .green
-        default: return .green
         }
     }
 
