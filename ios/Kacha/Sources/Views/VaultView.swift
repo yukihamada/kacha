@@ -31,48 +31,44 @@ struct VaultView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            ZStack {
-                Color.kachaBg.ignoresSafeArea()
-                if !isUnlocked {
-                    lockScreen
-                } else {
+        ZStack {
+            Color.kachaBg.ignoresSafeArea()
+            if !isUnlocked {
+                lockScreen
+            } else {
+                NavigationStack {
                     vaultContent
-                }
-            }
-            .navigationTitle("パスワード管理")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                if home != nil {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("閉じる") { dismiss() }.foregroundStyle(.secondary)
-                    }
-                }
-                if isUnlocked {
-                    ToolbarItem(placement: .primaryAction) {
-                        HStack(spacing: 12) {
-                            Button { showChatWebSync = true } label: {
-                                Image(systemName: "arrow.triangle.2.circlepath").foregroundColor(.kacha)
+                        .navigationTitle("鍵管理")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            if home != nil {
+                                ToolbarItem(placement: .cancellationAction) {
+                                    Button("閉じる") { dismiss() }.foregroundStyle(.secondary)
+                                }
                             }
-                            Button { showAdd = true } label: {
-                                Image(systemName: "plus.circle.fill").foregroundColor(.kacha)
+                            ToolbarItem(placement: .primaryAction) {
+                                HStack(spacing: 12) {
+                                    Button { showChatWebSync = true } label: {
+                                        Image(systemName: "arrow.triangle.2.circlepath").foregroundColor(.kacha)
+                                    }
+                                    Button { showAdd = true } label: {
+                                        Image(systemName: "plus.circle.fill").foregroundColor(.kacha)
+                                    }
+                                }
                             }
                         }
-                    }
                 }
             }
-            .sheet(isPresented: $showAdd) {
-                VaultItemEditor(home: home, item: nil, globalMode: home == nil)
-            }
-            .sheet(isPresented: $showChatWebSync) {
-                ChatWebSyncSheet(items: items, syncStatus: $syncStatus)
-            }
         }
-        .onAppear {
-            // Delay auth slightly to avoid crash when view is still appearing
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                authenticate()
-            }
+        .sheet(isPresented: $showAdd) {
+            VaultItemEditor(home: home, item: nil, globalMode: home == nil)
+        }
+        .sheet(isPresented: $showChatWebSync) {
+            ChatWebSyncSheet(items: items, syncStatus: $syncStatus)
+        }
+        .task {
+            try? await Task.sleep(for: .milliseconds(500))
+            authenticate()
         }
     }
 
