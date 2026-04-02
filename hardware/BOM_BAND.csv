@@ -1,0 +1,38 @@
+No,Part,Value/Description,Qty,Unit_USD,Total_USD,Footprint,Manufacturer,LCSC_PN,Notes
+1,ESP32-C3-MINI-1U,BLE5.0+WiFi MCU 4MB Flash uFL antenna,1,1.20,1.20,SMD 18.7x14.3mm,Espressif,C2839702,技適認証済 (209-J00143) BLE Peripheral動作
+2,RT9013-33GB,3.3V LDO 500mA Iq=55uA,1,0.05,0.05,SOT-23-5,Richtek,C145239,Iq=55μA (AMS1117の1/100)→電池寿命に直結。AMS1117は使わない
+3,ETA4054S21F,LiPo充電IC 500mA (R_PROG制御),1,0.15,0.15,SOT-23-5,ETA Solution,C559506,R_PROG=6KΩ → I=200mA (1C適正). 2.4KΩ(500mA/2.5C)は厳禁
+4,DW01A,LiPoバッテリー保護IC (過充電/過放電/短絡),1,0.05,0.05,SOT-23-6,Fortune Semiconductor,C376970,必須安全部品。過充電4.25V・過放電2.5V・短絡で保護。PSE対応に必須
+5,FS8205A,デュアルNch MOSFET (バッテリー保護スイッチ),1,0.05,0.05,SOT-23-6,Fortune Semiconductor,C32254,DW01AのDO/COピンで制御。過電流時に電池を切断
+6,LiPo 402030 200mAh,3.7V 200mAh JST PH 1.25mm 2P,1,1.20,1.20,—,Generic,—,4.0×20×30mm。DW01A+FS8205A保護回路経由で接続
+7,ERM振動モーター コイン型,3V 10mm φ 60~100mA,1,0.35,0.35,—,Generic,—,PWM duty比で強度制御。フライバックダイオード(D2)並列必須
+8,2N7002,Nch MOSFET 振動モーター低サイド駆動,1,0.05,0.05,SOT-23,Nexperia,C8545,VGS(th)=1-2.5V→GPIO1(3.3V)で確実ON。Rds(on)=3Ω@Vgs=3.3V
+9,1N4148W,フライバックダイオード (モーター逆起電力保護),1,0.01,0.01,SOD-123,Onsemi,C2128,振動モーターと並列。アノード=GND カソード=VBAT側
+10,LIS2DH12TR,3軸加速度センサー ±2/4/8/16g Low-Power,1,0.50,0.50,LGA-12 2×2mm,STMicro,C110112,転倒検知 Free-fall+Impact INT1。I2C 0x18 (SDO=GND)
+11,SW1 I'm OKボタン,12mm タクト大型 低背 高さ3.5mm,1,0.08,0.08,THT 12×12mm,ALPS,C92584,高齢者が押しやすい大型品。バンド外側に露出。THT→手ハンダ(SMT対象外)
+12,USB-C コネクタ,充電専用 SMD 6pin,1,0.20,0.20,SMD 6pin,Korean Hroparts,C165948,CC1/CC2はGNDへ5.1KΩ → 5V/500mA充電契約
+13,LED1 (充電中),赤 0402,1,0.02,0.02,0402,Hubei,C2286,ETA4054S21F CHRG出力で駆動。充電中=点灯
+14,LED2 (ステータス),緑 0402,1,0.02,0.02,0402,Hubei,C72041,ESP32-C3 GPIO2。BLEペアリング完了=点灯 アラート時=点滅
+15,R_PROG,6KΩ 0402,1,0.01,0.01,0402,Yageo,C25905,充電電流 I=1200/6000=200mA (1C)。充電時間≈75分
+16,R_BOOT,100KΩ 0402,1,0.01,0.01,0402,Yageo,C25741,GPIO0プルアップ RC遅延回路(τ=10ms)→Boot誤進入防止
+17,R_INT,10KΩ 0402,1,0.01,0.01,0402,Yageo,C25744,GPIO7→3.3V プルアップ。LIS2DH12 INT1割り込みライン
+18,R_CC1,5.1KΩ 0402,1,0.01,0.01,0402,Yageo,C25905,USB-C CC1 プルダウン
+19,R_CC2,5.1KΩ 0402,1,0.01,0.01,0402,Yageo,C25905,USB-C CC2 プルダウン
+20,R_VDiv1,1MΩ 0402,1,0.01,0.01,0402,Yageo,C25741,電池電圧分圧上。静止電流=3.7V/2MΩ=1.85μA(極小)
+21,R_VDiv2,1MΩ 0402,1,0.01,0.01,0402,Yageo,C25741,電池電圧分圧下。GPIO6 ADC入力
+22,R_LED1,100Ω 0402,1,0.01,0.01,0402,Yageo,C25900,LED1電流制限 3mA@3.3V
+23,R_LED2,100Ω 0402,1,0.01,0.01,0402,Yageo,C25900,LED2電流制限 3mA@3.3V
+24,R_I2C1,4.7KΩ 0402,1,0.01,0.01,0402,Yageo,C25900,I2C SDA プルアップ
+25,R_I2C2,4.7KΩ 0402,1,0.01,0.01,0402,Yageo,C25900,I2C SCL プルアップ
+26,C_BOOT,100nF 0402,1,0.005,0.005,0402,Samsung,C1525,GPIO0 Boot遅延RC回路。R_BOOTと組
+27,C_Bypass,100nF 0402 ×5,5,0.005,0.025,0402,Samsung,C1525,各IC電源ピン直近デカップリング
+28,C_Bulk_IN,10uF 0805,1,0.05,0.05,0805,Samsung,C15850,USB-C入力バルクキャップ
+29,C_Bulk_OUT,10uF 0805,1,0.05,0.05,0805,Samsung,C15850,LDO出力バルクキャップ
+30,PCB 2層 35×30mm,JLCPCB SMT組立 HASL,1,1.20,1.20,—,JLCPCB,—,丸角R3mm 白シルク 厚み0.8mm(軽量)
+31,シリコンバンド 22mm,交換式シリコンバンド 医療グレード,1,1.50,1.50,—,—,—,Apple Watch互換幅
+32,ABS射出成形ケース,35×30×9mm IP54相当シリコンシール,1,1.20,1.20,—,—,—,ボタン穴+USB-C穴+LED窓+KAGI緑ロゴ刻印
+33,バネ端子+ストラップ,ケースとPCBの固定金具,1,0.30,0.30,—,—,—,ツールレス交換可
+34,MAX30102,SpO2+心拍センサー I2C 0x57,1,0.60,0.60,SOT-23-7,MAXIM,C437626,指先/手首での光学式SpO2・心拍測定。赤色(660nm)+IR(880nm)LED内蔵。高齢者見守りの中核センサー
+35,NT3H1101W0FHKH,NFC I2C タグ I2C 0x55,1,0.15,0.15,XTQFN-16 4x4mm,NXP,C388846,NFCタッチでBLEペアリングURL書込。スマホをかざすだけでhttps://kagi.home/pair/{device_id}へ誘導
+36,JST SH 2P コネクタ,フレキシブル圧電センサー用コネクタ,1,0.05,0.05,SMD 2P,JST,C160390,圧電センサーによる呼吸・脈波検出拡張用(オプション実装)
+合計,,,,,$9.44,,,,"MAX30102(+$0.60)+NT3H1101(+$0.15)+JST SH 2P(+$0.05)追加: SpO2/心拍モニタリング+NFCペアリング機能を追加 / 旧合計$8.64→$9.44"

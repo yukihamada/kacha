@@ -1,10 +1,11 @@
-app = 'kacha-server'
+app = 'kagi-server'
 primary_region = 'nrt'
 
 [build]
+dockerfile = "Dockerfile"
 
 [env]
-DATABASE_PATH = '/data/kacha.db'
+DATABASE_PATH = '/data/kagi.db'
 PORT = '8080'
 
 [http_service]

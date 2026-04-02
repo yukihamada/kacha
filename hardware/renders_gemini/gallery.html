@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>KAGI & Koe — Gemini Image Renders</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #080810; color: #fff; font-family: -apple-system, sans-serif; padding: 40px 20px; }
+  h1 { text-align: center; font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .sub { text-align: center; color: #444; font-size: 12px; margin-bottom: 40px; letter-spacing: 2px; text-transform: uppercase; }
+  .section { margin-bottom: 50px; max-width: 1200px; margin-left: auto; margin-right: auto; }
+  .sec-title { font-size: 13px; font-weight: 600; color: #666; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #1a1a2a; }
+  .grid3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+  .grid4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+  .grid2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; }
+  .card { background: #0f0f1a; border-radius: 12px; overflow: hidden; border: 1px solid #1a1a2a; }
+  .card img { width: 100%; display: block; aspect-ratio: 1/1; object-fit: cover; }
+  .card.wide img { aspect-ratio: 16/9; }
+  .info { padding: 12px 14px; }
+  .name { font-size: 13px; font-weight: 600; }
+  .desc { font-size: 10px; color: #444; margin-top: 3px; line-height: 1.6; }
+  .tag { display: inline-block; font-size: 8px; font-weight: 700; padding: 2px 7px; border-radius: 3px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+  .t-min { background: rgba(255,255,255,0.1); color: #ccc; }
+  .t-ind { background: rgba(245,158,11,0.2); color: #f59e0b; }
+  .t-org { background: rgba(34,197,94,0.2); color: #22c55e; }
+  .t-koe { background: rgba(139,92,246,0.2); color: #a78bfa; }
+  .lineup-section { max-width: 1200px; margin: 0 auto 50px; }
+</style>
+</head>
+<body>
+<h1>KAGI & Koe — Gemini Generated</h1>
+<p class="sub">Gemini 3.1 Flash Image · 10 renders · product concept</p>
+
+<!-- KAGI 3パターン -->
+<div class="section">
+  <div class="sec-title">KAGI Sensor Hub — 3 Design Patterns</div>
+  <div class="grid3">
+    <div class="card">
+      <img src="kagi_minimal.png" alt="KAGI Minimal">
+      <div class="info">
+        <span class="tag t-min">A · Minimal</span>
+        <div class="name">KAGI Hub — ミニマル</div>
+        <div class="desc">ピュアホワイト · グリーンLED · ¥14,800</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="kagi_industrial.png" alt="KAGI Industrial">
+      <div class="info">
+        <span class="tag t-ind">B · Industrial</span>
+        <div class="name">KAGI Hub — インダストリアル</div>
+        <div class="desc">マットブラック · アンバーLED · ¥14,800</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="kagi_organic.png" alt="KAGI Organic">
+      <div class="info">
+        <span class="tag t-org">C · Organic</span>
+        <div class="name">KAGI Hub — オーガニック</div>
+        <div class="desc">グリーン卵型 · 自然との一体感 · ¥14,800</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- KAGI ラインナップ -->
+<div class="lineup-section">
+  <div class="sec-title">KAGI Full Lineup Shot</div>
+  <div class="card wide">
+    <img src="kagi_lineup.png" alt="KAGI Lineup" style="aspect-ratio:16/10">
+    <div class="info">
+      <div class="name">Sensor Lite / Hub / Pro — 3モデル並び</div>
+      <div class="desc">¥8,800 / ¥14,800 / ¥24,800</div>
+    </div>
+  </div>
+</div>
+
+<!-- Koe 個別 -->
+<div class="section">
+  <div class="sec-title">Koe Device — Individual Models</div>
+  <div class="grid4">
+    <div class="card">
+      <img src="koe_coin_dark.png" alt="Koe Coin Pebble">
+      <div class="info">
+        <span class="tag t-koe">Coin · Pebble</span>
+        <div class="name">Koe Coin — ダーク</div>
+        <div class="desc">φ26mm · 紫LED · $65</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="koe_coin_glass.png" alt="Koe Coin Crystal">
+      <div class="info">
+        <span class="tag t-koe">Coin · Crystal</span>
+        <div class="name">Koe Coin — ガラス</div>
+        <div class="desc">φ26mm · 琥珀色 · $65</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="koe_fill_speaker.png" alt="Koe Fill">
+      <div class="info">
+        <span class="tag t-koe">Fill</span>
+        <div class="name">Koe Fill</div>
+        <div class="desc">8"+1" ホーン · 壁掛け · $1,500</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="koe_sub_speaker.png" alt="Koe Sub">
+      <div class="info">
+        <span class="tag t-koe">Sub</span>
+        <div class="name">Koe Sub</div>
+        <div class="desc">15" · 1000W · 赤LED · $1,200</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Stage + Lineup -->
+<div class="section">
+  <div class="sec-title">Koe Stage & Full Lineup</div>
+  <div class="grid2">
+    <div class="card">
+      <img src="koe_stage_monitor.png" alt="Koe Stage" style="aspect-ratio:4/3">
+      <div class="info">
+        <span class="tag t-koe">Stage</span>
+        <div class="name">Koe Stage</div>
+        <div class="desc">Pi CM5 · 4K Display · 青LED · $800</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="koe_lineup.png" alt="Koe Lineup" style="aspect-ratio:4/3">
+      <div class="info">
+        <span class="tag t-koe">Full Lineup</span>
+        <div class="name">Koe Device — 5モデル</div>
+        <div class="desc">Coin · Stage · Fill · Sub · Pick</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;color:#1a1a2a;font-size:10px;padding-bottom:30px">
+  Generated with Gemini 3.1 Flash Image · © 2026 KAGI / Koe Device
+</div>
+</body>
+</html>

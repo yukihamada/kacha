@@ -17,7 +17,7 @@ enum IntentExecutor {
 
     static func unlock(summary: IntentHomeStore.HomeSummary?) async -> Result {
         guard let s = summary else {
-            return Result(success: false, message: "物件が設定されていません。カチャアプリから物件を登録してください。")
+            return Result(success: false, message: "物件が設定されていません。KAGIアプリから物件を登録してください。")
         }
         // SwitchBot優先、次にSesame
         if !s.switchBotToken.isEmpty && !s.switchBotSecret.isEmpty {
@@ -26,12 +26,12 @@ enum IntentExecutor {
         if !s.sesameApiKey.isEmpty && !s.sesameDeviceUUIDs.isEmpty {
             return await sesameLock(action: .unlock, apiKey: s.sesameApiKey, uuids: s.sesameDeviceUUIDs, homeName: s.name)
         }
-        return Result(success: false, message: "\(s.name)のスマートロックが設定されていません。カチャアプリから設定してください。")
+        return Result(success: false, message: "\(s.name)のスマートロックが設定されていません。KAGIアプリから設定してください。")
     }
 
     static func lock(summary: IntentHomeStore.HomeSummary?) async -> Result {
         guard let s = summary else {
-            return Result(success: false, message: "物件が設定されていません。カチャアプリから物件を登録してください。")
+            return Result(success: false, message: "物件が設定されていません。KAGIアプリから物件を登録してください。")
         }
         if !s.switchBotToken.isEmpty && !s.switchBotSecret.isEmpty {
             return await switchBotLock(action: .lock, token: s.switchBotToken, secret: s.switchBotSecret, homeName: s.name)
@@ -39,7 +39,7 @@ enum IntentExecutor {
         if !s.sesameApiKey.isEmpty && !s.sesameDeviceUUIDs.isEmpty {
             return await sesameLock(action: .lock, apiKey: s.sesameApiKey, uuids: s.sesameDeviceUUIDs, homeName: s.name)
         }
-        return Result(success: false, message: "\(s.name)のスマートロックが設定されていません。カチャアプリから設定してください。")
+        return Result(success: false, message: "\(s.name)のスマートロックが設定されていません。KAGIアプリから設定してください。")
     }
 
     // MARK: - Lights
@@ -56,7 +56,7 @@ enum IntentExecutor {
         if !s.switchBotToken.isEmpty && !s.switchBotSecret.isEmpty {
             return await switchBotAllLights(on: true, token: s.switchBotToken, secret: s.switchBotSecret, homeName: s.name)
         }
-        return Result(success: false, message: "\(s.name)の照明が設定されていません。カチャアプリから設定してください。")
+        return Result(success: false, message: "\(s.name)の照明が設定されていません。KAGIアプリから設定してください。")
     }
 
     static func lightsOff(summary: IntentHomeStore.HomeSummary?) async -> Result {
@@ -69,7 +69,7 @@ enum IntentExecutor {
         if !s.switchBotToken.isEmpty && !s.switchBotSecret.isEmpty {
             return await switchBotAllLights(on: false, token: s.switchBotToken, secret: s.switchBotSecret, homeName: s.name)
         }
-        return Result(success: false, message: "\(s.name)の照明が設定されていません。カチャアプリから設定してください。")
+        return Result(success: false, message: "\(s.name)の照明が設定されていません。KAGIアプリから設定してください。")
     }
 
     // MARK: - Check-in Prepare
@@ -314,7 +314,7 @@ private extension IntentExecutor {
             req.httpMethod = "POST"
             req.addValue(apiKey, forHTTPHeaderField: "x-api-key")
             req.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            req.httpBody = try? JSONSerialization.data(withJSONObject: ["cmd": cmdCode, "history": "カチャSiri"])
+            req.httpBody = try? JSONSerialization.data(withJSONObject: ["cmd": cmdCode, "history": "KAGI Siri"])
             req.timeoutInterval = 10
             if let (_, res) = try? await URLSession.shared.data(for: req),
                (200...299).contains((res as? HTTPURLResponse)?.statusCode ?? 0) {

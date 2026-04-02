@@ -1,11 +1,15 @@
 import SwiftUI
 import SwiftData
+import UserNotifications
 import WidgetKit
 
 struct HomeView: View {
     @Environment(\.modelContext) private var context
+    @ObservedObject private var subscription = SubscriptionManager.shared
     @Query(filter: #Predicate<Booking> { $0.status != "completed" && $0.status != "cancelled" },
            sort: \Booking.checkIn) private var allBookings: [Booking]
+    @Query(filter: #Predicate<Booking> { $0.status != "cancelled" },
+           sort: \Booking.checkIn) private var allBookingsForMinpaku: [Booking]
     @Query private var homes: [Home]
 
     /// Bookings filtered to active home only
@@ -72,7 +76,49 @@ struct HomeView: View {
             && ($0.status == "active" || $0.status == "completed")
         }.reduce(0) { $0 + $1.totalAmount }
     }
-    private var remainingNights: Int { max(0, 180 - minpakuNights) }
+    private var remainingNights: Int { max(0, 180 - computedMinpakuNights) }
+
+    // MARK: - Fiscal Year Minpaku Computation
+
+    /// Current fiscal year start (April 1)
+    private var fiscalYearStart: Date {
+        let cal = Calendar.current
+        let now = Date()
+        let year = cal.component(.year, from: now)
+        let month = cal.component(.month, from: now)
+        // Fiscal year: April 1 - March 31
+        let fiscalYear = month >= 4 ? year : year - 1
+        return cal.date(from: DateComponents(year: fiscalYear, month: 4, day: 1)) ?? now
+    }
+
+    /// Current fiscal year end (March 31 next year, end of day)
+    private var fiscalYearEnd: Date {
+        let cal = Calendar.current
+        let start = fiscalYearStart
+        return cal.date(byAdding: DateComponents(year: 1), to: start) ?? start
+    }
+
+    /// Compute actual minpaku nights from bookings in current fiscal year
+    private var computedMinpakuNights: Int {
+        guard activeHome?.businessType == "minpaku" else { return minpakuNights }
+
+        let homeBookings = allBookingsForMinpaku.filter { $0.homeId == activeHomeId }
+        let cal = Calendar.current
+        let fyStart = fiscalYearStart
+        let fyEnd = fiscalYearEnd
+
+        var totalNights = 0
+        for booking in homeBookings {
+            // Clamp booking dates to fiscal year range
+            let effectiveStart = max(booking.checkIn, fyStart)
+            let effectiveEnd = min(booking.checkOut, fyEnd)
+            let nights = cal.dateComponents([.day], from: effectiveStart, to: effectiveEnd).day ?? 0
+            if nights > 0 { totalNights += nights }
+        }
+
+        // Use the higher of computed vs manual count for backward compatibility
+        return max(totalNights, minpakuNights)
+    }
 
     var body: some View {
         NavigationStack {
@@ -81,13 +127,25 @@ struct HomeView: View {
                 ScrollView {
                     VStack(spacing: 20) {
                         headerSection
+
+                        // Free プランで2物件以上ある場合のアップグレード案内
+                        if homes.count > 1 && !subscription.isPro {
+                            UpgradePromptView(
+                                title: "複数物件はProプランで",
+                                message: "Freeプランでは1物件のみ管理できます。Proにアップグレードして全物件を管理しましょう。",
+                                requiredPlan: "pro"
+                            )
+                        }
+
                         if activeHome?.autolockEnabled == true && !(activeHome?.autolockBotDeviceId ?? "").isEmpty {
                             autolockSection
                         }
                         quickActionsGrid
                         if minpakuModeEnabled {
                             statsSection
-                            minpakuCounterSection
+                            if activeHome?.businessType == "minpaku" {
+                                minpakuCounterSection
+                            }
                         }
                         if minpakuModeEnabled && !todayCheckIns.isEmpty { todayCheckInsSection }
                         if minpakuModeEnabled && !activeBookings.isEmpty { activeBookingsSection }
@@ -511,31 +569,100 @@ struct HomeView: View {
                     Image(systemName: "calendar.badge.clock").foregroundColor(.kacha)
                     Text("民泊新法カウンター").font(.subheadline).bold().foregroundColor(.white)
                     Spacer()
-                    Text("\(minpakuNights) / 180泊").font(.caption).foregroundColor(.secondary)
+                    Text("営業日数 \(computedMinpakuNights) / 180日").font(.caption).foregroundColor(.secondary)
                 }
                 GeometryReader { geo in
                     ZStack(alignment: .leading) {
                         RoundedRectangle(cornerRadius: 4).fill(Color.white.opacity(0.1)).frame(height: 8)
                         RoundedRectangle(cornerRadius: 4).fill(progressColor)
-                            .frame(width: geo.size.width * min(1, Double(minpakuNights) / 180.0), height: 8)
+                            .frame(width: geo.size.width * min(1, Double(computedMinpakuNights) / 180.0), height: 8)
                     }
                 }
                 .frame(height: 8)
+
                 HStack {
-                    Text("残り \(remainingNights)泊 利用可能").font(.caption).foregroundColor(progressColor)
+                    Text("残り \(remainingNights)日 利用可能").font(.caption).foregroundColor(progressColor)
                     Spacer()
-                    Button("+ 泊数追加") { activeHome?.minpakuNights = min(180, (activeHome?.minpakuNights ?? 0) + 1) }
+                    Text(fiscalYearLabel).font(.caption2).foregroundColor(.secondary)
+                }
+
+                // Alert thresholds
+                if computedMinpakuNights >= 180 {
+                    minpakuAlertBanner(icon: "exclamationmark.octagon.fill", color: .kachaDanger,
+                                       text: "180日の上限に達しました。これ以上の営業はできません。")
+                } else if computedMinpakuNights >= 170 {
+                    minpakuAlertBanner(icon: "exclamationmark.triangle.fill", color: .kachaDanger,
+                                       text: "残り\(remainingNights)日です。上限間近のためご注意ください。")
+                } else if computedMinpakuNights >= 150 {
+                    minpakuAlertBanner(icon: "exclamationmark.triangle.fill", color: .kachaWarn,
+                                       text: "150日を超えました。残り\(remainingNights)日です。")
+                }
+
+                HStack {
+                    Spacer()
+                    Button("+ 手動で泊数追加") { activeHome?.minpakuNights = min(180, (activeHome?.minpakuNights ?? 0) + 1) }
                         .font(.caption).foregroundColor(.kacha)
                 }
             }
             .padding(16)
         }
+        .onAppear { checkMinpakuAlerts() }
+    }
+
+    private func minpakuAlertBanner(icon: String, color: Color, text: String) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: icon).foregroundColor(color)
+            Text(text).font(.caption).foregroundColor(color)
+        }
+        .padding(8)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(color.opacity(0.1))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+
+    private var fiscalYearLabel: String {
+        let cal = Calendar.current
+        let startYear = cal.component(.year, from: fiscalYearStart)
+        return "\(startYear)年度 (4/1〜3/31)"
+    }
+
+    /// Schedule local notifications at 150, 170, and 180 day thresholds
+    private func checkMinpakuAlerts() {
+        guard activeHome?.businessType == "minpaku" else { return }
+        let nights = computedMinpakuNights
+        let center = UNUserNotificationCenter.current()
+
+        let thresholds: [(Int, String)] = [
+            (150, "民泊営業日数が150日を超えました。残り\(180 - min(nights, 180))日です。"),
+            (170, "民泊営業日数が170日に達しました。上限間近です！"),
+            (180, "民泊営業日数が180日の上限に達しました。これ以上の営業はできません。"),
+        ]
+
+        for (threshold, message) in thresholds {
+            let id = "minpaku-alert-\(activeHomeId)-\(threshold)"
+            if nights >= threshold {
+                // Check if already sent this fiscal year
+                let sentKey = "minpakuAlertSent_\(activeHomeId)_\(threshold)_\(Calendar.current.component(.year, from: fiscalYearStart))"
+                guard !UserDefaults.standard.bool(forKey: sentKey) else { continue }
+
+                let content = UNMutableNotificationContent()
+                content.title = "民泊営業日数アラート"
+                content.body = message
+                content.sound = .default
+                content.userInfo = ["type": "minpaku_alert", "homeId": activeHomeId]
+
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+                let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
+                center.add(request)
+                UserDefaults.standard.set(true, forKey: sentKey)
+            }
+        }
     }
 
     private var progressColor: Color {
-        let r = Double(minpakuNights) / 180.0
-        if r < 0.7 { return .kachaSuccess }
-        if r < 0.9 { return .kachaWarn }
+        let nights = computedMinpakuNights
+        if nights < 150 { return .kachaSuccess }
+        if nights < 170 { return .kachaWarn }
         return .kachaDanger
     }
 

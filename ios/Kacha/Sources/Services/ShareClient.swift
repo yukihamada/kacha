@@ -5,7 +5,7 @@ import CryptoKit
 // サーバーには暗号化blobのみ保存。復号キーはURLフラグメントに入り、サーバーに送られない。
 
 struct ShareClient {
-    static let baseURL = "https://kacha.pasha.run"
+    static let baseURL = "https://kagi.pasha.run"
 
     // MARK: - Create Share (encrypt + upload)
 

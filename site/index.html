@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IKI — 誰も一人で死なない世界を</title>
+<meta property="og:title" content="IKI（息）— 誰も一人で死なない世界を">
+<meta property="og:description" content="60GHzレーダーで呼吸を検知。映像なし・音声なし。プライバシーを守りながら命を守る見守りデバイス。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="images/kagi_white_angle.png">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="description" content="60GHzミリ波レーダーで呼吸を検知する見守りデバイス。映像も音声も記録しません。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:#0a0a0a;
+  color:#d4d4d4;
+  font-family:'Inter','Noto Sans JP',-apple-system,sans-serif;
+  line-height:1.7;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:#e8a838;text-decoration:none}
+a:hover{opacity:0.8}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  background:rgba(10,10,10,0.7);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.nav-inner{
+  max-width:1200px;margin:0 auto;padding:0 32px;
+  display:flex;align-items:center;justify-content:space-between;
+  height:64px;
+}
+.nav-logo{
+  font-size:20px;font-weight:700;letter-spacing:6px;
+  color:#fff;text-transform:uppercase;
+}
+.nav-logo span{color:#e8a838}
+.nav-links{display:flex;gap:32px;font-size:13px;letter-spacing:1px;color:#999}
+.nav-links a{color:#999;transition:color .2s}
+.nav-links a:hover{color:#fff}
+.nav-cta{
+  font-size:13px;padding:8px 20px;border:1px solid rgba(232,168,56,0.4);
+  border-radius:8px;color:#e8a838;transition:all .2s;
+}
+.nav-cta:hover{background:rgba(232,168,56,0.1);opacity:1}
+
+/* HERO */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:120px 24px 80px;position:relative;
+  background:radial-gradient(ellipse at 50% 30%, rgba(232,168,56,0.03) 0%, transparent 60%);
+}
+.hero-device{
+  width:300px;height:300px;margin-bottom:40px;
+  display:flex;align-items:center;justify-content:center;
+  perspective:1000px;
+}
+.device-body{
+  width:160px;height:160px;border-radius:28px;
+  background:linear-gradient(145deg,#f5f2ed 0%,#e8e5e0 60%,#ddd9d3 100%);
+  box-shadow:0 40px 100px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.3) inset;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  transform:rotateX(8deg) rotateY(-15deg);
+  animation:heroFloat 5s ease-in-out infinite;
+  position:relative;overflow:hidden;
+}
+.device-body::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:50%;
+  background:linear-gradient(180deg,rgba(255,255,255,0.12) 0%,transparent 100%);
+}
+.device-led{
+  width:8px;height:8px;border-radius:50%;
+  background:#22c55e;
+  box-shadow:0 0 12px rgba(34,197,94,0.6);
+  animation:ledPulse 3s ease-in-out infinite;
+}
+.device-grill{
+  display:flex;gap:3px;
+}
+.device-grill span{width:4px;height:4px;border-radius:50%;background:rgba(0,0,0,0.15)}
+@keyframes heroFloat{
+  0%,100%{transform:rotateX(8deg) rotateY(-15deg) translateY(0)}
+  50%{transform:rotateX(8deg) rotateY(-15deg) translateY(-14px)}
+}
+@keyframes ledPulse{
+  0%,100%{opacity:1;box-shadow:0 0 12px rgba(34,197,94,0.6)}
+  50%{opacity:0.4;box-shadow:0 0 4px rgba(34,197,94,0.2)}
+}
+.hero-eyebrow{
+  font-size:11px;letter-spacing:4px;color:#e8a838;
+  text-transform:uppercase;font-weight:600;margin-bottom:24px;
+}
+.hero-title{
+  font-size:clamp(36px,6vw,72px);font-weight:800;
+  text-align:center;line-height:1.1;margin-bottom:20px;
+  letter-spacing:-2px;color:#fff;
+}
+.hero-title em{font-style:normal;color:#e8a838}
+.hero-sub{
+  text-align:center;color:#666;font-size:16px;
+  max-width:480px;margin-bottom:48px;line-height:1.8;
+}
+.hero-stats{
+  display:flex;gap:48px;text-align:center;margin-top:16px;
+}
+.hero-stat-val{font-size:28px;font-weight:700;color:#e8a838}
+.hero-stat-label{font-size:11px;letter-spacing:2px;color:#555;text-transform:uppercase;margin-top:4px}
+
+/* SECTIONS */
+section{padding:120px 24px}
+.container{max-width:1100px;margin:0 auto}
+.section-eyebrow{
+  font-size:11px;letter-spacing:4px;color:#e8a838;
+  text-transform:uppercase;font-weight:600;margin-bottom:12px;
+}
+.section-title{
+  font-size:clamp(28px,4vw,48px);font-weight:800;
+  letter-spacing:-1px;line-height:1.2;margin-bottom:16px;color:#fff;
+}
+.section-sub{color:#666;font-size:15px;max-width:560px;line-height:1.8}
+.text-center{text-align:center}
+.text-center .section-sub{margin:0 auto}
+
+/* PROBLEM */
+.problem{
+  background:linear-gradient(180deg,#0a0a0a 0%,#111 100%);
+}
+.problem-number{
+  font-size:clamp(64px,10vw,120px);font-weight:900;
+  color:#e8a838;line-height:1;margin-bottom:8px;
+}
+.problem-unit{font-size:24px;color:#999;font-weight:400}
+.problem-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:48px;
+  margin-top:64px;align-items:center;
+}
+.problem-img{
+  border-radius:20px;overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,0.5);
+}
+.problem-img img{width:100%;display:block}
+
+/* HOW IT WORKS */
+.how{background:#0a0a0a}
+.how-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:64px;
+}
+.how-card{
+  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
+  border-radius:20px;padding:40px 32px;
+  transition:border-color .3s;
+}
+.how-card:hover{border-color:rgba(232,168,56,0.3)}
+.how-icon{
+  font-size:32px;margin-bottom:20px;
+  width:56px;height:56px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(232,168,56,0.08);
+}
+.how-card h3{font-size:18px;font-weight:700;color:#fff;margin-bottom:8px}
+.how-card p{font-size:14px;color:#666;line-height:1.7}
+
+/* PRODUCT LINEUP */
+.lineup{background:linear-gradient(180deg,#0a0a0a 0%,#0d0d0d 100%)}
+.lineup-hero-img{
+  margin:64px auto 0;max-width:900px;
+  border-radius:24px;overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,0.6);
+}
+.lineup-hero-img img{width:100%;display:block}
+.product-cards{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:64px;
+}
+.product-card{
+  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
+  border-radius:20px;padding:32px;overflow:hidden;position:relative;
+  transition:transform .3s,border-color .3s;
+}
+.product-card:hover{transform:translateY(-4px);border-color:rgba(232,168,56,0.3)}
+.product-card .tag{
+  display:inline-block;font-size:10px;letter-spacing:2px;
+  color:#e8a838;border:1px solid rgba(232,168,56,0.3);
+  padding:4px 12px;border-radius:20px;margin-bottom:16px;
+  text-transform:uppercase;
+}
+.product-card h3{font-size:20px;font-weight:700;color:#fff;margin-bottom:8px}
+.product-card .price{font-size:28px;font-weight:800;color:#e8a838;margin-bottom:12px}
+.product-card .price small{font-size:14px;color:#666;font-weight:400}
+.product-card ul{list-style:none;margin-top:16px}
+.product-card li{
+  font-size:13px;color:#888;padding:6px 0;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  display:flex;align-items:center;gap:8px;
+}
+.product-card li::before{content:'';width:4px;height:4px;border-radius:50%;background:#e8a838;flex-shrink:0}
+
+/* TECH */
+.tech{background:#0a0a0a}
+.tech-visual{
+  margin:64px auto 0;max-width:800px;
+  border-radius:20px;overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,0.5);
+}
+.tech-visual img{width:100%;display:block}
+.specs-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:32px;margin-top:64px;
+}
+.spec-item{text-align:center}
+.spec-val{font-size:32px;font-weight:700;color:#e8a838}
+.spec-label{font-size:12px;color:#555;letter-spacing:1px;margin-top:4px;text-transform:uppercase}
+
+/* PRIVACY */
+.privacy{
+  background:linear-gradient(180deg,#0a0a0a 0%,#0e0e0e 100%);
+}
+.privacy-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:64px;
+  align-items:center;margin-top:48px;
+}
+.privacy-points{display:flex;flex-direction:column;gap:24px}
+.privacy-point{
+  display:flex;gap:16px;align-items:flex-start;
+}
+.privacy-point .icon{
+  flex-shrink:0;width:44px;height:44px;border-radius:12px;
+  background:rgba(232,168,56,0.08);
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+}
+.privacy-point h4{font-size:15px;font-weight:600;color:#fff;margin-bottom:4px}
+.privacy-point p{font-size:13px;color:#666;line-height:1.6}
+
+/* SAFETY LADDER */
+.safety{background:#0a0a0a}
+.safety-steps{
+  display:flex;flex-direction:column;gap:0;margin-top:64px;
+  max-width:700px;margin-left:auto;margin-right:auto;
+}
+.safety-step{
+  display:flex;gap:24px;padding:32px 0;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.safety-num{
+  font-size:48px;font-weight:900;color:rgba(232,168,56,0.15);
+  line-height:1;flex-shrink:0;width:60px;
+}
+.safety-step h4{font-size:16px;font-weight:600;color:#fff;margin-bottom:4px}
+.safety-step p{font-size:14px;color:#666;line-height:1.6}
+
+/* LIFESTYLE */
+.lifestyle{background:linear-gradient(180deg,#0a0a0a 0%,#0d0d0d 100%)}
+.lifestyle-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:64px;
+}
+.lifestyle-card{
+  border-radius:20px;overflow:hidden;position:relative;
+  aspect-ratio:4/3;
+}
+.lifestyle-card img{width:100%;height:100%;object-fit:cover;display:block}
+.lifestyle-card .overlay{
+  position:absolute;bottom:0;left:0;right:0;padding:24px;
+  background:linear-gradient(transparent,rgba(0,0,0,0.8));
+}
+.lifestyle-card .overlay h4{font-size:16px;font-weight:600;color:#fff}
+.lifestyle-card .overlay p{font-size:13px;color:#aaa}
+
+/* CTA */
+.cta-section{
+  padding:120px 24px;text-align:center;
+  background:radial-gradient(ellipse at 50% 50%, rgba(232,168,56,0.04) 0%, transparent 60%);
+}
+.cta-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#e8a838;color:#0a0a0a;
+  font-size:16px;font-weight:700;
+  padding:16px 40px;border-radius:14px;border:none;cursor:pointer;
+  transition:transform .2s,box-shadow .2s;
+}
+.cta-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 40px rgba(232,168,56,0.3);opacity:1;
+}
+.cta-secondary{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid rgba(255,255,255,0.15);color:#fff;
+  font-size:15px;font-weight:500;
+  padding:14px 36px;border-radius:14px;margin-left:16px;
+  transition:border-color .2s;
+}
+.cta-secondary:hover{border-color:rgba(232,168,56,0.4);opacity:1}
+
+/* FOOTER */
+footer{
+  border-top:1px solid rgba(255,255,255,0.06);
+  padding:48px 24px;text-align:center;
+  font-size:13px;color:#444;
+}
+footer a{color:#666}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .nav-links{display:none}
+  .problem-grid,.privacy-grid,.lifestyle-grid{grid-template-columns:1fr}
+  .how-grid,.product-cards{grid-template-columns:1fr}
+  .specs-grid{grid-template-columns:repeat(2,1fr)}
+  .hero-stats{flex-wrap:wrap;justify-content:center}
+  .cta-secondary{margin-left:0;margin-top:12px}
+}
+
+/* SCROLL ANIMATION */
+.order-btn{
+  width:100%;margin-top:20px;padding:12px;border:1px solid rgba(232,168,56,0.4);
+  border-radius:10px;background:transparent;color:#e8a838;
+  font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;
+}
+.order-btn:hover{background:rgba(232,168,56,0.1)}
+.order-btn.primary{background:#e8a838;color:#0a0a0a;border-color:#e8a838}
+.order-btn.primary:hover{background:#d4962e}
+.fade-in{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo"><span>I</span>KI <small style="font-size:11px;color:#666;letter-spacing:1px">息</small></div>
+    <div class="nav-links">
+      <a href="#problem">Why</a>
+      <a href="#how">How</a>
+      <a href="#lineup">Products</a>
+      <a href="#tech">Tech</a>
+      <a href="#privacy">Privacy</a>
+    </div>
+    <a href="#cta" class="nav-cta">App Store</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-device">
+    <div class="device-body">
+      <div class="device-grill"><span></span><span></span><span></span></div>
+      <div class="device-led"></div>
+      <div class="device-grill"><span></span><span></span><span></span><span></span><span></span></div>
+    </div>
+  </div>
+  <div class="hero-eyebrow">Privacy-First Safety Design</div>
+  <h1 class="hero-title">呼吸を<em>見守る。</em><br>映像は<em>残さない。</em></h1>
+  <p class="hero-sub">60GHzミリ波レーダーが呼吸と存在を検知。<br>カメラもマイクも使わない。あなたのプライバシーを完全に守りながら、大切な人の安全を見守ります。</p>
+  <div>
+    <a href="#cta" class="cta-btn">App Storeでダウンロード</a>
+    <a href="#lineup" class="cta-secondary">製品を見る</a>
+  </div>
+  <div class="hero-stats">
+    <div><div class="hero-stat-val">60GHz</div><div class="hero-stat-label">mmWave Radar</div></div>
+    <div><div class="hero-stat-val">0cm</div><div class="hero-stat-label">Camera / Mic</div></div>
+    <div><div class="hero-stat-val">&lt;100ms</div><div class="hero-stat-label">Detection</div></div>
+    <div><div class="hero-stat-val">Open</div><div class="hero-stat-label">Hardware</div></div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem" id="problem">
+  <div class="container">
+    <div class="problem-grid">
+      <div>
+        <div class="section-eyebrow">The Problem</div>
+        <div class="problem-number">6.8<span class="problem-unit">万人</span></div>
+        <h2 class="section-title">年間の孤独死。<br>この数字を、<em style="color:#e8a838">ゼロ</em>にする。</h2>
+        <p class="section-sub">日本で毎年6.8万人が誰にも看取られずに亡くなっている。高齢者の一人暮らしは900万世帯を超え、賃貸物件の事故物件リスクも年々深刻化している。<br><br>IKIは「カメラで監視」ではなく「レーダーで見守る」という新しいアプローチで、この問題に挑みます。</p>
+      </div>
+      <div class="problem-img fade-in">
+        <img src="images/lifestyle_elderly_living.png" alt="高齢者の暮らし" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="container">
+    <div class="text-center">
+      <div class="section-eyebrow">How It Works</div>
+      <h2 class="section-title">レーダーが、呼吸を読む。</h2>
+      <p class="section-sub">LD2410B 60GHzミリ波レーダーは、壁の向こうは透過せず、室内の人体の微細な動き（呼吸による胸の上下）を0.3mm精度で検知します。</p>
+    </div>
+    <div class="how-grid">
+      <div class="how-card fade-in">
+        <div class="how-icon">📡</div>
+        <h3>60GHz mmWave</h3>
+        <p>FMCW方式のミリ波レーダーが、静止した人の呼吸パターンを6m先まで検知。PIRセンサーでは不可能な「動かない人」の存在を捉えます。</p>
+      </div>
+      <div class="how-card fade-in">
+        <div class="how-icon">🌡</div>
+        <h3>環境センサー</h3>
+        <p>SHT40が温湿度を常時監視。熱中症リスクの高い室温や、異常な湿度変化を検知してアラートを送信します。</p>
+      </div>
+      <div class="how-card fade-in">
+        <div class="how-icon">🔐</div>
+        <h3>暗号署名</h3>
+        <p>ATECC608Aセキュアエレメントが全ての安否ログにECC P-256署名。改ざん不可能な監査証跡で、法的にも信頼できる記録を残します。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCT LINEUP -->
+<section class="lineup" id="lineup">
+  <div class="container">
+    <div class="text-center">
+      <div class="section-eyebrow">Product Lineup</div>
+      <h2 class="section-title">あなたの暮らしに合わせて。</h2>
+      <p class="section-sub">一人暮らしの見守りから、民泊の安全管理まで。IKIは3つのモデルで、あらゆるシーンに対応します。</p>
+    </div>
+    <div class="lineup-hero-img fade-in">
+      <img src="images/product_trio.png" alt="IKI製品ラインナップ" loading="lazy">
+    </div>
+    <div class="product-cards">
+      <div class="product-card fade-in">
+        <span class="tag">Entry</span>
+        <h3>IKI Lite</h3>
+        <div class="price">&yen;4,800 <small>/台</small></div>
+        <p style="font-size:13px;color:#666">一人暮らしの家族を見守る基本モデル</p>
+        <ul>
+          <li>60GHz mmWave呼吸検知</li>
+          <li>温湿度モニタリング</li>
+          <li>ドアセンサー対応</li>
+          <li>I'm OKボタン</li>
+          <li>CR2032バックアップ</li>
+          <li>WiFi + BLE 5.0</li>
+        </ul>
+        <button class="order-btn" onclick="checkout('lite')">予約する</button>
+      </div>
+      <div class="product-card fade-in" style="border-color:rgba(232,168,56,0.2)">
+        <span class="tag" style="background:rgba(232,168,56,0.1)">Recommended</span>
+        <h3>IKI Hub</h3>
+        <div class="price">&yen;14,800 <small>/台</small></div>
+        <p style="font-size:13px;color:#666">複数センサー統合のハブモデル</p>
+        <ul>
+          <li>Lite全機能</li>
+          <li>CO2 / VOC / NOx</li>
+          <li>照度センサー</li>
+          <li>マルチルーム対応</li>
+          <li>ローカルAI推論</li>
+          <li>Thread / Matter</li>
+        </ul>
+        <button class="order-btn primary" onclick="checkout('hub')">予約する</button>
+      </div>
+      <div class="product-card fade-in">
+        <span class="tag">Wearable</span>
+        <h3>IKI Band</h3>
+        <div class="price">&yen;9,800 <small>/台</small></div>
+        <p style="font-size:13px;color:#666">24時間バイタル見守りバンド</p>
+        <ul>
+          <li>SpO2 / 心拍 (MAX30102)</li>
+          <li>転倒検知 (LIS2DH12)</li>
+          <li>NFC緊急タグ</li>
+          <li>200mAh / 7日間</li>
+          <li>BLE 5.0常時接続</li>
+          <li>IP67防水</li>
+        </ul>
+        <button class="order-btn" onclick="checkout('band')">予約する</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH -->
+<section class="tech" id="tech">
+  <div class="container">
+    <div class="text-center">
+      <div class="section-eyebrow">Technology</div>
+      <h2 class="section-title">見えない波が、命を守る。</h2>
+      <p class="section-sub">60GHz FMCW（周波数変調連続波）レーダーは、人体の微細な動きを非接触で捉える最先端のセンシング技術です。</p>
+    </div>
+    <div class="tech-visual fade-in">
+      <img src="images/tech_radar_visualization.png" alt="レーダー技術" loading="lazy">
+    </div>
+    <div class="specs-grid fade-in">
+      <div class="spec-item">
+        <div class="spec-val">6m</div>
+        <div class="spec-label">呼吸検知距離</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-val">0.3mm</div>
+        <div class="spec-label">検知精度</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-val">&lt;55&micro;A</div>
+        <div class="spec-label">待機電流</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-val">~$14</div>
+        <div class="spec-label">BOMコスト</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRIVACY -->
+<section class="privacy" id="privacy">
+  <div class="container">
+    <div class="privacy-grid">
+      <div>
+        <div class="section-eyebrow">Privacy First</div>
+        <h2 class="section-title">プライバシーは、<br>設計思想です。</h2>
+        <p class="section-sub">IKIは「撮らない」のではなく「撮れない」デバイスです。カメラもマイクも物理的に搭載していません。</p>
+      </div>
+      <div class="privacy-points fade-in">
+        <div class="privacy-point">
+          <div class="icon">📷</div>
+          <div>
+            <h4>カメラ非搭載</h4>
+            <p>映像データは生成されません。ハッキングされても映像は流出しえない。</p>
+          </div>
+        </div>
+        <div class="privacy-point">
+          <div class="icon">🎙</div>
+          <div>
+            <h4>マイク非搭載</h4>
+            <p>音声の録音・送信は物理的に不可能。会話のプライバシーが完全に守られます。</p>
+          </div>
+        </div>
+        <div class="privacy-point">
+          <div class="icon">🔒</div>
+          <div>
+            <h4>エッジ処理</h4>
+            <p>全ての判定はデバイス上で完結。クラウドには「安全/要確認/警報」の3ステータスのみ送信。</p>
+          </div>
+        </div>
+        <div class="privacy-point">
+          <div class="icon">🛡</div>
+          <div>
+            <h4>暗号証跡</h4>
+            <p>ATECC608Aによるハードウェア署名で、ログの改ざんを数学的に不可能にします。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SAFETY LADDER -->
+<section class="safety">
+  <div class="container">
+    <div class="text-center">
+      <div class="section-eyebrow">Safety Ladder</div>
+      <h2 class="section-title">段階的に、確実に。</h2>
+      <p class="section-sub">異常検知から通報まで、3段階のエスカレーションで誤報を最小化しながら確実に命を守ります。</p>
+    </div>
+    <div class="safety-steps fade-in">
+      <div class="safety-step">
+        <div class="safety-num">01</div>
+        <div>
+          <h4>デバイスアラート</h4>
+          <p>LEDが黄色に点滅し、ブザーが鳴動。「I'm OK」ボタンを押せばリセット。本人が気づいて対応できる軽微な異常に対応。</p>
+        </div>
+      </div>
+      <div class="safety-step">
+        <div class="safety-num">02</div>
+        <div>
+          <h4>家族プッシュ通知</h4>
+          <p>Tier1で30分以内に応答がない場合、登録された家族全員にプッシュ通知を送信。アプリでリアルタイムにステータスを確認可能。</p>
+        </div>
+      </div>
+      <div class="safety-step">
+        <div class="safety-num">03</div>
+        <div>
+          <h4>緊急連絡先通報</h4>
+          <p>家族からも応答がない場合、事前登録の緊急連絡先（管理会社・ケアマネ・119）に自動通報。全ログは暗号署名付きで提出可能。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIFESTYLE -->
+<section class="lifestyle">
+  <div class="container">
+    <div class="text-center">
+      <div class="section-eyebrow">Use Cases</div>
+      <h2 class="section-title">暮らしに、溶け込む。</h2>
+    </div>
+    <div class="lifestyle-grid">
+      <div class="lifestyle-card fade-in">
+        <img src="images/kagi_bedroom.png" alt="寝室" loading="lazy">
+        <div class="overlay">
+          <h4>一人暮らしの見守り</h4>
+          <p>離れて暮らす家族の安否を、毎日確認</p>
+        </div>
+      </div>
+      <div class="lifestyle-card fade-in">
+        <img src="images/lifestyle_airbnb.png" alt="民泊" loading="lazy">
+        <div class="overlay">
+          <h4>民泊・賃貸管理</h4>
+          <p>事故物件リスクを低減。保険料の削減にも</p>
+        </div>
+      </div>
+      <div class="lifestyle-card fade-in">
+        <img src="images/kagi_living_room.png" alt="リビング" loading="lazy">
+        <div class="overlay">
+          <h4>高齢者施設</h4>
+          <p>複数居室を一元管理。夜間の巡回負担を軽減</p>
+        </div>
+      </div>
+      <div class="lifestyle-card fade-in">
+        <img src="images/kagi_hotel.png" alt="ホテル" loading="lazy">
+        <div class="overlay">
+          <h4>ホテル・旅館</h4>
+          <p>ゲストのプライバシーを守りながら安全管理</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="cta">
+  <div class="section-eyebrow">Get Started</div>
+  <h2 class="section-title" style="color:#fff">大切な人を、<em style="color:#e8a838">今日から</em>見守る。</h2>
+  <p class="section-sub text-center" style="margin:0 auto 48px">IKIアプリは無料。デバイスは1台4,800円から。<br>設定は5分で完了します。</p>
+  <div>
+    <a href="#" class="cta-btn">App Storeでダウンロード</a>
+    <a href="https://github.com/enablerdao/kagi" class="cta-secondary">GitHub</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <p style="margin-bottom:8px"><strong style="color:#fff;letter-spacing:4px">IKI 息</strong></p>
+    <p>Open Hardware &bull; ESP32-S3 &bull; 技適認証済 (201-220017)</p>
+    <p style="margin-top:8px">&copy; 2026 EnablerDAO. MIT License.</p>
+  </div>
+</footer>
+
+<!-- SCROLL ANIMATION -->
+<script>
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible') });
+}, { threshold: 0.15 });
+document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+
+async function checkout(product) {
+  const btn = event.target;
+  btn.disabled = true;
+  btn.textContent = '処理中...';
+  try {
+    const res = await fetch('/api/v1/checkout', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ product, quantity: 1 })
+    });
+    const data = await res.json();
+    if (data.url) window.location.href = data.url;
+  } catch (e) {
+    alert('エラーが発生しました。もう一度お試しください。');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '予約する';
+  }
+}
+</script>
+</body>
+</html>

@@ -12,7 +12,7 @@ import UIKit
 final class CloudSyncService: ObservableObject {
     static let shared = CloudSyncService()
 
-    private let baseURL = "https://kacha.pasha.run"
+    private let baseURL = "https://kagi.pasha.run"
     private let keychainService = "com.enablerdao.kacha.cloudsync"
     private let appId = "kacha-ios"
 

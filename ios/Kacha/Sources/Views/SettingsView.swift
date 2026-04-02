@@ -17,6 +17,10 @@ struct SettingsView: View {
     @State private var homeToDelete: Home?
     @State private var showTutorial = false
     @State private var showSecurity = false
+    @State private var showReorderHomes = false
+    @State private var showSubscription = false
+    @ObservedObject private var subscription = SubscriptionManager.shared
+    @AppStorage("geminiApiKey") private var geminiApiKey = ""
 
     var activeHome: Home? { homes.first { $0.id == activeHomeId } }
 
@@ -36,6 +40,8 @@ struct SettingsView: View {
                         } else {
                             emptyState
                         }
+                        subscriptionSection
+                        aiSettingsSection
                         backupSection
                         appInfoSection
                         ikiSection
@@ -51,8 +57,13 @@ struct SettingsView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbarBackground(Color.kachaBg, for: .navigationBar)
             .sheet(isPresented: $showAddHome) { addHomeSheet }
+            .sheet(isPresented: $showReorderHomes) {
+                HomeReorderView()
+                    .presentationDetents([.medium, .large])
+            }
             .fullScreenCover(isPresented: $showTutorial) { OnboardingView(isReview: true) }
             .sheet(isPresented: $showSecurity) { SecurityInfoView() }
+            .sheet(isPresented: $showSubscription) { SubscriptionView() }
             .alert("ホームを削除", isPresented: $showDeleteAlert) {
                 Button("削除", role: .destructive) { deleteHome() }
                 Button("キャンセル", role: .cancel) {}
@@ -70,6 +81,13 @@ struct SettingsView: View {
                 HStack {
                     SettingsHeader(icon: "house.fill", title: "ホーム", color: .kacha)
                     Spacer()
+                    if homes.count >= 2 {
+                        Button { showReorderHomes = true } label: {
+                            Image(systemName: "arrow.up.arrow.down")
+                                .foregroundColor(.kacha)
+                                .font(.subheadline)
+                        }
+                    }
                     Button {
                         newHomeName = ""; showAddHome = true
                     } label: {
@@ -139,6 +157,98 @@ struct SettingsView: View {
             }
         }
         .presentationDetents([.medium])
+    }
+
+    // MARK: - Subscription / Plan
+
+    private var subscriptionSection: some View {
+        KachaCard {
+            VStack(spacing: 12) {
+                HStack {
+                    Image(systemName: subscription.planIcon)
+                        .foregroundColor(subscription.planColor)
+                    Text("プラン").font(.subheadline).fontWeight(.semibold)
+                    Spacer()
+                    Text(subscription.planDisplayName)
+                        .font(.caption).bold()
+                        .foregroundColor(subscription.planColor)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(subscription.planColor.opacity(0.15))
+                        .clipShape(Capsule())
+                }
+
+                Button { showSubscription = true } label: {
+                    HStack(spacing: 10) {
+                        Image(systemName: "arrow.up.circle.fill")
+                            .foregroundColor(.kacha).frame(width: 20)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(subscription.currentPlan == "free" ? "アップグレード" : "プランを変更")
+                                .font(.subheadline).foregroundColor(.white)
+                            Text("Pro: AI自動返信・複数物件 / Business: チーム管理")
+                                .font(.caption2).foregroundColor(.secondary)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right").font(.caption).foregroundColor(.secondary)
+                    }
+                }
+
+                #if DEBUG
+                Divider().background(Color.kachaCardBorder)
+                HStack {
+                    Image(systemName: "ladybug.fill").foregroundColor(.kachaWarn).font(.caption)
+                    Toggle("DEBUG: 全機能アンロック", isOn: Binding(
+                        get: { UserDefaults.standard.bool(forKey: "debugSubscriptionOverride") },
+                        set: { UserDefaults.standard.set($0, forKey: "debugSubscriptionOverride") }
+                    ))
+                    .font(.caption2).tint(.kacha)
+                }
+                #endif
+            }
+            .padding(16)
+        }
+    }
+
+    // MARK: - AI Settings
+
+    private var aiSettingsSection: some View {
+        KachaCard {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Image(systemName: "sparkles").foregroundColor(.kacha)
+                    Text("AI設定").font(.subheadline).fontWeight(.semibold)
+                    Spacer()
+                    if !geminiApiKey.isEmpty {
+                        HStack(spacing: 4) {
+                            Circle().fill(Color.green).frame(width: 6, height: 6)
+                            Text("有効").font(.caption2).foregroundColor(.green)
+                        }
+                    }
+                }
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Gemini APIキー").font(.caption).foregroundColor(.secondary)
+                    SecureField("APIキーを入力...", text: $geminiApiKey)
+                        .font(.subheadline)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 10)
+                        .background(Color.kachaCard)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.kachaCardBorder, lineWidth: 1)
+                        )
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
+                }
+
+                Text("ゲストメッセージへのAI返信候補を生成します。Google AI Studioで無料のAPIキーを取得できます。")
+                    .font(.caption2)
+                    .foregroundColor(.secondary.opacity(0.8))
+            }
+            .padding(16)
+        }
     }
 
     // MARK: - Backup & Cloud Sync
@@ -223,7 +333,7 @@ struct SettingsView: View {
             VStack(spacing: 10) {
                 HStack {
                     Image(systemName: "door.left.hand.open").foregroundColor(.kacha)
-                    Text("カチャ").font(.subheadline).bold().foregroundColor(.white)
+                    Text("KAGI").font(.subheadline).bold().foregroundColor(.white)
                     Spacer()
                     Text("v1.0.0").font(.caption).foregroundColor(.secondary)
                 }
@@ -391,6 +501,54 @@ private struct HomeChip: View {
     }
 }
 
+// MARK: - Home Reorder View
+
+private struct HomeReorderView: View {
+    @Query(sort: \Home.sortOrder) private var homes: [Home]
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                Color.kachaBg.ignoresSafeArea()
+                List {
+                    ForEach(homes) { home in
+                        HStack(spacing: 12) {
+                            Image(systemName: "line.3.horizontal")
+                                .foregroundColor(.secondary)
+                            HomeThumbView(home: home, size: 32)
+                            Text(home.name)
+                                .font(.subheadline).foregroundColor(.white)
+                            Spacer()
+                        }
+                        .listRowBackground(Color.kachaCard)
+                    }
+                    .onMove { source, destination in
+                        var ordered = homes.map { $0 }
+                        ordered.move(fromOffsets: source, toOffset: destination)
+                        for (i, home) in ordered.enumerated() {
+                            home.sortOrder = i
+                        }
+                        try? modelContext.save()
+                    }
+                }
+                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .environment(\.editMode, .constant(.active))
+            }
+            .navigationTitle("並び替え")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("完了") { dismiss() }
+                        .foregroundColor(.kacha)
+                }
+            }
+        }
+    }
+}
+
 // MARK: - HomeSettingsSections
 
 struct HomeSettingsSections: View {
@@ -441,6 +599,7 @@ struct HomeSettingsSections: View {
                 beds24Section
                 icalSection
                 automationSection
+                lineSection
             }
         }
         .alert(alertTitle, isPresented: $showAlert) {
@@ -521,7 +680,7 @@ struct HomeSettingsSections: View {
                     guideStep(3, "SwitchBotアプリでBot動作を確認",
                               "ボタンモードを「押す」に設定し、解錠ボタンが押されることを確認")
                     guideStep(4, "下のリストからBotを選択",
-                              "カチャから遠隔でオートロック解除できるようになります")
+                              "KAGIから遠隔でオートロック解除できるようになります")
                 }
 
                 Divider().background(Color.kachaCardBorder)
@@ -1216,14 +1375,108 @@ struct HomeSettingsSections: View {
                 }
                 .tint(.kacha)
 
+                Divider().background(Color.kachaCardBorder)
+
+                Toggle(isOn: Binding(
+                    get: { UserDefaults.standard.bool(forKey: "autoGuestCard_\(home.id)") },
+                    set: { UserDefaults.standard.set($0, forKey: "autoGuestCard_\(home.id)") }
+                )) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("ゲストカード自動送信").font(.subheadline).foregroundColor(.white)
+                        Text("チェックイン前日にドアコード・Wi-Fi情報のリンクをBeds24経由で自動送信")
+                            .font(.caption2).foregroundColor(.secondary)
+                    }
+                }
+                .tint(.kacha)
+                .disabled(home.beds24RefreshToken.isEmpty)
+
                 HStack(spacing: 6) {
                     Image(systemName: "info.circle").foregroundColor(.secondary)
-                    Text("どちらもデフォルトOFFです。必要に応じてONにしてください。")
+                    Text("すべてデフォルトOFFです。必要に応じてONにしてください。")
                         .font(.caption2).foregroundColor(.secondary)
                 }
             }
             .padding(16)
         }
+    }
+
+    // MARK: - LINE連携
+
+    @State private var isTestingLINE = false
+    @State private var lineTestResult: String?
+
+    private var lineSection: some View {
+        KachaCard {
+            VStack(spacing: 14) {
+                SettingsHeader(icon: "paperplane.fill", title: "LINE連携", color: Color(hex: "06C755"))
+
+                Text("LINE Messaging API で清掃スタッフへ通知を送信します")
+                    .font(.caption).foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                Divider().background(Color.kachaCardBorder)
+
+                SettingsTextField(
+                    label: "チャネルアクセストークン",
+                    placeholder: "LINE Developers で取得",
+                    text: $home.lineChannelToken
+                )
+
+                Divider().background(Color.kachaCardBorder)
+
+                SettingsTextField(
+                    label: "送信先ID",
+                    placeholder: "ユーザーID or グループID",
+                    text: $home.lineGroupId
+                )
+
+                Divider().background(Color.kachaCardBorder)
+
+                HStack {
+                    Button {
+                        Task { await testLINEMessage() }
+                    } label: {
+                        HStack(spacing: 6) {
+                            if isTestingLINE { ProgressView().tint(Color(hex: "06C755")).scaleEffect(0.8) }
+                            else { Image(systemName: "paperplane") }
+                            Text("テスト送信")
+                        }
+                        .actionButtonStyle(Color(hex: "06C755"))
+                    }
+                    .disabled(isTestingLINE || home.lineChannelToken.isEmpty || home.lineGroupId.isEmpty)
+
+                    if let result = lineTestResult {
+                        Text(result)
+                            .font(.caption)
+                            .foregroundColor(result.contains("成功") ? .kachaSuccess : .kachaDanger)
+                    }
+                }
+
+                HStack(spacing: 6) {
+                    Image(systemName: "info.circle").foregroundColor(.secondary)
+                    Text("LINE Developers (developers.line.biz) でMessaging APIチャネルを作成し、トークンを取得してください。")
+                        .font(.caption2).foregroundColor(.secondary)
+                }
+            }
+            .padding(16)
+        }
+    }
+
+    private func testLINEMessage() async {
+        isTestingLINE = true
+        lineTestResult = nil
+        defer { isTestingLINE = false }
+        do {
+            try await LINEMessagingClient.send(
+                message: "KAGIからのテスト送信です。LINE連携が正常に設定されています。",
+                to: home.lineGroupId,
+                token: home.lineChannelToken
+            )
+            lineTestResult = "送信成功"
+        } catch {
+            lineTestResult = "エラー: \(error.localizedDescription)"
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) { lineTestResult = nil }
     }
 
     // MARK: iCal

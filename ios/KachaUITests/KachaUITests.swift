@@ -19,8 +19,8 @@ final class KachaUITests: XCTestCase {
     // MARK: - Onboarding
 
     func testOnboardingFlow() {
-        // First page should show "カチャ"
-        XCTAssertTrue(app.staticTexts["カチャ"].waitForExistence(timeout: 5))
+        // First page should show "KAGI"
+        XCTAssertTrue(app.staticTexts["KAGI"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["開いた、ウェルカム。"].exists)
 
         // Check Amazon links exist
@@ -172,7 +172,7 @@ final class KachaUITests: XCTestCase {
     // MARK: - Helpers
 
     private func skipOnboarding() {
-        guard app.staticTexts["カチャ"].exists && app.buttons["次へ"].exists else { return }
+        guard app.staticTexts["KAGI"].exists && app.buttons["次へ"].exists else { return }
         app.buttons["次へ"].tap()
         sleep(1)
         app.buttons["次へ"].tap()

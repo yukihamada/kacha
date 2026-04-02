@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KAGI Sensor Hub — 3 Models × 3 Design Patterns</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0a0a0f; color: #fff; font-family: 'SF Pro Display', -apple-system, sans-serif; padding: 40px 20px; }
+  h1 { text-align: center; font-size: 32px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px; }
+  .subtitle { text-align: center; color: #888; font-size: 15px; margin-bottom: 60px; }
+  .section-title { font-size: 20px; font-weight: 600; color: #aaa; text-align: center; margin: 50px 0 10px; letter-spacing: 2px; text-transform: uppercase; }
+  .pattern-label { font-size: 13px; color: #555; text-align: center; margin-bottom: 30px; letter-spacing: 1px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; max-width: 1100px; margin: 0 auto 80px; }
+
+  /* ===== PATTERN A: MINIMAL ===== */
+  .min-card {
+    background: #f0f0f0; border-radius: 24px; padding: 28px 20px;
+    color: #111; aspect-ratio: 3/4; display: flex; flex-direction: column;
+    align-items: center; justify-content: space-between;
+  }
+  .min-card.hub { background: #f5f5f5; }
+  .min-card.pro { background: #e8e8e8; }
+  .min-badge {
+    background: #111; color: #fff; font-size: 10px; font-weight: 700;
+    letter-spacing: 2px; padding: 4px 14px; border-radius: 20px; text-transform: uppercase;
+  }
+  .min-body {
+    width: 100px; height: 150px; background: #fff; border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1); display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 10px;
+  }
+  .min-body.hub { width: 120px; height: 170px; }
+  .min-body.pro { width: 130px; height: 195px; border-radius: 20px; }
+  .min-kanji { font-size: 24px; font-weight: 800; color: #111; }
+  .min-bar { width: 36px; height: 3px; border-radius: 2px; background: linear-gradient(90deg, #22c55e, #06b6d4); }
+  .min-bar.wide { width: 50px; }
+  .min-dots { display: flex; gap: 6px; }
+  .min-dot { width: 7px; height: 7px; border-radius: 50%; background: #ddd; }
+  .min-dot.on { background: #22c55e; }
+  .min-name { font-size: 15px; font-weight: 700; color: #111; text-align: center; }
+  .min-price { font-size: 12px; color: #777; text-align: center; margin-top: 2px; }
+  .min-spec { font-size: 11px; color: #666; text-align: center; line-height: 1.8; margin-top: 6px; }
+
+  /* ===== PATTERN B: INDUSTRIAL ===== */
+  .ind-card {
+    background: #141414; border-radius: 10px; padding: 28px 20px;
+    border: 1px solid #2a2a2a; aspect-ratio: 3/4; display: flex; flex-direction: column;
+    align-items: center; justify-content: space-between; position: relative; overflow: hidden;
+  }
+  .ind-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+  .ind-card.lite::before { background: #38bdf8; }
+  .ind-card.hub::before { background: #f59e0b; }
+  .ind-card.pro::before { background: #a855f7; }
+  .ind-badge {
+    font-size: 10px; font-weight: 700; letter-spacing: 2px;
+    padding: 4px 12px; border-radius: 2px; text-transform: uppercase; color: #000;
+  }
+  .ind-card.lite .ind-badge { background: #38bdf8; }
+  .ind-card.hub .ind-badge { background: #f59e0b; }
+  .ind-card.pro .ind-badge { background: #a855f7; color: #fff; }
+  .ind-body {
+    width: 100px; height: 140px; background: #222; border-radius: 6px;
+    border: 1px solid #333; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 10px; position: relative;
+  }
+  .ind-body.hub { width: 115px; height: 160px; }
+  .ind-body.pro { width: 130px; height: 185px; }
+  .ind-corner { position: absolute; width: 10px; height: 10px; border-style: solid; }
+  .ind-corner.tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+  .ind-corner.tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+  .ind-corner.bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+  .ind-corner.br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+  .ind-card.lite .ind-corner { border-color: #38bdf8; }
+  .ind-card.hub .ind-corner { border-color: #f59e0b; }
+  .ind-card.pro .ind-corner { border-color: #a855f7; }
+  .ind-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 5px; }
+  .ind-d { width: 7px; height: 7px; border-radius: 50%; background: #3a3a3a; }
+  .ind-card.lite .ind-d.on { background: #38bdf8; }
+  .ind-card.hub .ind-d.on { background: #f59e0b; }
+  .ind-card.pro .ind-d.on { background: #a855f7; }
+  .ind-model { font-size: 10px; color: #555; font-family: monospace; letter-spacing: 1px; }
+  .ind-name { font-size: 15px; font-weight: 700; text-align: center; }
+  .ind-price { font-size: 12px; color: #555; text-align: center; margin-top: 2px; }
+  .ind-spec { font-size: 10px; color: #666; text-align: center; line-height: 2; font-family: monospace; margin-top: 6px; }
+
+  /* ===== PATTERN C: ORGANIC ===== */
+  .org-card {
+    border-radius: 28px; padding: 28px 20px;
+    aspect-ratio: 3/4; display: flex; flex-direction: column;
+    align-items: center; justify-content: space-between; position: relative; overflow: hidden;
+  }
+  .org-card.lite { background: linear-gradient(145deg, #0f172a, #1e1b4b); }
+  .org-card.hub { background: linear-gradient(145deg, #0d2b1e, #064e3b); }
+  .org-card.pro { background: linear-gradient(145deg, #1a0a2e, #2d0a3a); }
+  .org-glow {
+    position: absolute; border-radius: 50%; opacity: 0.2;
+    width: 200px; height: 200px; bottom: -80px; right: -60px;
+  }
+  .org-card.lite .org-glow { background: radial-gradient(circle, #818cf8, transparent 60%); }
+  .org-card.hub .org-glow { background: radial-gradient(circle, #22c55e, transparent 60%); }
+  .org-card.pro .org-glow { background: radial-gradient(circle, #e879f9, transparent 60%); }
+  .org-badge {
+    font-size: 10px; font-weight: 600; letter-spacing: 1.5px;
+    padding: 5px 16px; border-radius: 20px; text-transform: uppercase; position: relative; z-index: 1;
+  }
+  .org-card.lite .org-badge { background: rgba(129,140,248,0.15); color: #818cf8; border: 1px solid rgba(129,140,248,0.3); }
+  .org-card.hub .org-badge { background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+  .org-card.pro .org-badge { background: rgba(232,121,249,0.15); color: #e879f9; border: 1px solid rgba(232,121,249,0.3); }
+  .org-body {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 50%; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 12px;
+    width: 120px; height: 120px; position: relative; z-index: 1;
+  }
+  .org-body.hub { width: 140px; height: 140px; border-radius: 40%; }
+  .org-body.pro { width: 155px; height: 155px; border-radius: 35%; }
+  .org-ring {
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  }
+  .org-card.lite .org-ring { width: 50px; height: 50px; border: 2px solid rgba(129,140,248,0.5); box-shadow: 0 0 16px rgba(129,140,248,0.2); }
+  .org-card.hub .org-ring { width: 56px; height: 56px; border: 2px solid rgba(34,197,94,0.5); box-shadow: 0 0 16px rgba(34,197,94,0.2); }
+  .org-card.pro .org-ring { width: 62px; height: 62px; border: 2px solid rgba(232,121,249,0.5); box-shadow: 0 0 16px rgba(232,121,249,0.2); }
+  .org-inner { border-radius: 50%; width: 30px; height: 30px; }
+  .org-card.lite .org-inner { background: radial-gradient(circle, rgba(129,140,248,0.6), rgba(129,140,248,0.1)); }
+  .org-card.hub .org-inner { background: radial-gradient(circle, rgba(34,197,94,0.6), rgba(34,197,94,0.1)); }
+  .org-card.pro .org-inner { background: radial-gradient(circle, rgba(232,121,249,0.6), rgba(232,121,249,0.1)); }
+  .org-waves { display: flex; gap: 2px; align-items: center; height: 20px; }
+  .org-w { width: 3px; border-radius: 2px; }
+  .org-card.lite .org-w { background: linear-gradient(to top, rgba(129,140,248,0.2), #818cf8); }
+  .org-card.hub .org-w { background: linear-gradient(to top, rgba(34,197,94,0.2), #22c55e); }
+  .org-card.pro .org-w { background: linear-gradient(to top, rgba(232,121,249,0.2), #e879f9); }
+  .org-name { font-size: 15px; font-weight: 700; text-align: center; position: relative; z-index: 1; }
+  .org-price { font-size: 12px; color: rgba(255,255,255,0.4); text-align: center; margin-top: 2px; position: relative; z-index: 1; }
+  .org-spec { font-size: 11px; color: rgba(255,255,255,0.4); text-align: center; line-height: 1.9; margin-top: 6px; position: relative; z-index: 1; }
+</style>
+</head>
+<body>
+
+<h1>KAGI Sensor Hub</h1>
+<p class="subtitle">3 Models × 3 Design Patterns — Hardware Concept Design 2026</p>
+
+<!-- ===== PATTERN A: MINIMAL ===== -->
+<div class="section-title">Pattern A — Minimal</div>
+<div class="pattern-label">ピュアホワイト · スイス時計的美学 · ミニマルフォルム</div>
+<div class="grid">
+  <div class="min-card lite">
+    <span class="min-badge">KAGI Lite</span>
+    <div class="min-body">
+      <div class="min-kanji">鍵</div>
+      <div class="min-bar"></div>
+      <div class="min-dots">
+        <div class="min-dot on"></div><div class="min-dot on"></div><div class="min-dot"></div>
+      </div>
+    </div>
+    <div>
+      <div class="min-name">Sensor Lite</div>
+      <div class="min-price">¥8,800</div>
+      <div class="min-spec">温湿度 · 照度 · 動体<br>Wi-Fi + BLE 5.0<br>φ52 × H18mm</div>
+    </div>
+  </div>
+  <div class="min-card hub">
+    <span class="min-badge">KAGI Hub</span>
+    <div class="min-body hub">
+      <div class="min-kanji">鍵</div>
+      <div class="min-bar wide"></div>
+      <div class="min-dots">
+        <div class="min-dot on"></div><div class="min-dot on"></div><div class="min-dot on"></div>
+      </div>
+      <div class="min-dots">
+        <div class="min-dot on"></div><div class="min-dot on"></div><div class="min-dot"></div>
+      </div>
+    </div>
+    <div>
+      <div class="min-name">Sensor Hub</div>
+      <div class="min-price">¥14,800</div>
+      <div class="min-spec">8センサー搭載<br>ドア検知 · 音響 · 加速度<br>68 × 68 × 22mm</div>
+    </div>
+  </div>
+  <div class="min-card pro">
+    <span class="min-badge">KAGI Pro</span>
+    <div class="min-body pro">
+      <div class="min-kanji">鍵</div>
+      <div class="min-bar wide"></div>
+      <div class="min-dots">
+        <div class="min-dot on"></div><div class="min-dot on"></div><div class="min-dot on"></div><div class="min-dot on"></div>
+      </div>
+      <div class="min-dots">
+        <div class="min-dot on"></div><div class="min-dot on"></div><div class="min-dot on"></div><div class="min-dot on"></div>
+      </div>
+    </div>
+    <div>
+      <div class="min-name">Sensor Pro</div>
+      <div class="min-price">¥24,800</div>
+      <div class="min-spec">全センサー + CO₂ + UV<br>LTE + Wi-Fi + BLE<br>バッテリー内蔵 88mm</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PATTERN B: INDUSTRIAL ===== -->
+<div class="section-title">Pattern B — Industrial</div>
+<div class="pattern-label">マットブラック · CNC削り出し · ツールグレード精度美学</div>
+<div class="grid">
+  <div class="ind-card lite">
+    <span class="ind-badge">KAGI Lite</span>
+    <div class="ind-body">
+      <div class="ind-corner tl"></div><div class="ind-corner tr"></div>
+      <div class="ind-corner bl"></div><div class="ind-corner br"></div>
+      <div class="ind-grid">
+        <div class="ind-d on"></div><div class="ind-d"></div><div class="ind-d"></div>
+        <div class="ind-d on"></div><div class="ind-d"></div><div class="ind-d"></div>
+        <div class="ind-d"></div><div class="ind-d"></div><div class="ind-d"></div>
+      </div>
+      <div class="ind-model">KG-L01</div>
+    </div>
+    <div>
+      <div class="ind-name">Sensor Lite</div>
+      <div class="ind-price">¥8,800</div>
+      <div class="ind-spec">TEMP · HUM · LUX<br>PIR · Wi-Fi · BLE<br>52×52×18mm</div>
+    </div>
+  </div>
+  <div class="ind-card hub">
+    <span class="ind-badge">KAGI Hub</span>
+    <div class="ind-body hub">
+      <div class="ind-corner tl"></div><div class="ind-corner tr"></div>
+      <div class="ind-corner bl"></div><div class="ind-corner br"></div>
+      <div class="ind-grid">
+        <div class="ind-d on"></div><div class="ind-d on"></div><div class="ind-d on"></div>
+        <div class="ind-d on"></div><div class="ind-d on"></div><div class="ind-d"></div>
+        <div class="ind-d"></div><div class="ind-d"></div><div class="ind-d"></div>
+      </div>
+      <div class="ind-model">KG-H01</div>
+    </div>
+    <div>
+      <div class="ind-name">Sensor Hub</div>
+      <div class="ind-price">¥14,800</div>
+      <div class="ind-spec">TEMP·HUM·LUX·PIR<br>DOOR·VOC·MIC·ACC<br>BARO · 68×68×22mm</div>
+    </div>
+  </div>
+  <div class="ind-card pro">
+    <span class="ind-badge">KAGI Pro</span>
+    <div class="ind-body pro">
+      <div class="ind-corner tl"></div><div class="ind-corner tr"></div>
+      <div class="ind-corner bl"></div><div class="ind-corner br"></div>
+      <div class="ind-grid">
+        <div class="ind-d on"></div><div class="ind-d on"></div><div class="ind-d on"></div>
+        <div class="ind-d on"></div><div class="ind-d on"></div><div class="ind-d on"></div>
+        <div class="ind-d on"></div><div class="ind-d on"></div><div class="ind-d on"></div>
+      </div>
+      <div class="ind-model">KG-P01</div>
+    </div>
+    <div>
+      <div class="ind-name">Sensor Pro</div>
+      <div class="ind-price">¥24,800</div>
+      <div class="ind-spec">ALL SENSORS + LTE<br>CO₂·UV·AI ON-DEVICE<br>BATT · 88×88×24mm</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PATTERN C: ORGANIC ===== -->
+<div class="section-title">Pattern C — Organic</div>
+<div class="pattern-label">バイオモーフィック · ソフトタッチマット · 自然と共生するデザイン</div>
+<div class="grid">
+  <div class="org-card lite">
+    <div class="org-glow"></div>
+    <span class="org-badge">KAGI Lite</span>
+    <div class="org-body">
+      <div class="org-ring"><div class="org-inner"></div></div>
+      <div class="org-waves">
+        <div class="org-w" style="height:6px"></div>
+        <div class="org-w" style="height:12px"></div>
+        <div class="org-w" style="height:18px"></div>
+        <div class="org-w" style="height:12px"></div>
+        <div class="org-w" style="height:6px"></div>
+      </div>
+    </div>
+    <div>
+      <div class="org-name">Sensor Lite</div>
+      <div class="org-price">¥8,800</div>
+      <div class="org-spec">温湿度 · 照度 · 動体<br>Wi-Fi + BLE · φ52mm<br>円形フォルム</div>
+    </div>
+  </div>
+  <div class="org-card hub">
+    <div class="org-glow"></div>
+    <span class="org-badge">KAGI Hub</span>
+    <div class="org-body hub">
+      <div class="org-ring"><div class="org-inner"></div></div>
+      <div class="org-waves">
+        <div class="org-w" style="height:4px"></div>
+        <div class="org-w" style="height:10px"></div>
+        <div class="org-w" style="height:18px"></div>
+        <div class="org-w" style="height:22px"></div>
+        <div class="org-w" style="height:18px"></div>
+        <div class="org-w" style="height:10px"></div>
+        <div class="org-w" style="height:4px"></div>
+      </div>
+    </div>
+    <div>
+      <div class="org-name">Sensor Hub</div>
+      <div class="org-price">¥14,800</div>
+      <div class="org-spec">8センサー · スマートホーム<br>Wi-Fi + BLE · 68mm<br>卵型フォルム</div>
+    </div>
+  </div>
+  <div class="org-card pro">
+    <div class="org-glow"></div>
+    <span class="org-badge">KAGI Pro</span>
+    <div class="org-body pro">
+      <div class="org-ring"><div class="org-inner"></div></div>
+      <div class="org-waves">
+        <div class="org-w" style="height:3px"></div>
+        <div class="org-w" style="height:8px"></div>
+        <div class="org-w" style="height:14px"></div>
+        <div class="org-w" style="height:20px"></div>
+        <div class="org-w" style="height:24px"></div>
+        <div class="org-w" style="height:20px"></div>
+        <div class="org-w" style="height:14px"></div>
+        <div class="org-w" style="height:8px"></div>
+        <div class="org-w" style="height:3px"></div>
+      </div>
+    </div>
+    <div>
+      <div class="org-name">Sensor Pro</div>
+      <div class="org-price">¥24,800</div>
+      <div class="org-spec">全センサー · LTE · AI<br>バッテリー内蔵 · 88mm<br>大型卵型フォルム</div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;color:#333;font-size:12px;padding-bottom:40px">
+  © 2026 KAGI Smart Home — Hardware Design Concepts. All specifications subject to change.
+</div>
+</body>
+</html>

@@ -30,7 +30,7 @@ settings:
     DEVELOPMENT_TEAM: 5BV85JW8US
     CODE_SIGN_STYLE: Automatic
     SWIFT_VERSION: "5.9"
-    CURRENT_PROJECT_VERSION: 7
+    CURRENT_PROJECT_VERSION: 10
     MARKETING_VERSION: "1.0.0"
 
 targets:
@@ -79,13 +79,13 @@ targets:
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         TARGETED_DEVICE_FAMILY: 1
         SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: false
-    dependencies:
-      - target: KachaClip
+    # dependencies:
+    #   - target: KachaClip  # App Clip provisioning profile未設定のため一時無効化
     entitlements:
       path: Kacha/Kacha.entitlements
       properties:
         com.apple.developer.associated-domains:
-          - applinks:kacha.pasha.run
+          - applinks:kagi.pasha.run
 
   KachaTests:
     type: bundle.unit-test
@@ -146,7 +146,7 @@ targets:
       path: KachaClip/KachaClip.entitlements
       properties:
         com.apple.developer.associated-domains:
-          - applinks:kacha.pasha.run
+          - applinks:kagi.pasha.run
         com.apple.developer.parent-application-identifiers:
           - $(AppIdentifierPrefix)com.enablerdao.kacha
 

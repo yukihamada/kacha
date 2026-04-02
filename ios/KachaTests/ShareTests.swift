@@ -94,7 +94,7 @@ final class ShareTests: XCTestCase {
     // MARK: - Share Server
 
     func testShareServerHealth() async throws {
-        let url = URL(string: "https://kacha.pasha.run/health")!
+        let url = URL(string: "https://kagi.pasha.run/health")!
         let (data, response) = try await URLSession.shared.data(from: url)
         let http = response as? HTTPURLResponse
         XCTAssertEqual(http?.statusCode, 200)
@@ -103,7 +103,7 @@ final class ShareTests: XCTestCase {
     }
 
     func testAASA() async throws {
-        let url = URL(string: "https://kacha.pasha.run/.well-known/apple-app-site-association")!
+        let url = URL(string: "https://kagi.pasha.run/.well-known/apple-app-site-association")!
         let (data, response) = try await URLSession.shared.data(from: url)
         let http = response as? HTTPURLResponse
         XCTAssertEqual(http?.statusCode, 200)

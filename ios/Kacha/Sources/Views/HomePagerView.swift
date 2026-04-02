@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import CoreLocation
 
 extension Notification.Name {
     static let switchToDashboard = Notification.Name("switchToDashboard")
@@ -113,8 +114,40 @@ struct HomePagerView: View {
                 currentPage = 1
             }
         }
+        .task {
+            await selectNearestHomeIfNeeded()
+        }
         .onReceive(NotificationCenter.default.publisher(for: .switchToDashboard)) { _ in
             withAnimation { currentPage = 0 }
+        }
+    }
+
+    /// アプリ起動時に最も近い家を自動選択
+    private func selectNearestHomeIfNeeded() async {
+        // Only auto-select when multiple homes with coordinates exist
+        let homesWithLocation = homes.filter { $0.latitude != 0 && $0.longitude != 0 }
+        guard homesWithLocation.count >= 2 else { return }
+
+        guard let userLocation = await GeofenceManager.shared.requestCurrentLocation() else { return }
+
+        var nearest: Home?
+        var minDistance = Double.greatestFiniteMagnitude
+        for home in homesWithLocation {
+            let homeLocation = CLLocation(latitude: home.latitude, longitude: home.longitude)
+            let dist = userLocation.distance(from: homeLocation)
+            if dist < minDistance {
+                minDistance = dist
+                nearest = home
+            }
+        }
+
+        guard let best = nearest, best.id != activeHomeId else { return }
+
+        activeHomeId = best.id
+        best.syncToAppStorage()
+        minpakuModeEnabled = (best.businessType != "none")
+        if let idx = homes.firstIndex(where: { $0.id == best.id }) {
+            withAnimation { currentPage = idx + 1 }
         }
     }
 

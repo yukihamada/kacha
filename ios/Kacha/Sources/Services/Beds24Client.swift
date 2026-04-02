@@ -1,4 +1,7 @@
 import Foundation
+import os.log
+
+private let beds24Log = Logger(subsystem: "com.enablerdao.kacha", category: "Beds24")
 
 // MARK: - Beds24 Client
 // Invite Code取得: Beds24 → 設定 → API v2 → Invite Code作成
@@ -15,7 +18,7 @@ final class Beds24Client: Sendable {
     //       token → use in all API calls via "token" header
 
     /// Step 1: Invite Code → Refresh Token
-    func setupWithInviteCode(_ inviteCode: String, deviceName: String = "カチャ") async throws -> String {
+    func setupWithInviteCode(_ inviteCode: String, deviceName: String = "KAGI") async throws -> String {
         guard !inviteCode.isEmpty else { throw Beds24Error.missingCode }
         guard let setupURL = URL(string: "\(base)/authentication/setup") else { throw Beds24Error.apiError(0) }
         var req = URLRequest(url: setupURL)
@@ -67,10 +70,11 @@ final class Beds24Client: Sendable {
     func fetchBookings(token: String, includeGuests: Bool = true) async throws -> [Beds24Booking] {
         guard !token.isEmpty else { return [] }
 
-        // No date params — API returns upcoming bookings by default
+        // Explicitly include all statuses (inquiry, request, new, confirmed, black)
         var urlStr = "\(base)/bookings?"
         if includeGuests { urlStr += "includeGuests=true&" }
         urlStr += "includeInvoiceItems=true"
+        urlStr += "&status=confirmed&status=request&status=new&status=black&status=inquiry"
 
         guard let bookingsURL = URL(string: urlStr) else { throw Beds24Error.apiError(0) }
         var req = URLRequest(url: bookingsURL)
@@ -95,9 +99,15 @@ final class Beds24Client: Sendable {
         if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
             // Check if data is in "data" key or top level
             if let bookingsArray = json["data"] as? [[String: Any]] {
-                #if DEBUG
-                print("[Beds24] Found \(bookingsArray.count) bookings in 'data' key")
-                #endif
+                beds24Log.info("Found \(bookingsArray.count) bookings in 'data' key")
+                for (i, b) in bookingsArray.prefix(20).enumerated() {
+                    let bid = String(describing: b["id"] ?? "?")
+                    let st = String(describing: b["status"] ?? "nil")
+                    let fn = String(describing: b["firstName"] ?? "")
+                    let ln = String(describing: b["lastName"] ?? "")
+                    let ch = String(describing: b["channel"] ?? b["referer"] ?? "?")
+                    beds24Log.info("[\(i)] id=\(bid) status=\(st) name=\(ln) \(fn) channel=\(ch)")
+                }
                 let reencoded = try JSONSerialization.data(withJSONObject: bookingsArray)
                 do {
                     return try JSONDecoder().decode([Beds24Booking].self, from: reencoded)
@@ -367,6 +377,37 @@ final class Beds24Client: Sendable {
     }
 
     // MARK: - Channels (チャネル連携)
+
+    /// Airbnbチャネル設定を取得
+    func getAirbnbChannelSettings(propertyId: Int, token: String) async throws -> [String: Any] {
+        let data = try await apiGet("/channels/settings?propertyId=\(propertyId)&channel=airbnb", token: token)
+        guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else { return [:] }
+        return json
+    }
+
+    /// Airbnb問い合わせインポートを有効化
+    /// inquiryAndRequests: "importAll" | "ignore" | "importOnlyContainingBookingNumber"
+    func enableAirbnbInquiryImport(propertyId: Int, token: String) async throws {
+        let payload: [String: Any] = [
+            "channel": "airbnb",
+            "properties": [
+                [
+                    "id": propertyId,
+                    "inquiryAndRequests": "importAll"
+                ]
+            ]
+        ]
+        let url = try buildURL("/channels/settings")
+        var req = URLRequest(url: url)
+        req.httpMethod = "POST"
+        req.addValue(token, forHTTPHeaderField: "token")
+        req.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        req.httpBody = try JSONSerialization.data(withJSONObject: [payload])
+        req.timeoutInterval = 15
+        let (_, resp) = try await URLSession.shared.data(for: req)
+        let status = (resp as? HTTPURLResponse)?.statusCode ?? 0
+        guard (200..<300).contains(status) else { throw Beds24Error.apiError(status) }
+    }
 
     /// Booking.comのレビューを取得
     func getBookingComReviews(propertyId: Int, token: String) async throws -> [Beds24Review] {
@@ -728,7 +769,7 @@ struct Beds24Review: Codable {
 
 /// サーバーにBeds24アカウント+APNsトークンを登録（プッシュ通知用）
 enum Beds24PushRegistrar {
-    private static let serverBase = "https://kacha-server.fly.dev"
+    private static let serverBase = "https://kagi-server.fly.dev"
 
     static func register(userId: String, refreshToken: String, pushToken: String) async {
         guard let url = URL(string: "\(serverBase)/api/v1/beds24/register") else { return }

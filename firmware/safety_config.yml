@@ -1,0 +1,178 @@
+# KAGI Safety Config -- デフォルト設定
+# GitHub: kagi-home/safety-config (MIT License)
+# このファイルをフォークして自分の連絡先・閾値を設定できる
+#
+# 設計原則:
+#   1. 偽陰性ゼロ -- 「大丈夫」と判断して実は危険、は許さない
+#   2. 偽陽性の最小化 -- 「狼少年」になると家族が反応しなくなる
+#   3. プライバシー優先 -- 音声・映像は記録しない
+#   4. 段階的エスカレーション -- 本人 → 家族 → 緊急連絡先
+#   5. ハードウェア署名 -- ATECC608Aで全イベントに署名
+
+version: "2.0"
+device_id: "KAGI-XXXX"  # プロビジョニング時に上書き
+
+# ─── 生活リズム学習 ───
+# 初期7日間は通知しない (ベイズ事後分布を構築)
+learning_days: 7
+
+# ─── センサーフュージョン設定 ───
+sensor_fusion:
+  # 重み (大きいほどACSへの影響大)
+  weights:
+    mmwave: 5.0        # LD2410B: 呼吸検知=1.0, 動体=0.8
+    ok_button: 4.0     # I'm OKボタン: 押下=1.0 (減衰あり)
+    door: 3.0          # ドアセンサー: 開閉=0.8
+    audio: 2.0         # INMP441 (Hub以上): 生活音=0.6
+    co2: 2.0           # SCD41 (Pro): 400-1500ppm=0.5
+    temperature: 1.0   # SHT40: 20-28°C=0.3 (生活環境)
+
+  # 半減期 (分) -- 最後の検知からの信号減衰速度
+  # s_i(t) = s_raw * exp(-ln(2)/T_half * elapsed_minutes)
+  half_life_minutes:
+    mmwave: 90         # 3時間で0.25に減衰
+    ok_button: 720     # 24時間で0.06に減衰
+    door: 720          # 24時間で0.06に減衰
+    audio: 120         # 4時間で0.25に減衰
+
+  # ACS閾値
+  thresholds:
+    normal: 0.6        # ACS >= 0.6 → 緑LED (正常)
+    caution: 0.3       # 0.3 <= ACS < 0.6 → 黄LED (注意)
+    alert: 0.3         # ACS < 0.3 → Tier1発動
+
+# ─── Safety Ladder ───
+safety_ladder:
+
+  # Tier 1: デバイスが本人に確認
+  tier1:
+    name: "本人確認"
+    triggers:
+      - condition: acs_below_threshold  # ACS < 0.3
+    action:
+      type: device_alert
+      led: "yellow_pulse"              # LEDが黄色にゆっくり点滅
+      buzzer: "soft_beep_x3"           # ピッ...ピッ...ピッ (優しく3回)
+    response_window_minutes: 30        # 30分間待機
+    response_actions:
+      - button_press: "OK → タイマーリセット → 緑LED"
+      - no_response: "→ Tier2へエスカレート"
+    debounce_seconds: 10               # チャタリング防止 (10秒)
+
+  # Tier 2: 家族・登録者に通知
+  tier2:
+    name: "家族通知"
+    triggers:
+      - condition: tier1_no_response
+    action:
+      type: push_notification
+      recipients:
+        - family_primary                # 第1連絡先
+        - family_secondary              # 第2連絡先
+      message: "{{name}}さんから{{hours}}時間以上反応がありません。確認をお願いします。"
+      include_last_activity: true       # 最後の反応時刻を含める
+      include_audit_log_url: true       # ATECC608A署名済みログURL
+    response_window_minutes: 60
+    response_actions:
+      - family_confirms_ok: "解除 → Normal"
+      - family_checking: "タイマー延長30分"
+      - no_response: "→ Tier3へ (opt-in必要)"
+
+  # Tier 3: 外部機関への連絡
+  tier3:
+    name: "緊急連絡先"
+    requires_opt_in: true              # デフォルト: 無効
+    requires_annual_renewal: true       # 毎年明示的再同意が必要
+    triggers:
+      - condition: tier2_no_response
+    action:
+      type: phone_call                 # Twilio自動音声通話
+      recipients:
+        - emergency_contact             # 管理会社等
+    human_confirmation_required: true   # 人間の判断を必ず挟む
+
+# ─── 絶対にやらないこと ───
+never:
+  - auto_call_police_or_ambulance      # 人間確認なしの119/110通報禁止
+  - record_audio                        # 音声録音禁止
+  - record_video                        # 映像録画禁止
+  - share_data_without_consent          # 同意なしデータ共有禁止
+  - override_user_travel_mode           # 旅行モード中のアラート禁止
+
+# ─── I'm OKボタン習慣化設定 ───
+ok_button:
+  # リマインド音の設定
+  reminder:
+    # 学習期間中 (1-7日目): 毎朝8:00にリマインド
+    learning_time: "08:00"
+    # 学習後: 個人の起床推定時刻 + 30分に自動調整
+    adaptive: true
+    adaptive_offset_minutes: 30
+  # リマインド音パターン
+  reminder_buzzer: "soft_beep_x2"      # ピッ...ピッ
+  # 確認音パターン
+  confirm_buzzer: "short_beep_x1"      # ピッ (200ms)
+  confirm_led: "green_flash"           # 緑フラッシュ (500ms)
+
+# ─── LED表示パターン ───
+led:
+  normal:
+    color: [0, 32, 0]                  # 緑 (低輝度 -- 目障りにならない)
+    pattern: "breathing"                # ゆっくり明滅 (2秒周期)
+  caution:
+    color: [32, 24, 0]                 # 黄
+    pattern: "slow_pulse"              # ゆっくり点滅 (3秒周期)
+  tier1_active:
+    color: [32, 24, 0]                 # 黄
+    pattern: "fast_pulse"              # 速い点滅 (1秒周期)
+  tier2_active:
+    color: [32, 0, 0]                  # 赤
+    pattern: "fast_pulse"
+  tier3_active:
+    color: [32, 0, 0]                  # 赤
+    pattern: "solid"                   # 常灯
+  wifi_connecting:
+    color: [0, 0, 32]                  # 青
+    pattern: "fast_pulse"
+  sensor_fault:
+    color: [32, 16, 0]                 # 橙
+    pattern: "double_blink"            # 2回点滅 (故障通知)
+  power_loss:
+    color: [32, 0, 0]                  # 赤
+    pattern: "single_blink"            # 1回点滅 (30秒間隔)
+
+# ─── 省電力設定 ───
+power:
+  # 深夜 (睡眠推定時) の省電力
+  sleep_mode:
+    mmwave_interval_seconds: 30        # mmWave読み取りを30秒間隔に延長
+    cloud_interval_seconds: 300        # クラウド送信を5分間隔に延長
+    led_brightness_percent: 10         # LED輝度を10%に
+
+  # 停電時
+  power_loss:
+    ble_advertise_seconds: 5           # BLE送信: 5秒
+    deep_sleep_seconds: 30             # Deep Sleep: 30秒
+    max_runtime_hours: 8               # 最大動作時間: 8時間
+
+# ─── 既知の誤報ケース対策 ───
+false_positive_mitigation:
+  # 旅行モード (アプリから設定、最大30日)
+  travel_mode_max_days: 30
+  # ペットモード (mmWave感度を調整)
+  pet_mode:
+    enabled: false
+    mmwave_threshold_adjustment: 0.8   # 閾値を0.8倍に
+  # 季節補正 (冬は布団によるmmWave減衰を補正)
+  seasonal_adjustment:
+    winter_mmwave_sensitivity: 1.2     # 冬季はmmWave感度を1.2倍
+    summer_heatstroke_threshold_c: 30.0 # 夏季の熱中症警告温度
+
+# ─── 監査ログ ───
+audit_log:
+  # ローカルバッファ (NVS リングバッファ)
+  local_buffer_size: 100               # 最大100件
+  # クラウド保存期間
+  cloud_retention_years: 5             # 介護記録の法定保管期間
+  # 署名アルゴリズム
+  signature_algorithm: "ECDSA-P256"    # ATECC608A

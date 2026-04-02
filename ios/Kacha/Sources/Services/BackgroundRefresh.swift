@@ -45,6 +45,8 @@ struct BackgroundRefresh {
                         (try? context.fetch(FetchDescriptor<Home>())) ?? homes
                     }
                     let _ = await BookingPoller.pollAndNotify(context: context, home: home, allHomes: refreshedHomes)
+                    // Check for new guest messages
+                    let _ = await MessagePoller.pollNewMessages(context: context, home: home, allHomes: refreshedHomes)
                 }
             }
 

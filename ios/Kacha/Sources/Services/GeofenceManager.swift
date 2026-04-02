@@ -81,10 +81,39 @@ class GeofenceManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         isMonitoring = false
     }
 
+    // MARK: - Current Location (one-shot)
+
+    private var locationContinuation: CheckedContinuation<CLLocation?, Never>?
+
+    /// Get user's current location (one-shot). Returns nil if permission denied or timeout.
+    func requestCurrentLocation() async -> CLLocation? {
+        guard authorizationStatus == .authorizedAlways || authorizationStatus == .authorizedWhenInUse else {
+            return nil
+        }
+        return await withCheckedContinuation { continuation in
+            locationContinuation = continuation
+            locationManager.requestLocation()
+        }
+    }
+
     // MARK: - CLLocationManagerDelegate
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         authorizationStatus = manager.authorizationStatus
+    }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let continuation = locationContinuation {
+            locationContinuation = nil
+            continuation.resume(returning: locations.first)
+        }
+    }
+
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        if let continuation = locationContinuation {
+            locationContinuation = nil
+            continuation.resume(returning: nil)
+        }
     }
 
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {

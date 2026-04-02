@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>KAGI & Koe — Photo Renders</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0a0a0f; color: #fff; font-family: -apple-system, sans-serif; padding: 40px 20px; }
+  h1 { text-align: center; font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+  .sub { text-align: center; color: #555; font-size: 13px; margin-bottom: 50px; letter-spacing: 1px; }
+  .section { margin-bottom: 60px; }
+  .sec-title { font-size: 16px; font-weight: 600; color: #888; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px; border-bottom: 1px solid #1a1a1a; padding-bottom: 12px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1100px; }
+  .grid5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; max-width: 1100px; }
+  .card { background: #111; border-radius: 16px; overflow: hidden; }
+  .card img { width: 100%; display: block; aspect-ratio: 1/1; object-fit: cover; }
+  .card-info { padding: 14px 16px; }
+  .card-name { font-size: 13px; font-weight: 600; }
+  .card-desc { font-size: 11px; color: #555; margin-top: 3px; line-height: 1.5; }
+  .badge { display: inline-block; font-size: 9px; font-weight: 600; letter-spacing: 1px; padding: 2px 8px; border-radius: 4px; margin-bottom: 6px; text-transform: uppercase; }
+  .badge.minimal { background: #f0f0f0; color: #111; }
+  .badge.industrial { background: #f59e0b; color: #000; }
+  .badge.organic { background: #166534; color: #4ade80; }
+  .badge.pebble { background: #4c1d95; color: #a78bfa; }
+  .badge.crystal { background: #1e3a5f; color: #60a5fa; }
+  .badge.wave { background: #7f1d1d; color: #fca5a5; }
+</style>
+</head>
+<body>
+<h1>KAGI & Koe — AI Photo Renders</h1>
+<p class="sub">Imagen 4.0 生成 · 3パターン比較 · 実物イメージ</p>
+
+<div class="section">
+  <div class="sec-title">KAGI Sensor Hub — 3 Design Patterns</div>
+  <div class="grid">
+    <div class="card">
+      <img src="kagi_hub_minimal.png" alt="KAGI Hub Minimal">
+      <div class="card-info">
+        <span class="badge minimal">Pattern A — Minimal</span>
+        <div class="card-name">KAGI Hub · ミニマル</div>
+        <div class="card-desc">ピュアホワイト · スイス時計的美学<br>¥14,800 / 68×68mm</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="kagi_hub_industrial.png" alt="KAGI Hub Industrial">
+      <div class="card-info">
+        <span class="badge industrial">Pattern B — Industrial</span>
+        <div class="card-name">KAGI Hub · インダストリアル</div>
+        <div class="card-desc">マットブラック · CNC削り出し<br>¥14,800 / 68×68mm</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="kagi_hub_organic.png" alt="KAGI Hub Organic">
+      <div class="card-info">
+        <span class="badge organic">Pattern C — Organic</span>
+        <div class="card-name">KAGI Hub · オーガニック</div>
+        <div class="card-desc">バイオモーフィック · 自然素材感<br>¥14,800 / 68mm卵型</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="sec-title">Koe Device — 5 Models Photo Renders</div>
+  <div class="grid5">
+    <div class="card">
+      <img src="koe_coin_pebble.png" alt="Koe Coin Pebble">
+      <div class="card-info">
+        <span class="badge pebble">Pebble</span>
+        <div class="card-name">Koe Coin</div>
+        <div class="card-desc">φ26mm · ESP32-S3<br>$65 · NTP同期</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="koe_coin_crystal.png" alt="Koe Coin Crystal">
+      <div class="card-info">
+        <span class="badge crystal">Crystal</span>
+        <div class="card-name">Koe Coin</div>
+        <div class="card-desc">φ26mm · 透明ガラス<br>$65 · NTP同期</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="koe_stage_wave.png" alt="Koe Stage Wave">
+      <div class="card-info">
+        <span class="badge wave">Wave</span>
+        <div class="card-name">Koe Stage</div>
+        <div class="card-desc">Pi CM5 · 4K Display<br>$800 · フェス対応</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="koe_fill_wave.png" alt="Koe Fill Wave">
+      <div class="card-info">
+        <span class="badge wave">Wave</span>
+        <div class="card-name">Koe Fill</div>
+        <div class="card-desc">8"+1"ホーン · Pi5<br>$1,500 · 壁掛け</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="koe_sub_wave.png" alt="Koe Sub Wave">
+      <div class="card-info">
+        <span class="badge wave">Wave</span>
+        <div class="card-name">Koe Sub</div>
+        <div class="card-desc">15" · 1000W<br>$1,200 · サブウーファー</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;color:#222;font-size:11px;padding:20px 0 30px">
+  Generated with Google Imagen 4.0 · © 2026 KAGI / Koe Device
+</div>
+</body>
+</html>

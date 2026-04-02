@@ -1,0 +1,381 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 54;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		088B259587682DBB1869CA43 /* IKIBLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42E6F2673F05139FCE516363 /* IKIBLEManager.swift */; };
+		1EC86DD7F88159C35801B084 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F6FF029B7548757C1274465 /* Assets.xcassets */; };
+		3E1BBF53173FF630A0C72728 /* IKIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B023CFBBAC6F7FFA7362E0 /* IKIApp.swift */; };
+		3F5D27FA7AF5B98EB761D100 /* IKISetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83499A87E6C9B736278D481 /* IKISetupView.swift */; };
+		7A1E4E2DCC7A2FDB83121B18 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D28A730E149C15A60128EF7A /* SettingsView.swift */; };
+		806BFC4030C22499BB72F549 /* IKIDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17316A8ABDBC1E7682360737 /* IKIDevice.swift */; };
+		A2731338C21FF9D5BBB1E07A /* SafetyDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE218BD9BA1BD1D6194924C /* SafetyDashboardView.swift */; };
+		A2D1D32C95ECF94EE796D71C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4244F401D129964001254C01 /* ContentView.swift */; };
+		C36D3252227D09AFC61684B8 /* IKIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F797BE8D8911D7EAA277A9 /* IKIService.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		17316A8ABDBC1E7682360737 /* IKIDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IKIDevice.swift; sourceTree = "<group>"; };
+		2F3741025C592A604E42DE2B /* IKI.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = IKI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2FE218BD9BA1BD1D6194924C /* SafetyDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafetyDashboardView.swift; sourceTree = "<group>"; };
+		3F6FF029B7548757C1274465 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4244F401D129964001254C01 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		42E6F2673F05139FCE516363 /* IKIBLEManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IKIBLEManager.swift; sourceTree = "<group>"; };
+		B83499A87E6C9B736278D481 /* IKISetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IKISetupView.swift; sourceTree = "<group>"; };
+		C5B023CFBBAC6F7FFA7362E0 /* IKIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IKIApp.swift; sourceTree = "<group>"; };
+		D28A730E149C15A60128EF7A /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		D4F797BE8D8911D7EAA277A9 /* IKIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IKIService.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		05D5D22B07C5F81B637CF462 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				4244F401D129964001254C01 /* ContentView.swift */,
+				C5B023CFBBAC6F7FFA7362E0 /* IKIApp.swift */,
+				F9043BDB44AF27C3FF05035E /* Models */,
+				9B356C2963D6756C1AF27BB3 /* Services */,
+				3FFB91E0B6FFDE721E203AD3 /* Views */,
+			);
+			name = Sources;
+			path = IKI/Sources;
+			sourceTree = "<group>";
+		};
+		09AA7043D99BA1089DC7E54B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				3F6FF029B7548757C1274465 /* Assets.xcassets */,
+			);
+			name = Resources;
+			path = IKI/Resources;
+			sourceTree = "<group>";
+		};
+		09E958EAD575CE35D1B72679 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2F3741025C592A604E42DE2B /* IKI.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3FFB91E0B6FFDE721E203AD3 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B83499A87E6C9B736278D481 /* IKISetupView.swift */,
+				2FE218BD9BA1BD1D6194924C /* SafetyDashboardView.swift */,
+				D28A730E149C15A60128EF7A /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		642AEAD96632A9A251356E29 = {
+			isa = PBXGroup;
+			children = (
+				09AA7043D99BA1089DC7E54B /* Resources */,
+				05D5D22B07C5F81B637CF462 /* Sources */,
+				09E958EAD575CE35D1B72679 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9B356C2963D6756C1AF27BB3 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				42E6F2673F05139FCE516363 /* IKIBLEManager.swift */,
+				D4F797BE8D8911D7EAA277A9 /* IKIService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		F9043BDB44AF27C3FF05035E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				17316A8ABDBC1E7682360737 /* IKIDevice.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		98DA584E15A0B6CAE36C07F0 /* IKI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CAF4026E22C75E7D58B2DB8B /* Build configuration list for PBXNativeTarget "IKI" */;
+			buildPhases = (
+				6258B88E1CA9D88ED837B4FA /* Sources */,
+				4E0F95D0ADDF1226610C9232 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = IKI;
+			packageProductDependencies = (
+			);
+			productName = IKI;
+			productReference = 2F3741025C592A604E42DE2B /* IKI.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		941BEB52B57BCDDE6B4C923E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					98DA584E15A0B6CAE36C07F0 = {
+						DevelopmentTeam = 5BV85JW8US;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 0C162F701FC90F96E110AEEF /* Build configuration list for PBXProject "IKI" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 642AEAD96632A9A251356E29;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 54;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				98DA584E15A0B6CAE36C07F0 /* IKI */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4E0F95D0ADDF1226610C9232 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1EC86DD7F88159C35801B084 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6258B88E1CA9D88ED837B4FA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A2D1D32C95ECF94EE796D71C /* ContentView.swift in Sources */,
+				3E1BBF53173FF630A0C72728 /* IKIApp.swift in Sources */,
+				088B259587682DBB1869CA43 /* IKIBLEManager.swift in Sources */,
+				806BFC4030C22499BB72F549 /* IKIDevice.swift in Sources */,
+				C36D3252227D09AFC61684B8 /* IKIService.swift in Sources */,
+				3F5D27FA7AF5B98EB761D100 /* IKISetupView.swift in Sources */,
+				A2731338C21FF9D5BBB1E07A /* SafetyDashboardView.swift in Sources */,
+				7A1E4E2DCC7A2FDB83121B18 /* SettingsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		73C7F683C1ABEE16B723958C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 5BV85JW8US;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = IKI/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.10;
+			};
+			name = Debug;
+		};
+		8720B05BEA27E69C9C071BCC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = IKI/IKI.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5BV85JW8US;
+				INFOPLIST_FILE = IKI/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.enablerdao.iki;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		C539E43AEE82BE9F6173B4C7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 5BV85JW8US;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = IKI/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.10;
+			};
+			name = Release;
+		};
+		FC4A09E6A6E1A2DDE20D36D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = IKI/IKI.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5BV85JW8US;
+				INFOPLIST_FILE = IKI/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.enablerdao.iki;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0C162F701FC90F96E110AEEF /* Build configuration list for PBXProject "IKI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				73C7F683C1ABEE16B723958C /* Debug */,
+				C539E43AEE82BE9F6173B4C7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		CAF4026E22C75E7D58B2DB8B /* Build configuration list for PBXNativeTarget "IKI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FC4A09E6A6E1A2DDE20D36D8 /* Debug */,
+				8720B05BEA27E69C9C071BCC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 941BEB52B57BCDDE6B4C923E /* Project object */;
+}

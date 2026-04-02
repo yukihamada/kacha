@@ -14,6 +14,8 @@ struct BookingView: View {
 
     private let statusFilters = [
         ("all", "すべて"),
+        ("inquiry", "問い合わせ"),
+        ("request", "リクエスト"),
         ("upcoming", "予定"),
         ("confirmed", "確定"),
         ("active", "滞在中"),
@@ -205,6 +207,7 @@ struct StatusBadge: View {
         case "active": return .kachaSuccess
         case "upcoming": return .kachaAccent
         case "confirmed": return .kacha
+        case "inquiry": return .kachaAccent
         case "request": return .kachaWarn
         case "completed": return .secondary
         case "cancelled": return .kachaDanger

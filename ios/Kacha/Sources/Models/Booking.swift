@@ -113,6 +113,7 @@ final class Booking {
         case "upcoming": return "予定"
         case "confirmed": return "確定"
         case "request": return "リクエスト"
+        case "inquiry": return "問い合わせ"
         case "active": return "滞在中"
         case "completed": return "完了"
         case "cancelled": return "キャンセル"
@@ -124,6 +125,7 @@ final class Booking {
     static func mapBeds24Status(_ beds24Status: String?, checkIn: Date, checkOut: Date) -> String {
         let now = Date()
         if beds24Status == "cancelled" { return "cancelled" }
+        if beds24Status == "inquiry" { return "inquiry" }
         if beds24Status == "request" { return "request" }
         // Auto-detect active/completed based on dates
         if now >= checkIn && now < checkOut { return "active" }

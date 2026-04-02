@@ -9,6 +9,7 @@ struct CleaningManagementView: View {
     @Query private var bookings: [Booking]
     @Query(sort: \Home.sortOrder) private var homes: [Home]
     @Environment(\.modelContext) private var context
+    @ObservedObject private var subscription = SubscriptionManager.shared
 
     private var cleaningTasks: [CleaningTask] {
         let calendar = Calendar.current
@@ -41,14 +42,29 @@ struct CleaningManagementView: View {
             ZStack {
                 Color.kachaBg.ignoresSafeArea()
 
-                ScrollView {
-                    VStack(spacing: 16) {
-                        statsHeader
-                        tasksList
-                        Spacer(minLength: 40)
+                if !subscription.isBusiness {
+                    ScrollView {
+                        VStack(spacing: 20) {
+                            UpgradePromptView(
+                                title: "清掃管理はBusinessプランで",
+                                message: "清掃タスクの管理・ステータス追跡・自動通知はBusinessプランで利用できます。",
+                                requiredPlan: "business"
+                            )
+                            Spacer(minLength: 40)
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.top, 8)
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 8)
+                } else {
+                    ScrollView {
+                        VStack(spacing: 16) {
+                            statsHeader
+                            tasksList
+                            Spacer(minLength: 40)
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.top, 8)
+                    }
                 }
             }
             .navigationTitle("清掃管理")

@@ -9,6 +9,7 @@ struct TeamView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
     @Query(sort: \ShareRecord.createdAt, order: .reverse) private var allRecords: [ShareRecord]
+    @ObservedObject private var subscription = SubscriptionManager.shared
 
     @State private var showNewShare = false
     @State private var revokeTarget: ShareRecord?
@@ -34,24 +35,41 @@ struct TeamView: View {
         NavigationStack {
             ZStack {
                 Color.kachaBg.ignoresSafeArea()
-                ScrollView {
-                    VStack(spacing: 20) {
-                        headerCard
-                        if !activeMembers.isEmpty {
-                            memberSection(title: "有効なメンバー", members: activeMembers, isActive: true)
+
+                if !subscription.isBusiness {
+                    ScrollView {
+                        VStack(spacing: 20) {
+                            headerCard
+                            UpgradePromptView(
+                                title: "チーム管理はBusinessプランで",
+                                message: "メンバーの招待・権限管理はBusinessプランで利用できます。チームでの民泊運営を効率化しましょう。",
+                                requiredPlan: "business"
+                            )
+                            Spacer(minLength: 40)
                         }
-                        if !inactiveMembers.isEmpty {
-                            memberSection(title: "過去のメンバー", members: inactiveMembers, isActive: false)
-                        }
-                        if records.isEmpty {
-                            emptyState
-                        }
-                        roleLegendCard
-                        inviteButton
-                        Spacer(minLength: 40)
+                        .padding(.horizontal, 16)
+                        .padding(.top, 8)
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 8)
+                } else {
+                    ScrollView {
+                        VStack(spacing: 20) {
+                            headerCard
+                            if !activeMembers.isEmpty {
+                                memberSection(title: "有効なメンバー", members: activeMembers, isActive: true)
+                            }
+                            if !inactiveMembers.isEmpty {
+                                memberSection(title: "過去のメンバー", members: inactiveMembers, isActive: false)
+                            }
+                            if records.isEmpty {
+                                emptyState
+                            }
+                            roleLegendCard
+                            inviteButton
+                            Spacer(minLength: 40)
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.top, 8)
+                    }
                 }
             }
             .navigationBarHidden(true)

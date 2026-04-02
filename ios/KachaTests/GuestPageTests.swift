@@ -214,19 +214,19 @@ final class GuestPageTests: XCTestCase {
         let json = """
         {
             "token": "abc123xyz",
-            "url": "https://kacha.pasha.run/g/abc123xyz"
+            "url": "https://kagi.pasha.run/g/abc123xyz"
         }
         """.data(using: .utf8)!
 
         let response = try JSONDecoder().decode(GuestPageClient.CreateResponse.self, from: json)
 
         XCTAssertEqual(response.token, "abc123xyz")
-        XCTAssertEqual(response.url, "https://kacha.pasha.run/g/abc123xyz")
+        XCTAssertEqual(response.url, "https://kagi.pasha.run/g/abc123xyz")
     }
 
     func testCreateResponseTokenNotEmpty() throws {
         let json = """
-        {"token": "test-token-001", "url": "https://kacha.pasha.run/g/test-token-001"}
+        {"token": "test-token-001", "url": "https://kagi.pasha.run/g/test-token-001"}
         """.data(using: .utf8)!
 
         let response = try JSONDecoder().decode(GuestPageClient.CreateResponse.self, from: json)

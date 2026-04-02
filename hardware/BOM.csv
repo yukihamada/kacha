@@ -1,0 +1,53 @@
+Reference,Value,Package,Manufacturer,MPN,Description,Quantity,Unit Price (USD),Source,Change
+U1,ESP32-S3-MINI-1-N8,ESP32-S3-MINI,Espressif,ESP32-S3-MINI-1-N8,WiFi+BLE5.0 MCU 8MB Flash 技適認証済(201-220017),1,3.20,LCSC (C2913206),
+U2,SHT40-AD1B-R2,DFN-4 (1.5x1.5mm),Sensirion,SHT40-AD1B-R2,Temperature & Humidity Sensor ±0.2°C ±1.8%RH I2C 0x44,1,2.20,Digi-Key (SHT40-AD1B-R2CT-ND),[COST↓] SHT45→SHT40: -$1.30/台
+U3,LD2410B,SMD Module (35x7mm),Hi-Link,LD2410B,60GHz mmWave Radar Presence+Breathing Sensor UART+OUT 5V,1,2.00,AliExpress/LCSC,[UPGRADE] PIR→LD2410B: -$2.80 静止人体・呼吸検知・安否確認
+U4,VEML7700-TR,ODFN-6 (2.0x2.0mm),Vishay,VEML7700-TR,Ambient Light Sensor 0-167klux I2C 0x10,1,0.85,LCSC (C82227),[COST↓] BH1750→VEML7700: -$0.75 高ダイナミックレンジ
+U5,SGP41-D-R4,DFN-6 (2.44x2.44mm),Sensirion,SGP41-D-R4,VOC + NOx Index Sensor I2C 0x59,1,7.00,Digi-Key (1649-SGP41-D-R4CT-ND),[UPGRADE] SGP40($5.80)→SGP41($7.00): +$1.20 NOx検知追加 同パッケージ・同I2Cアドレス ドロップイン換装
+U6,INMP441ACEZ-R7,LGA (4.72x3.76mm),TDK InvenSense,INMP441ACEZ-R7,MEMS Microphone I2S -26dBFS SNR61dB (TinyML音響イベント検知),1,1.40,LCSC (C2889089),
+U7,LIS2DH12TR,LGA-16 (2x2mm),STMicroelectronics,LIS2DH12TR,3-axis Accelerometer ±16g I2C 0x19 INT1→GPIO13,1,0.95,LCSC (C110926),
+U8,BMP280,LGA-8 (2.0x2.5mm),Bosch,BMP280,Barometric Pressure+Temperature I2C 0x76 (窓開放検知・天気予報),1,1.10,LCSC (C83291),
+U9,RT9013-33GB,SOT-23-5,Richtek,RT9013-33GB,3.3V LDO 500mA SOT-23-5 Iq=55μA,1,0.05,LCSC (C145239),[UPGRADE] ME6206A(300mA)→RT9013(500mA): SCD41追加でピーク電流マージン確保
+U10,USBLC6-2SC6,SOT-23-6,STMicroelectronics,USBLC6-2SC6,USB ESD Protection Diode,1,0.25,LCSC (C7519),
+U11,ATECC608A-MAHDA-T,UDFN-8 (2x3mm),Microchip,ATECC608A-MAHDA-T,Secure Element I2C 0x60 ECC P-256 — デバイス認証・OTA署名・監査ログ署名,1,0.60,Digi-Key (ATECC608A-MAHDA-TCT-ND),[ADD] セキュアエレメント
+U12,SCD41-D-R2,DFN-10 (2.5x2.5mm),Sensirion,SCD41-D-R2,True CO₂ Sensor 400-5000ppm ±40ppm I2C 0x62 (換気アラート・在室密度),1,14.00,Digi-Key (SCD41-D-R2CT-ND),[ADD] CO₂センサー: 世界初の民泊CO₂ハブ Nest/Aqara全社不搭載
+U13,ST25DV04K-IER6T3,SO8N (3.9x4.9mm),STMicroelectronics,ST25DV04K-IER6T3,Dynamic NFC Tag I2C 0x53 13.56MHz ISO15693 — スマホタップでWiFi自動接続,1,0.50,LCSC (C2677547),[ADD] NFCダイナミックタグ: ゲストWiFi自動配布
+J1,USB-C Receptacle,USB-C SMD 16pin,Korean Hroparts Elec,TYPE-C-31-M-12,USB Type-C Connector 16Pin SMD,1,0.30,LCSC (C165948),
+J2,JST PH 2Pin,JST PH 2.0mm,JST,B2B-PH-K-S(LF)(SN),Door Sensor Cable Connector (MC-38),1,0.08,LCSC (C131337),
+J3,JST PH 2Pin,JST PH 2.0mm,JST,B2B-PH-K-S(LF)(SN),Water Leak Sensor Cable Connector,1,0.08,LCSC (C131337),[ADD] 水漏れセンサー入力ポート (GPIO16)
+J4,2.54mm 4Pin Header,SMD 2.54mm pitch,Generic,PZ254-1-04-Z,I2C Expansion Port (SDA/SCL/3.3V/GND),1,0.15,LCSC,[ADD] 拡張ポート: 将来センサー追加 (e-ink / CO sensor etc.)
+BT1,CR2032 Holder,SMD Battery Holder,Linx Technologies,BAT-HLD-001-SMT,CR2032 SMD Battery Holder (停電時BLE通知バックアップ),1,0.60,LCSC (C75811),
+BZ1,Active Piezo Buzzer 3V,SMD 9x6mm,Jiangsu Huaneng,MLT-8530,Active Piezo Buzzer 3V SMD GPIO17駆動 (緊急アラーム・確認音),1,0.10,LCSC (C96044),[ADD] 音声アラート: 煙感知器音検知・緊急・確認
+D1,WS2812B-2020,2020 (2.0x2.0mm),Worldsemi,WS2812B-2020,RGB LED NeoPixel #1 (フロント — 家スコアをアンビエント色表示),1,0.08,LCSC (C965555),
+D1b,WS2812B-2020,2020 (2.0x2.0mm),Worldsemi,WS2812B-2020,RGB LED NeoPixel #2 (リア — D1 DOUTとデイジーチェーン 360°視認性),1,0.08,LCSC (C965555),[ADD] 2個目LED: 前後どこからでも見える
+D2,1N5819W,SOD-123,MDD,1N5819W,Schottky Diode 40V 1A (CR2032 ORing回路),1,0.03,LCSC (C191023),
+D3,PRTR5V0U2X,SOT-363,Nexperia,PRTR5V0U2X,TVS Diode ESD Protection — Door Sensor GPIO3,1,0.10,LCSC (C2827654),[FIX] 外部ケーブルESD保護
+D4,PRTR5V0U2X,SOT-363,Nexperia,PRTR5V0U2X,TVS Diode ESD Protection — Water Leak Sensor GPIO16,1,0.10,LCSC (C2827654),[ADD] 水漏れセンサーESD保護
+SW1,Tactile Switch,SMD 3x4x2mm,C&K,PTS636 SM25F SMTR LFS,Reset Button → EN Pin,1,0.10,LCSC (C2837610),
+SW2,Tactile Switch,SMD 3x4x2mm,C&K,PTS636 SM25F SMTR LFS,Pairing / Setup Button (GPIO2 3秒=AP再設定 5秒=工場出荷),1,0.10,LCSC (C2837610),
+R1,4.7K,0402,Yageo,RC0402JR-074K7L,I2C SDA Pull-up 3.3V (400kHz対応 立ち上がり280ns),1,0.002,LCSC (C25900),[FIX] 10K→4.7K
+R2,4.7K,0402,Yageo,RC0402JR-074K7L,I2C SCL Pull-up 3.3V (400kHz対応),1,0.002,LCSC (C25900),[FIX] 10K→4.7K
+R4,10K,0402,Yageo,RC0402JR-0710KL,Pull-up for Door Sensor GPIO3,1,0.002,LCSC (C25744),
+R5,5.1K,0402,Yageo,RC0402JR-075K1L,USB-C CC1 (UFP認識),1,0.002,LCSC (C25905),
+R6,5.1K,0402,Yageo,RC0402JR-075K1L,USB-C CC2 (UFP認識),1,0.002,LCSC (C25905),
+R7,100K,0402,Yageo,RC0402JR-07100KL,VBUS Voltage Divider High (停電検知),1,0.002,LCSC (C25741),
+R8,100K,0402,Yageo,RC0402JR-07100KL,VBUS Voltage Divider Low,1,0.002,LCSC (C25741),
+R9,33,0402,Yageo,RC0402JR-0733RL,WS2812B Data Series Resistor (ringing防止 + GPIO保護),1,0.002,LCSC (C25900),[FIX] 必須
+R10,10K,0402,Yageo,RC0402JR-0710KL,Pull-up for Water Leak Sensor GPIO16,1,0.002,LCSC (C25744),[ADD]
+R11,47K,0402,Yageo,RC0402JR-0747KL,NFC GPO Pull-up (ST25DV GPO → GPIO21),1,0.002,LCSC,[ADD] NFC割り込みプルアップ
+C1,10uF,0805,Samsung,CL21A106KAYNNNE,ESP32-S3 VDD3P3 Bypass Cap,2,0.02,LCSC (C15850),
+C2,100nF,0402,Samsung,CL05B104KO5NNNC,IC Decoupling Cap (x13: U2〜U8/U11/U12/U13/U9/BZ1/EN),13,0.005,LCSC (C1525),[UPDATE] 10→13個
+C3,22uF,0805,Samsung,CL21A226MAQNNNE,LDO 3.3V Output Bypass,1,0.03,LCSC (C45783),
+C4,22uF,0805,Samsung,CL21A226MAQNNNE,LDO 5V Input Bypass,1,0.03,LCSC (C45783),
+C5,470uF 6.3V,SMD 6.3x7.7mm,Nichicon,UWT1C471MNL1GS,CR2032 Backup Burst Current Buffer (WiFi TX 300mA吸収),1,0.12,LCSC (C330803),[FIX]
+C6,10uF,0805,Samsung,CL21A106KAYNNNE,LD2410B 5V Bulk Bypass Cap,1,0.02,LCSC (C15850),[ADD]
+C7,100uF 6.3V,SMD 5x5.4mm,Panasonic,EEEFK0J101P,SCD41 Power Supply Bulk Cap (CO₂センサーヒーター瞬間電流吸収),1,0.08,LCSC (C369398),[ADD]
+C8,47pF,0402,Samsung,CL05C470JB5NNNC,NFC Antenna Tuning Cap (ST25DV RF整合),1,0.002,LCSC,[ADD] NFCアンテナ整合
+FB1,600R@100MHz,0402,Murata,BLM18PG601SN1D,Power Rail Ferrite Bead EMI Filter (LDO→3.3V Rail間),1,0.05,LCSC (C1015),[ADD] mmWave+WiFiノイズ遮断
+TP1,Test Point 3.3V,1mm pad,-,-,Factory Test Point 3.3V Rail,1,0,LCSC,-
+TP2,Test Point GND,1mm pad,-,-,Factory Test Point GND,1,0,LCSC,-
+TP3,Test Point SDA,1mm pad,-,-,Factory Test Point I2C SDA,1,0,LCSC,-
+TP4,Test Point SCL,1mm pad,-,-,Factory Test Point I2C SCL,1,0,LCSC,-
+TP5,Test Point GPIO0,1mm pad,-,-,BOOT pin — Firmware Flash専用 (ボタン接続禁止),1,0,LCSC,[FIX]
+DOOR1,MC-38,Wired Reed Switch,Generic,MC-38,Door/Window Magnetic Reed Switch 15-25mm検知距離,1,1.20,AliExpress/Amazon,
+LEAK1,Resistive Leak Sensor,Floor Mat 30x30cm,Generic,FS-IR02,Water Leak Detection Mat with 1m cable (J3接続),1,1.00,AliExpress,[ADD] 水漏れ検知マット

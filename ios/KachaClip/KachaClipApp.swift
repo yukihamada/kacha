@@ -2,7 +2,7 @@ import SwiftUI
 import CryptoKit
 
 // MARK: - App Clip Entry Point
-// URL: https://kacha.pasha.run/guest?t=TOKEN#ENCRYPTION_KEY
+// URL: https://kagi.pasha.run/guest?t=TOKEN#ENCRYPTION_KEY
 
 @main
 struct KachaClipApp: App {
@@ -25,9 +25,9 @@ struct KachaClipApp: App {
 
     private func handleURL(_ url: URL) {
         // Support both:
-        //   https://kacha.pasha.run/guest?t=TOKEN#KEY
+        //   https://kagi.pasha.run/guest?t=TOKEN#KEY
         //   kacha://guest?t=TOKEN#KEY
-        let isUniversal = url.scheme == "https" && url.host == "kacha.pasha.run"
+        let isUniversal = url.scheme == "https" && url.host == "kagi.pasha.run"
             && (url.path == "/guest" || url.path == "/join")
         let isCustom = url.scheme == "kacha" && (url.host == "guest" || url.host == "join")
         guard isUniversal || isCustom else { return }
@@ -131,7 +131,7 @@ enum ClipShareError: Error, LocalizedError {
 }
 
 struct ClipShareClient {
-    static let baseURL = "https://kacha.pasha.run"
+    static let baseURL = "https://kagi.pasha.run"
 
     static func fetchShare(token: String, encryptionKey: String) async throws -> GuestData {
         guard let url = URL(string: "\(baseURL)/api/v1/shares/\(token)") else {

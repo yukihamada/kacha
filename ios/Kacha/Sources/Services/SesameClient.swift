@@ -33,7 +33,7 @@ final class SesameClient: ObservableObject {
         return status
     }
 
-    func sendCommand(_ command: Command, uuid: String, apiKey: String, historyTag: String = "カチャ") async throws {
+    func sendCommand(_ command: Command, uuid: String, apiKey: String, historyTag: String = "KAGI") async throws {
         guard !uuid.isEmpty, !apiKey.isEmpty else { throw SesameError.missingConfig }
         guard let cmdURL = URL(string: "\(base)/\(uuid)") else { throw SesameError.apiError(0) }
         var req = URLRequest(url: cmdURL)

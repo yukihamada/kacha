@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KAGI Sensor Hub - Design Preview</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#0a0a12; color:#eaeaf2; font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif; padding:40px; }
+h1 { color:#E8A838; font-size:28px; text-align:center; margin-bottom:8px; }
+.subtitle { text-align:center; color:#7a7a95; font-size:14px; margin-bottom:40px; }
+
+.views { display:flex; gap:40px; justify-content:center; flex-wrap:wrap; }
+
+/* 3D-ish device rendering */
+.device-view { text-align:center; }
+.device-label { color:#E8A838; font-size:13px; font-weight:600; margin-bottom:12px; }
+
+/* Front view */
+.device-front {
+  width:240px; height:240px;
+  background: linear-gradient(145deg, #1a1a2e 0%, #16162a 50%, #0f0f1e 100%);
+  border-radius:16px;
+  border: 1px solid rgba(232,168,56,0.15);
+  position:relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+  overflow:hidden;
+}
+
+/* Logo */
+.logo {
+  position:absolute; top:16px; left:50%; transform:translateX(-50%);
+  font-size:18px; font-weight:800; letter-spacing:3px;
+  color:#E8A838; text-shadow: 0 0 20px rgba(232,168,56,0.3);
+}
+
+/* PIR lens */
+.pir-lens {
+  position:absolute; top:50px; left:50%; transform:translateX(-50%);
+  width:36px; height:36px; border-radius:50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 60%, transparent 100%);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.pir-inner {
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:18px; height:18px; border-radius:50%;
+  background: radial-gradient(circle, #2a2a3e, #1a1a2e);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Status LED */
+.status-led {
+  position:absolute; top:96px; left:50%; transform:translateX(-50%);
+  width:6px; height:6px; border-radius:50%;
+  background:#10B981;
+  box-shadow: 0 0 8px #10B981, 0 0 20px rgba(16,185,129,0.3);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity:1; box-shadow: 0 0 8px #10B981, 0 0 20px rgba(16,185,129,0.3); }
+  50% { opacity:0.6; box-shadow: 0 0 4px #10B981; }
+}
+
+/* Ventilation grille */
+.vent-area {
+  position:absolute; bottom:55px; left:50%; transform:translateX(-50%);
+  display:flex; gap:3px;
+}
+.vent-slot {
+  width:2px; height:16px; border-radius:1px;
+  background: rgba(255,255,255,0.04);
+}
+
+/* Mic hole */
+.mic-holes {
+  position:absolute; top:115px; right:24px;
+  display:grid; grid-template-columns:repeat(3,1fr); gap:2px;
+}
+.mic-dot {
+  width:2px; height:2px; border-radius:50%;
+  background: rgba(255,255,255,0.06);
+}
+
+/* Sensor icons on device */
+.sensor-icons {
+  position:absolute; bottom:20px; left:50%; transform:translateX(-50%);
+  display:flex; gap:8px;
+}
+.sensor-icon {
+  width:20px; height:20px; border-radius:4px;
+  background:rgba(232,168,56,0.08);
+  border:1px solid rgba(232,168,56,0.15);
+  display:flex; align-items:center; justify-content:center;
+  font-size:10px; color:rgba(232,168,56,0.5);
+}
+
+/* Side view */
+.device-side {
+  width:100px; height:240px;
+  background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1e 100%);
+  border-radius:8px 16px 16px 8px;
+  border: 1px solid rgba(232,168,56,0.1);
+  position:relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.03);
+}
+
+/* USB-C port on side */
+.usbc-port {
+  position:absolute; bottom:20px; left:50%; transform:translateX(-50%);
+  width:18px; height:8px; border-radius:4px;
+  background:#0a0a12;
+  border:1px solid rgba(255,255,255,0.1);
+}
+.usbc-inner {
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:10px; height:4px; border-radius:2px;
+  background:rgba(255,255,255,0.05);
+}
+
+/* Wall mount holes */
+.mount-hole {
+  position:absolute; width:6px; height:6px; border-radius:50%;
+  background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.05);
+}
+
+/* Door sensor */
+.door-sensor-cable {
+  position:absolute; top:80px; left:-2px;
+  width:4px; height:4px; border-radius:50%;
+  background:#333;
+  border:1px solid rgba(255,255,255,0.1);
+}
+
+/* Specs section */
+.specs { margin-top:60px; max-width:900px; margin-left:auto; margin-right:auto; }
+.spec-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:24px; }
+.spec-card {
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(232,168,56,0.1);
+  border-radius:12px; padding:16px; text-align:center;
+}
+.spec-icon { font-size:24px; margin-bottom:8px; }
+.spec-name { font-size:12px; color:#E8A838; font-weight:600; margin-bottom:4px; }
+.spec-detail { font-size:10px; color:#7a7a95; line-height:1.5; }
+.spec-chip { font-size:9px; color:#3B9FE8; margin-top:6px; display:inline-block;
+  padding:2px 6px; background:rgba(59,159,232,0.1); border-radius:4px; }
+
+/* Dimensions */
+.dims { margin-top:40px; text-align:center; }
+.dim-box {
+  display:inline-block; padding:12px 24px;
+  background:rgba(232,168,56,0.05); border:1px solid rgba(232,168,56,0.15);
+  border-radius:8px; margin:0 8px;
+}
+.dim-val { font-size:20px; font-weight:700; color:#E8A838; }
+.dim-label { font-size:10px; color:#7a7a95; margin-top:2px; }
+
+/* Color options */
+.colors { margin-top:40px; text-align:center; }
+.colors h3 { color:#E8A838; font-size:14px; margin-bottom:16px; }
+.color-options { display:flex; gap:16px; justify-content:center; }
+.color-opt {
+  width:60px; height:60px; border-radius:12px; cursor:pointer;
+  border:2px solid transparent; transition:all 0.3s;
+}
+.color-opt:hover { border-color:#E8A838; transform:scale(1.1); }
+.color-opt.active { border-color:#E8A838; box-shadow:0 0 15px rgba(232,168,56,0.3); }
+.color-name { font-size:10px; color:#7a7a95; margin-top:4px; }
+
+/* BOM cost */
+.cost { margin-top:40px; text-align:center; }
+.cost-grid { display:flex; gap:20px; justify-content:center; margin-top:16px; }
+.cost-card {
+  background:rgba(16,185,129,0.05); border:1px solid rgba(16,185,129,0.15);
+  border-radius:12px; padding:16px 24px; text-align:center;
+}
+.cost-qty { font-size:12px; color:#7a7a95; }
+.cost-price { font-size:24px; font-weight:700; color:#10B981; margin-top:4px; }
+.cost-unit { font-size:10px; color:#7a7a95; }
+
+/* Improvements */
+.improve { margin-top:60px; max-width:900px; margin-left:auto; margin-right:auto; }
+.improve h2 { color:#E8A838; font-size:18px; margin-bottom:16px; }
+.improve-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+.improve-card {
+  background:rgba(59,159,232,0.05); border:1px solid rgba(59,159,232,0.15);
+  border-radius:12px; padding:16px;
+}
+.improve-title { font-size:13px; font-weight:600; color:#3B9FE8; margin-bottom:4px; }
+.improve-desc { font-size:11px; color:#7a7a95; line-height:1.6; }
+.improve-impact { font-size:10px; color:#E8A838; margin-top:6px; }
+</style>
+</head>
+<body>
+
+<h1>KAGI Sensor Hub</h1>
+<p class="subtitle">8-in-1 Smart Property Monitor | 60mm x 60mm x 25mm</p>
+
+<div class="views">
+  <!-- Front View -->
+  <div class="device-view">
+    <div class="device-label">FRONT</div>
+    <div class="device-front">
+      <div class="logo">KAGI</div>
+      <div class="pir-lens"><div class="pir-inner"></div></div>
+      <div class="status-led"></div>
+      <div class="mic-holes">
+        <div class="mic-dot"></div><div class="mic-dot"></div><div class="mic-dot"></div>
+        <div class="mic-dot"></div><div class="mic-dot"></div><div class="mic-dot"></div>
+        <div class="mic-dot"></div><div class="mic-dot"></div><div class="mic-dot"></div>
+      </div>
+      <div class="vent-area">
+        <div class="vent-slot"></div><div class="vent-slot"></div><div class="vent-slot"></div>
+        <div class="vent-slot"></div><div class="vent-slot"></div><div class="vent-slot"></div>
+        <div class="vent-slot"></div><div class="vent-slot"></div><div class="vent-slot"></div>
+        <div class="vent-slot"></div><div class="vent-slot"></div><div class="vent-slot"></div>
+        <div class="vent-slot"></div><div class="vent-slot"></div><div class="vent-slot"></div>
+      </div>
+      <div class="sensor-icons">
+        <div class="sensor-icon">T</div>
+        <div class="sensor-icon">M</div>
+        <div class="sensor-icon">D</div>
+        <div class="sensor-icon">L</div>
+        <div class="sensor-icon">A</div>
+        <div class="sensor-icon">N</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Side View -->
+  <div class="device-view">
+    <div class="device-label">SIDE</div>
+    <div class="device-side">
+      <div class="mount-hole" style="top:30px;right:12px;"></div>
+      <div class="mount-hole" style="bottom:60px;right:12px;"></div>
+      <div class="door-sensor-cable"></div>
+      <div class="usbc-port"><div class="usbc-inner"></div></div>
+      <div style="position:absolute;bottom:6px;left:50%;transform:translateX(-50%);font-size:8px;color:rgba(255,255,255,0.2)">USB-C</div>
+    </div>
+  </div>
+
+  <!-- Top View (showing mic holes) -->
+  <div class="device-view">
+    <div class="device-label">TOP</div>
+    <div style="width:240px;height:100px;background:linear-gradient(90deg,#1a1a2e,#16162a);border-radius:16px;border:1px solid rgba(232,168,56,0.1);position:relative;box-shadow:0 10px 40px rgba(0,0,0,0.4);">
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:grid;grid-template-columns:repeat(5,1fr);gap:4px;">
+        <div class="mic-dot" style="width:3px;height:3px;"></div>
+        <div class="mic-dot" style="width:3px;height:3px;"></div>
+        <div class="mic-dot" style="width:3px;height:3px;"></div>
+        <div class="mic-dot" style="width:3px;height:3px;"></div>
+        <div class="mic-dot" style="width:3px;height:3px;"></div>
+        <div class="mic-dot" style="width:3px;height:3px;"></div>
+        <div class="mic-dot" style="width:3px;height:3px;"></div>
+        <div class="mic-dot" style="width:3px;height:3px;"></div>
+        <div class="mic-dot" style="width:3px;height:3px;"></div>
+        <div class="mic-dot" style="width:3px;height:3px;"></div>
+      </div>
+      <div style="position:absolute;top:8px;left:50%;transform:translateX(-50%);font-size:8px;color:rgba(255,255,255,0.15);">MIC ARRAY</div>
+    </div>
+  </div>
+</div>
+
+<!-- Dimensions -->
+<div class="dims">
+  <div class="dim-box"><div class="dim-val">60mm</div><div class="dim-label">WIDTH</div></div>
+  <div class="dim-box"><div class="dim-val">60mm</div><div class="dim-label">HEIGHT</div></div>
+  <div class="dim-box"><div class="dim-val">25mm</div><div class="dim-label">DEPTH</div></div>
+  <div class="dim-box"><div class="dim-val">45g</div><div class="dim-label">WEIGHT</div></div>
+</div>
+
+<!-- 8 Sensors -->
+<div class="specs">
+  <h2 style="color:#E8A838;font-size:18px;text-align:center;">8 Sensors</h2>
+  <div class="spec-grid">
+    <div class="spec-card">
+      <div class="spec-icon">🌡</div>
+      <div class="spec-name">Temperature & Humidity</div>
+      <div class="spec-detail">±0.1°C / ±1% RH<br>AC forgetting, mold prevention</div>
+      <div class="spec-chip">SHT45</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-icon">👤</div>
+      <div class="spec-name">Motion (PIR)</div>
+      <div class="spec-detail">5m range, 94° angle<br>Checkout confirm, intruder alert</div>
+      <div class="spec-chip">EKMC1603111</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-icon">🚪</div>
+      <div class="spec-name">Door Open/Close</div>
+      <div class="spec-detail">Magnetic reed switch<br>Lock backup, entry log</div>
+      <div class="spec-chip">MC-38</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-icon">💡</div>
+      <div class="spec-name">Light Level</div>
+      <div class="spec-detail">1-65535 lux<br>Lights-off check, auto scene</div>
+      <div class="spec-chip">BH1750FVI</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-icon">🌬</div>
+      <div class="spec-name">Air Quality (VOC)</div>
+      <div class="spec-detail">VOC Index 0-500<br>Ventilation alert, smoke detect</div>
+      <div class="spec-chip">SGP40</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-icon">🔊</div>
+      <div class="spec-name">Noise Level</div>
+      <div class="spec-detail">dB only, no recording<br>Party prevention, 22:00 alert</div>
+      <div class="spec-chip">INMP441</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-icon">📳</div>
+      <div class="spec-name">Vibration / Accel</div>
+      <div class="spec-detail">±2g to ±16g<br>Washer done, earthquake, tamper</div>
+      <div class="spec-chip">LIS2DH12</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-icon">🌤</div>
+      <div class="spec-name">Barometric Pressure</div>
+      <div class="spec-detail">300-1100 hPa<br>Window open detect, weather</div>
+      <div class="spec-chip">BMP280</div>
+    </div>
+  </div>
+</div>
+
+<!-- Color Options -->
+<div class="colors">
+  <h3>Color Variations</h3>
+  <div class="color-options">
+    <div>
+      <div class="color-opt active" style="background:linear-gradient(145deg,#1a1a2e,#0f0f1e);"></div>
+      <div class="color-name">Midnight</div>
+    </div>
+    <div>
+      <div class="color-opt" style="background:linear-gradient(145deg,#f5f5f0,#e8e8e0);"></div>
+      <div class="color-name">Pearl White</div>
+    </div>
+    <div>
+      <div class="color-opt" style="background:linear-gradient(145deg,#E8A838,#c48a20);"></div>
+      <div class="color-name">KAGI Gold</div>
+    </div>
+    <div>
+      <div class="color-opt" style="background:linear-gradient(145deg,#2d3436,#1a1a2e);"></div>
+      <div class="color-name">Slate</div>
+    </div>
+  </div>
+</div>
+
+<!-- Cost -->
+<div class="cost">
+  <h3 style="color:#E8A838;font-size:14px;">Unit Cost (BOM + PCB + Assembly)</h3>
+  <div class="cost-grid">
+    <div class="cost-card">
+      <div class="cost-qty">10 units</div>
+      <div class="cost-price">~$58</div>
+      <div class="cost-unit">per unit</div>
+    </div>
+    <div class="cost-card">
+      <div class="cost-qty">50 units</div>
+      <div class="cost-price">~$42</div>
+      <div class="cost-unit">per unit</div>
+    </div>
+    <div class="cost-card">
+      <div class="cost-qty">100 units</div>
+      <div class="cost-price">~$35</div>
+      <div class="cost-unit">per unit</div>
+    </div>
+    <div class="cost-card" style="border-color:rgba(232,168,56,0.3);background:rgba(232,168,56,0.05);">
+      <div class="cost-qty">Retail Price</div>
+      <div class="cost-price" style="color:#E8A838;">$99-129</div>
+      <div class="cost-unit">MSRP</div>
+    </div>
+  </div>
+</div>
+
+<!-- Improvements -->
+<div class="improve">
+  <h2>Further Improvements</h2>
+  <div class="improve-grid">
+    <div class="improve-card">
+      <div class="improve-title">1. PoE (Power over Ethernet) Option</div>
+      <div class="improve-desc">Ethernet + 電源を1本のケーブルで。WiFi不安定な物件でも確実に通信。PoE splitter (HT-4852S) + W5500 Ethernet PHYを追加。</div>
+      <div class="improve-impact">Impact: 通信安定性 ★★★★★</div>
+    </div>
+    <div class="improve-card">
+      <div class="improve-title">2. E-Ink Status Display</div>
+      <div class="improve-desc">1.54" E-Ink (GDEW0154T8) で室温・湿度・空気質を常時表示。消費電力ほぼゼロ。ゲストが一目で環境確認。</div>
+      <div class="improve-impact">Impact: ゲスト体験 ★★★★★</div>
+    </div>
+    <div class="improve-card">
+      <div class="improve-title">3. Thread/Matter Protocol</div>
+      <div class="improve-desc">Apple Home / Google Home / Alexa と直接連携。ESP32-S3はThread非対応なのでESP32-H2をサブMCUとして追加。</div>
+      <div class="improve-impact">Impact: エコシステム ★★★★☆</div>
+    </div>
+    <div class="improve-card">
+      <div class="improve-title">4. Radar Presence Sensor (LD2410)</div>
+      <div class="improve-desc">PIRの代わりにmmWaveレーダー。静止人物も検知（椅子に座っている人）。プライバシー保護しつつ高精度。</div>
+      <div class="improve-impact">Impact: 検知精度 ★★★★★</div>
+    </div>
+    <div class="improve-card">
+      <div class="improve-title">5. Rechargeable Battery (18650)</div>
+      <div class="improve-desc">停電時にCR2032の30秒ではなく、18650リチウムで数時間動作。USB-C充電 + BMS (TP4056)。</div>
+      <div class="improve-impact">Impact: 耐障害性 ★★★★☆</div>
+    </div>
+    <div class="improve-card">
+      <div class="improve-title">6. IR Blaster (赤外線リモコン)</div>
+      <div class="improve-desc">エアコン・テレビをNature Remo不要で直接制御。IR LED (940nm) + IR受信モジュールでリモコン学習。</div>
+      <div class="improve-impact">Impact: デバイス統合 ★★★★★</div>
+    </div>
+    <div class="improve-card">
+      <div class="improve-title">7. LoRa Sub-Module</div>
+      <div class="improve-desc">WiFi圏外の倉庫・離れにもセンサーデータを送信。SX1262モジュールで数km届く。920MHz帯（日本）。</div>
+      <div class="improve-impact">Impact: カバー範囲 ★★★★☆</div>
+    </div>
+    <div class="improve-card">
+      <div class="improve-title">8. Camera Module (Privacy-First)</div>
+      <div class="improve-desc">OV2640カメラで「人数カウント」のみ。映像はエッジ処理で人数→数値に変換し、画像は破棄。定員管理に。</div>
+      <div class="improve-impact">Impact: 定員管理 ★★★☆☆ (プライバシー懸念あり)</div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:60px;padding:20px;color:#333;font-size:10px;">
+  KAGI Sensor Hub v1.0 | ESP32-S3 | 8 Sensors | WiFi + BLE 5.0 | USB-C | Made for KAGI App
+</div>
+
+</body>
+</html>

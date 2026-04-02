@@ -134,13 +134,26 @@ struct BookingPoller {
                 context.insert(booking)
                 imported += 1
 
-                let homeName = allHomes.first { $0.id == resolvedHomeId }?.name ?? home.name
+                let resolvedHome = allHomes.first { $0.id == resolvedHomeId } ?? home
                 sendNewBookingNotification(
                     guestName: b24.guestFullName,
-                    homeName: homeName,
+                    homeName: resolvedHome.name,
                     checkIn: b24.arrival ?? "",
                     platform: b24.platformKey
                 )
+
+                // Auto-send guest card if enabled and check-in is within 2 days
+                let twoDaysFromNow = Calendar.current.date(byAdding: .day, value: 2, to: Date()) ?? Date()
+                if UserDefaults.standard.bool(forKey: "autoGuestCard_\(resolvedHome.id)"),
+                   cin <= twoDaysFromNow {
+                    Task {
+                        await GuestMessenger.sendGuestCardIfNeeded(
+                            home: resolvedHome,
+                            booking: booking,
+                            context: context
+                        )
+                    }
+                }
             }
         }
 

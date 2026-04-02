@@ -353,7 +353,7 @@ struct GuestClipView: View {
                 } label: {
                     HStack(spacing: 6) {
                         Image(systemName: "arrow.down.app.fill")
-                        Text(t("カチャをダウンロード",
+                        Text(t("KAGIをダウンロード",
                                 "Download KAGI",
                                 "下载 KAGI",
                                 "KAGI 다운로드"))

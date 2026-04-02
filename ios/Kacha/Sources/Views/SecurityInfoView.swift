@@ -52,7 +52,7 @@ struct SecurityInfoView: View {
                             color: .kachaWarn,
                             items: [
                                 ("ローカル保存", "SwitchBot、Sesame、Hue等のAPIキーはiPhoneのローカルストレージにのみ保存。"),
-                                ("通信", "各デバイスメーカーのAPIサーバーと直接通信。カチャのサーバーを経由しません。"),
+                                ("通信", "各デバイスメーカーのAPIサーバーと直接通信。KAGIのサーバーを経由しません。"),
                                 ("キーローテーション", "シェア終了後にAPIキーを入れ替える機能を搭載。古いキーを無効化できます。"),
                             ]
                         )
@@ -85,7 +85,7 @@ struct SecurityInfoView: View {
                         // What we don't do
                         infoCard(
                             icon: "xmark.shield.fill",
-                            title: "カチャがしないこと",
+                            title: "KAGIがしないこと",
                             color: .kachaDanger,
                             items: [
                                 ("広告トラッキングなし", "広告SDKは一切組み込んでいません。"),

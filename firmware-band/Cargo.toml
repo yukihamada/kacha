@@ -1,0 +1,25 @@
+[package]
+name = "kagi-band"
+version = "1.0.0"
+edition = "2021"
+authors = ["KAGI Team"]
+description = "KAGI Band - 手首装着型I'm OKデバイス ファームウェア"
+license = "MIT"
+
+[dependencies]
+esp-idf-hal = { version = "0.45", features = ["std"] }
+esp-idf-svc = { version = "0.50", features = ["std"] }
+esp-idf-sys = { version = "0.36", features = ["binstart"] }
+anyhow = "1"
+log = "0.4"
+heapless = "0.8"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[build-dependencies]
+embuild = { version = "0.33", features = ["espidf"] }
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1

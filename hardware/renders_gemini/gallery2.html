@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>KAGI & Koe — More Renders</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #080810; color: #fff; font-family: -apple-system, sans-serif; padding: 40px 20px; }
+  h1 { text-align: center; font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .sub { text-align: center; color: #444; font-size: 12px; margin-bottom: 44px; letter-spacing: 2px; text-transform: uppercase; }
+  .sec { max-width: 1240px; margin: 0 auto 50px; }
+  .sec-title { font-size: 12px; font-weight: 600; color: #555; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #111822; }
+  .g2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; }
+  .g3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+  .g4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+  .g6 { display: grid; grid-template-columns: repeat(6,1fr); gap: 10px; }
+  .card { background: #0d0d18; border-radius: 10px; overflow: hidden; border: 1px solid #141420; }
+  .card img { width: 100%; display: block; object-fit: cover; }
+  .card img.sq { aspect-ratio: 1/1; }
+  .card img.wide { aspect-ratio: 16/10; }
+  .card img.tall { aspect-ratio: 3/4; }
+  .info { padding: 10px 12px; }
+  .name { font-size: 12px; font-weight: 600; }
+  .desc { font-size: 10px; color: #3a3a50; margin-top: 2px; }
+  .tag { display: inline-block; font-size: 8px; font-weight: 700; padding: 2px 7px; border-radius: 3px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+  .tw { background: rgba(255,255,255,0.08); color: #888; }
+  .tk { background: rgba(139,92,246,0.2); color: #a78bfa; }
+  .tg { background: rgba(34,197,94,0.15); color: #4ade80; }
+  .tr { background: rgba(239,68,68,0.15); color: #f87171; }
+  .tb { background: rgba(59,130,246,0.15); color: #60a5fa; }
+</style>
+</head>
+<body>
+<h1>KAGI & Koe — Extended Renders</h1>
+<p class="sub">Gemini 3.1 Flash Image · 18 new renders · angles · lifestyle · concepts</p>
+
+<!-- KAGI カラバリ -->
+<div class="sec">
+  <div class="sec-title">KAGI — Color & Material Variants</div>
+  <div class="g3">
+    <div class="card">
+      <img class="sq" src="kagi_white_angle.png">
+      <div class="info"><span class="tag tw">White · 45° View</span><div class="name">Sensor Hub — アングル</div><div class="desc">俯瞰45度 · デスク設置</div></div>
+    </div>
+    <div class="card">
+      <img class="sq" src="kagi_beige.png">
+      <div class="info"><span class="tag tw">Beige · Sand</span><div class="name">Sensor Hub — ベージュ</div><div class="desc">ウォームサンド · リネン質感</div></div>
+    </div>
+    <div class="card">
+      <img class="sq" src="kagi_black_closeup.png">
+      <div class="info"><span class="tag tw">Black · Macro</span><div class="name">Sensor Pro — クローズアップ</div><div class="desc">マットブラック · アンバーLED</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- KAGI ライフスタイル -->
+<div class="sec">
+  <div class="sec-title">KAGI — Lifestyle & Environment</div>
+  <div class="g3">
+    <div class="card">
+      <img class="sq" src="kagi_living_room.png">
+      <div class="info"><span class="tag tg">Lifestyle</span><div class="name">リビング設置</div><div class="desc">壁掛け · 夜の室内</div></div>
+    </div>
+    <div class="card">
+      <img class="sq" src="kagi_bedroom.png">
+      <div class="info"><span class="tag tg">Lifestyle</span><div class="name">ベッドサイド</div><div class="desc">緑卵型 · 朝の光</div></div>
+    </div>
+    <div class="card">
+      <img class="sq" src="kagi_hotel.png">
+      <div class="info"><span class="tag tg">Lifestyle</span><div class="name">ホテル設置</div><div class="desc">大理石壁 · ラグジュアリー</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- KAGI テック系 -->
+<div class="sec">
+  <div class="sec-title">KAGI — Technical & Dashboard</div>
+  <div class="g2">
+    <div class="card">
+      <img class="wide" src="kagi_sensor_exploded.png">
+      <div class="info"><span class="tag tb">Exploded View</span><div class="name">分解図 — 内部コンポーネント</div><div class="desc">ESP32-S3 · SHT45 · PIR · BH1750</div></div>
+    </div>
+    <div class="card">
+      <img class="wide" src="kagi_dashboard.png">
+      <div class="info"><span class="tag tb">App + Device</span><div class="name">ダッシュボード + デバイス</div><div class="desc">スマートフォンアプリ連携</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- KAGI Pro dark -->
+<div class="sec">
+  <div class="sec-title">KAGI Pro — Dark Edition</div>
+  <div style="max-width:500px">
+    <div class="card">
+      <img class="sq" src="kagi_pro_dark.png">
+      <div class="info"><span class="tag tr">Pro · Dark</span><div class="name">Sensor Pro — ダークエディション</div><div class="desc">紫LEDマトリクス · ¥24,800</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Koe Coin -->
+<div class="sec">
+  <div class="sec-title">Koe Coin — Scale & Multiple</div>
+  <div class="g2">
+    <div class="card">
+      <img class="sq" src="koe_coin_hand.png">
+      <div class="info"><span class="tag tk">Hand Scale</span><div class="name">Koe Coin — 手のひらスケール</div><div class="desc">φ26mm · 実際の大きさ感</div></div>
+    </div>
+    <div class="card">
+      <img class="sq" src="koe_coin_table.png">
+      <div class="info"><span class="tag tk">Flat Lay</span><div class="name">Koe Coin × Multiple</div><div class="desc">複数台 · カラーLED · フラットレイ</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Koe Pick -->
+<div class="sec">
+  <div class="sec-title">Koe Pick — Earpiece</div>
+  <div style="max-width:500px">
+    <div class="card">
+      <img class="sq" src="koe_pick_ear.png">
+      <div class="info"><span class="tag tk">Pick</span><div class="name">Koe Pick — イヤーピース型</div><div class="desc">ウェアラブル · $65</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Koe Speakers -->
+<div class="sec">
+  <div class="sec-title">Koe Fill & Sub — Speaker Detail</div>
+  <div class="g3">
+    <div class="card">
+      <img class="sq" src="koe_fill_concert.png">
+      <div class="info"><span class="tag tg">Fill · Concert</span><div class="name">Koe Fill — ライブ会場</div><div class="desc">ラインアレイ設置 · $1,500</div></div>
+    </div>
+    <div class="card">
+      <img class="sq" src="koe_sub_room.png">
+      <div class="info"><span class="tag tr">Sub · Room</span><div class="name">Koe Sub — リスニングルーム</div><div class="desc">15" · レコードコレクション</div></div>
+    </div>
+    <div class="card">
+      <img class="sq" src="koe_sub_bass.png">
+      <div class="info"><span class="tag tr">Sub · Detail</span><div class="name">Koe Sub — ドライバー詳細</div><div class="desc">ヘキサゴングリル · 赤LEDリング</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Koe Stage -->
+<div class="sec">
+  <div class="sec-title">Koe Stage — Monitor Detail</div>
+  <div class="g2">
+    <div class="card">
+      <img class="wide" src="koe_stage_closeup.png">
+      <div class="info"><span class="tag tb">Stage · Closeup</span><div class="name">Koe Stage — ディスプレイクローズアップ</div><div class="desc">Pi CM5 · 4K波形表示 · $800</div></div>
+    </div>
+    <div class="card">
+      <img class="wide" src="koe_festival.png">
+      <div class="info"><span class="tag tb">Festival · Hawaii</span><div class="name">フェスティバル設置イメージ</div><div class="desc">野外会場 · 夕焼け · 空間音響</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Koe Orchestral -->
+<div class="sec">
+  <div class="sec-title">Koe — Orchestral Concept</div>
+  <div class="card">
+    <img class="wide" src="koe_orchestral.png" style="aspect-ratio:16/8">
+    <div class="info"><span class="tag tk">Concept Art</span><div class="name">Koe Orchestral — 群衆を楽器に</div><div class="desc">100台のCoinが円形配置 · 各デバイスが異なるLEDカラーで発光 · "群衆を楽器にするデバイス"</div></div>
+  </div>
+</div>
+
+<div style="text-align:center;color:#111;font-size:10px;padding-bottom:30px">
+  Generated with Gemini 3.1 Flash Image · © 2026 KAGI / Koe Device
+</div>
+</body>
+</html>

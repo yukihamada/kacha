@@ -5,7 +5,7 @@ import Foundation
 // The page is publicly accessible — no encryption. Do not include sensitive API keys.
 
 struct GuestPageClient {
-    static let baseURL = "https://kacha.pasha.run"
+    static let baseURL = "https://kagi.pasha.run"
 
     // MARK: - Request / Response
 

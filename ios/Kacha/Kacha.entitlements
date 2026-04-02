@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:kacha.pasha.run</string>
+		<string>applinks:kagi.pasha.run</string>
 	</array>
 </dict>
 </plist>

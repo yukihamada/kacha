@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KAGI Home — Product Design</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #0d0d12;
+  color: #fff;
+  font-family: -apple-system, 'Helvetica Neue', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ===================== HERO ===================== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(0,200,150,0.07) 0%, transparent 70%);
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.hero-label {
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: #00c896;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+.hero-title {
+  font-size: clamp(36px, 6vw, 72px);
+  font-weight: 800;
+  letter-spacing: -2px;
+  text-align: center;
+  line-height: 1.05;
+  margin-bottom: 16px;
+}
+.hero-title span { color: #00c896; }
+.hero-sub {
+  color: #666;
+  font-size: 15px;
+  text-align: center;
+  max-width: 480px;
+  line-height: 1.7;
+  margin-bottom: 60px;
+}
+
+/* ===================== DEVICE 3D CSS ===================== */
+.device-stage {
+  perspective: 1200px;
+  margin: 0 auto 40px;
+  width: 340px; height: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.device-wrap {
+  transform-style: preserve-3d;
+  animation: float 4s ease-in-out infinite;
+  position: relative;
+}
+@keyframes float {
+  0%, 100% { transform: rotateX(8deg) rotateY(-18deg) translateY(0px); }
+  50%       { transform: rotateX(8deg) rotateY(-18deg) translateY(-12px); }
+}
+
+/* Front face */
+.face {
+  position: absolute;
+  transform-style: preserve-3d;
+}
+.face-front {
+  width: 180px; height: 180px;
+  border-radius: 26px;
+  background: linear-gradient(145deg, #f0ede8 0%, #e8e5e0 60%, #dedad4 100%);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.5) inset,
+    0 30px 80px rgba(0,0,0,0.6),
+    0 8px 20px rgba(0,0,0,0.4);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 18px;
+}
+.face-front::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 60%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 100%);
+  border-radius: 26px 26px 0 0;
+  pointer-events: none;
+}
+
+/* Top area — micro perforations for mic */
+.mic-grille {
+  display: flex;
+  gap: 3px;
+  opacity: 0.4;
+}
+.mic-dot { width: 2px; height: 2px; border-radius: 50%; background: #888; }
+
+/* LED zone */
+.led-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  justify-content: center;
+}
+.led-orb-wrap {
+  position: relative;
+  width: 52px; height: 52px;
+  display: flex; align-items: center; justify-content: center;
+}
+.led-glow {
+  position: absolute;
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,200,150,0.7) 0%, transparent 70%);
+  animation: breathe 3s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes breathe {
+  0%, 100% { opacity: 0.5; transform: scale(0.85); }
+  50%       { opacity: 1.0; transform: scale(1.15); }
+}
+.led-lens {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff 0%, #00c896 40%, #006644 100%);
+  box-shadow: 0 0 12px rgba(0,200,150,0.9), 0 0 30px rgba(0,200,150,0.5);
+  animation: breathe 3s ease-in-out infinite;
+  z-index: 1;
+}
+.score-badge {
+  background: rgba(0,0,0,0.12);
+  border-radius: 10px;
+  padding: 5px 12px;
+  text-align: center;
+}
+.score-num {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1a1a1a;
+  line-height: 1;
+}
+.score-label {
+  font-size: 8px;
+  color: #666;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* NFC ring */
+.nfc-ring {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.15);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.nfc-ring::after {
+  content: '';
+  position: absolute;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.08);
+}
+.nfc-icon { font-size: 10px; color: #999; opacity: 0.6; }
+
+/* Bottom — vent slits */
+.vent-row {
+  display: flex;
+  gap: 4px;
+}
+.vent-slit {
+  width: 16px; height: 2px;
+  border-radius: 1px;
+  background: rgba(0,0,0,0.12);
+}
+
+/* Right face (side) */
+.face-right {
+  width: 36px; height: 180px;
+  border-radius: 0 14px 14px 0;
+  background: linear-gradient(90deg, #ccc8c2 0%, #b8b4ae 100%);
+  position: absolute;
+  left: 180px; top: 0;
+  transform: rotateY(90deg) translateZ(18px) translateX(0px);
+  transform-origin: left center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 20px;
+  gap: 8px;
+}
+.usbc-port {
+  width: 12px; height: 6px;
+  border-radius: 3px;
+  background: #888;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
+}
+.jst-port {
+  width: 10px; height: 5px;
+  border-radius: 2px;
+  background: #999;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
+}
+
+/* Bottom face */
+.face-bottom {
+  width: 180px; height: 36px;
+  border-radius: 0 0 14px 14px;
+  background: linear-gradient(180deg, #ccc8c2 0%, #b0aca6 100%);
+  position: absolute;
+  top: 180px; left: 0;
+  transform: rotateX(-90deg) translateZ(18px) translateY(0);
+  transform-origin: top center;
+}
+
+/* Shadow on ground */
+.shadow {
+  position: absolute;
+  width: 180px; height: 40px;
+  background: radial-gradient(ellipse, rgba(0,0,0,0.4) 0%, transparent 70%);
+  top: 230px; left: 0;
+  transform: rotateX(-90deg) translateZ(-60px);
+  transform-origin: top center;
+  border-radius: 50%;
+}
+
+/* ===================== COLOR VARIANTS ===================== */
+.variants-section {
+  padding: 80px 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.section-head {
+  text-align: center;
+  margin-bottom: 50px;
+}
+.section-eyebrow {
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: #00c896;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.section-title {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+.section-sub {
+  color: #555;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.color-card {
+  border-radius: 24px;
+  padding: 40px 24px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+.color-card:hover { transform: translateY(-6px); }
+
+/* Arctic White */
+.cc-white {
+  background: linear-gradient(160deg, #f5f3f0 0%, #ebebeb 100%);
+  border: 1px solid rgba(0,0,0,0.06);
+}
+/* Midnight */
+.cc-dark {
+  background: linear-gradient(160deg, #1c1c20 0%, #141416 100%);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+/* Sand */
+.cc-sand {
+  background: linear-gradient(160deg, #e8ddd0 0%, #d4c8b8 100%);
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+.mini-device {
+  width: 90px; height: 90px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.2);
+}
+.md-white { background: linear-gradient(145deg, #fff 0%, #f0ede8 100%); }
+.md-dark  { background: linear-gradient(145deg, #2a2a30 0%, #1a1a1e 100%); }
+.md-sand  { background: linear-gradient(145deg, #f0e8da 0%, #ddd0bc 100%); }
+
+.mini-led {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+}
+.ml-green {
+  background: radial-gradient(circle at 35% 35%, #fff 0%, #00c896 40%, #006644 100%);
+  box-shadow: 0 0 10px rgba(0,200,150,0.9);
+  animation: breathe 3s ease-in-out infinite;
+}
+.ml-blue {
+  background: radial-gradient(circle at 35% 35%, #fff 0%, #60b4f8 40%, #1a6ae8 100%);
+  box-shadow: 0 0 10px rgba(96,180,248,0.9);
+  animation: breathe 3s ease-in-out 0.5s infinite;
+}
+.ml-amber {
+  background: radial-gradient(circle at 35% 35%, #fff 0%, #ffd060 40%, #c87800 100%);
+  box-shadow: 0 0 10px rgba(255,200,0,0.9);
+  animation: breathe 3s ease-in-out 1s infinite;
+}
+
+.cc-name { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
+.cc-white .cc-name, .cc-sand .cc-name { color: #1a1a1a; }
+.cc-dark .cc-name { color: #fff; }
+.cc-sub { font-size: 12px; }
+.cc-white .cc-sub, .cc-sand .cc-sub { color: #888; }
+.cc-dark .cc-sub { color: #555; }
+
+.cc-price {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+.cc-white .cc-price, .cc-sand .cc-price { color: #111; }
+.cc-dark .cc-price { color: #fff; }
+
+.cc-chips {
+  display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
+}
+.chip {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 3px 9px;
+  border-radius: 20px;
+}
+.cc-white .chip, .cc-sand .chip {
+  background: rgba(0,0,0,0.07);
+  color: #444;
+}
+.cc-dark .chip {
+  background: rgba(255,255,255,0.08);
+  color: #aaa;
+}
+
+/* ===================== EXPLODED VIEW ===================== */
+.exploded-section {
+  padding: 80px 20px;
+  background: #080810;
+}
+.exploded-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.exploded-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+.sensor-map {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  max-width: 420px;
+}
+.device-face-flat {
+  width: 260px; height: 260px;
+  border-radius: 36px;
+  background: linear-gradient(145deg, #f0ede8 0%, #e0ddd8 100%);
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.15) inset;
+  display: grid;
+  grid-template-areas:
+    "mic  mic  mic"
+    "nfc  led  vent"
+    "bot  bot  bot";
+  padding: 22px;
+  gap: 8px;
+}
+
+/* Component spots on face */
+.spot {
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: default;
+}
+.spot-mic {
+  grid-area: mic;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+.spot-nfc {
+  grid-area: nfc;
+  border-radius: 50%;
+  width: 52px; height: 52px;
+  border: 1.5px dashed rgba(0,0,0,0.15);
+  font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(0,0,0,0.2);
+}
+.spot-led {
+  grid-area: led;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.spot-vent {
+  grid-area: vent;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+}
+.vent-line { width: 20px; height: 2px; background: rgba(0,0,0,0.12); border-radius: 1px; }
+.spot-bot {
+  grid-area: bot;
+  display: flex; justify-content: center; gap: 16px; align-items: center;
+}
+
+/* Callout lines */
+.callout {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.callout-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,200,150,0.4));
+  flex: 1;
+  min-width: 20px;
+}
+.callout-text {
+  font-size: 11px;
+  font-weight: 600;
+  color: #00c896;
+  letter-spacing: 0.5px;
+}
+.callout-sub {
+  font-size: 10px;
+  color: #444;
+  margin-top: 1px;
+}
+
+/* Sensor list on right */
+.sensor-list { display: flex; flex-direction: column; gap: 16px; }
+.sensor-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.2s;
+}
+.sensor-row:hover { background: rgba(0,200,150,0.05); }
+.sensor-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.si-green { background: rgba(0,200,150,0.12); }
+.si-blue  { background: rgba(96,180,248,0.12); }
+.si-amber { background: rgba(255,180,0,0.12); }
+.si-red   { background: rgba(255,100,100,0.12); }
+.si-purple{ background: rgba(180,120,255,0.12); }
+.sensor-info { flex: 1; }
+.sensor-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ddd;
+  margin-bottom: 2px;
+}
+.sensor-desc {
+  font-size: 11px;
+  color: #555;
+  line-height: 1.5;
+}
+.sensor-new {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #00c896;
+  background: rgba(0,200,150,0.1);
+  padding: 2px 7px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 2px;
+}
+
+/* ===================== LIFECYCLE ===================== */
+.lifecycle-section {
+  padding: 80px 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.lifecycle-flow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  margin-top: 40px;
+}
+.lf-step {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  padding: 24px 16px;
+  text-align: center;
+  position: relative;
+}
+.lf-step:first-child { border-radius: 14px 0 0 14px; }
+.lf-step:last-child  { border-radius: 0 14px 14px 0; }
+.lf-num {
+  font-size: 28px;
+  font-weight: 900;
+  color: rgba(0,200,150,0.2);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.lf-title { font-size: 13px; font-weight: 700; color: #ddd; margin-bottom: 6px; }
+.lf-desc  { font-size: 11px; color: #555; line-height: 1.6; }
+
+/* ===================== SPEC TABLE ===================== */
+.spec-section {
+  padding: 60px 20px 100px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.spec-table tr { border-bottom: 1px solid rgba(255,255,255,0.05); }
+.spec-table tr:hover td { background: rgba(255,255,255,0.02); }
+.spec-table td {
+  padding: 12px 16px;
+  font-size: 13px;
+}
+.spec-table td:first-child { color: #555; width: 40%; }
+.spec-table td:last-child  { color: #ddd; font-weight: 500; }
+.spec-highlight { color: #00c896 !important; }
+
+/* ===================== FOOTER ===================== */
+.footer {
+  text-align: center;
+  padding: 40px;
+  color: #333;
+  font-size: 12px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 700px) {
+  .color-grid { grid-template-columns: 1fr; }
+  .exploded-grid { grid-template-columns: 1fr; }
+  .lifecycle-flow { grid-template-columns: 1fr 1fr; }
+  .sensor-map { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ========== HERO ========== -->
+<section class="hero">
+  <div class="hero-label">KAGI Home — v1.0</div>
+  <h1 class="hero-title">家の<span>主治医</span>、<br>55mm 角に凝縮。</h1>
+  <p class="hero-sub">10種のセンサー + CO₂ + NFC + mmWaveレーダー + BLEゲートウェイ。<br>電源を挿すだけで、家が賢くなる。</p>
+
+  <!-- 3D CSS Device -->
+  <div class="device-stage">
+    <div class="device-wrap">
+      <!-- Front -->
+      <div class="face face-front">
+        <!-- Mic grille top -->
+        <div class="mic-grille">
+          <div class="mic-dot"></div><div class="mic-dot"></div><div class="mic-dot"></div>
+          <div class="mic-dot"></div><div class="mic-dot"></div><div class="mic-dot"></div>
+          <div class="mic-dot"></div>
+        </div>
+        <!-- LED + score -->
+        <div class="led-zone">
+          <div class="led-orb-wrap">
+            <div class="led-glow"></div>
+            <div class="led-lens"></div>
+          </div>
+          <div class="score-badge">
+            <div class="score-num">87</div>
+            <div class="score-label">Home Score</div>
+          </div>
+          <!-- NFC ring (subtle) -->
+          <div class="nfc-ring"><span class="nfc-icon">◯</span></div>
+        </div>
+        <!-- Vent bottom -->
+        <div class="vent-row">
+          <div class="vent-slit"></div><div class="vent-slit"></div><div class="vent-slit"></div>
+          <div class="vent-slit"></div><div class="vent-slit"></div>
+        </div>
+      </div>
+      <!-- Right side face -->
+      <div class="face face-right">
+        <div class="jst-port" title="Water leak"></div>
+        <div class="jst-port" title="Door sensor"></div>
+        <div class="usbc-port" title="USB-C"></div>
+      </div>
+      <!-- Bottom face -->
+      <div class="face face-bottom"></div>
+    </div>
+  </div>
+
+  <p style="color:#333; font-size:12px; letter-spacing:1px;">55 × 55 × 25 mm &nbsp;·&nbsp; PA12 筐体 &nbsp;·&nbsp; 3色展開</p>
+</section>
+
+<!-- ========== COLOR VARIANTS ========== -->
+<section class="variants-section">
+  <div class="section-head">
+    <div class="section-eyebrow">Colorways</div>
+    <h2 class="section-title">3つのカラー</h2>
+    <p class="section-sub">どんなインテリアにも馴染む、3種類の仕上げ</p>
+  </div>
+
+  <div class="color-grid">
+    <!-- Arctic White -->
+    <div class="color-card cc-white">
+      <div class="mini-device md-white">
+        <div class="mini-led ml-green"></div>
+        <div style="font-size:9px; color:#999; letter-spacing:1px;">KAGI</div>
+      </div>
+      <div>
+        <div class="cc-name">Arctic White</div>
+        <div class="cc-sub">マットホワイト · PA12</div>
+      </div>
+      <div class="cc-price">¥24,800</div>
+      <div class="cc-chips">
+        <span class="chip">標準モデル</span>
+        <span class="chip">全センサー</span>
+        <span class="chip">CO₂</span>
+      </div>
+    </div>
+
+    <!-- Midnight -->
+    <div class="color-card cc-dark">
+      <div class="mini-device md-dark">
+        <div class="mini-led ml-blue"></div>
+        <div style="font-size:9px; color:#555; letter-spacing:1px;">KAGI</div>
+      </div>
+      <div>
+        <div class="cc-name">Midnight</div>
+        <div class="cc-sub">マットブラック · PC+ABS</div>
+      </div>
+      <div class="cc-price" style="color:#fff;">¥24,800</div>
+      <div class="cc-chips">
+        <span class="chip">標準モデル</span>
+        <span class="chip">全センサー</span>
+        <span class="chip">CO₂</span>
+      </div>
+    </div>
+
+    <!-- Sand -->
+    <div class="color-card cc-sand">
+      <div class="mini-device md-sand">
+        <div class="mini-led ml-amber"></div>
+        <div style="font-size:9px; color:#aa9977; letter-spacing:1px;">KAGI</div>
+      </div>
+      <div>
+        <div class="cc-name">Sand</div>
+        <div class="cc-sub">ベージュ · PA12 + 染色</div>
+      </div>
+      <div class="cc-price">¥24,800</div>
+      <div class="cc-chips">
+        <span class="chip">標準モデル</span>
+        <span class="chip">全センサー</span>
+        <span class="chip">CO₂</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== EXPLODED / SENSOR MAP ========== -->
+<section class="exploded-section">
+  <div class="exploded-inner">
+    <div class="section-head" style="margin-bottom:50px;">
+      <div class="section-eyebrow">Sensors</div>
+      <h2 class="section-title">10種、55mm に全部入り</h2>
+      <p class="section-sub">競合製品の2〜4倍のセンサー密度</p>
+    </div>
+
+    <div class="exploded-grid">
+      <!-- Sensor map (flat device face with annotations) -->
+      <div class="sensor-map">
+        <div class="device-face-flat">
+          <!-- Mic area -->
+          <div class="spot spot-mic">
+            <div class="mic-dot" style="width:3px;height:3px;background:#bbb;border-radius:50%;"></div>
+            <div class="mic-dot" style="width:3px;height:3px;background:#bbb;border-radius:50%;"></div>
+            <div class="mic-dot" style="width:3px;height:3px;background:#bbb;border-radius:50%;"></div>
+            <div class="mic-dot" style="width:3px;height:3px;background:#bbb;border-radius:50%;"></div>
+            <div class="mic-dot" style="width:3px;height:3px;background:#bbb;border-radius:50%;"></div>
+          </div>
+          <!-- NFC -->
+          <div class="spot spot-nfc">☊</div>
+          <!-- LED -->
+          <div class="spot spot-led">
+            <div style="width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,#00c896 40%,#006644);box-shadow:0 0 16px rgba(0,200,150,0.9);animation:breathe 3s ease-in-out infinite;"></div>
+            <div style="width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,#00c896 40%,#006644);box-shadow:0 0 16px rgba(0,200,150,0.9);animation:breathe 3s ease-in-out 0.3s infinite;opacity:0.7;"></div>
+          </div>
+          <!-- Vent slits -->
+          <div class="spot spot-vent">
+            <div class="vent-line"></div>
+            <div class="vent-line"></div>
+            <div class="vent-line"></div>
+            <div class="vent-line" style="width:12px;"></div>
+          </div>
+          <!-- Bottom -->
+          <div class="spot spot-bot">
+            <div style="width:14px;height:7px;border-radius:3px;background:#aaa;box-shadow:inset 0 1px 2px rgba(0,0,0,0.3);" title="USB-C"></div>
+            <div style="display:flex;gap:4px;">
+              <div style="width:10px;height:6px;border-radius:2px;background:#bbb;" title="JST"></div>
+              <div style="width:10px;height:6px;border-radius:2px;background:#bbb;" title="JST"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sensor list -->
+      <div class="sensor-list">
+        <div class="sensor-row">
+          <div class="sensor-icon si-green">🌡️</div>
+          <div class="sensor-info">
+            <div class="sensor-name">SHT40 — 温湿度</div>
+            <div class="sensor-desc">±0.2°C / ±1.8%RH &nbsp;·&nbsp; I2C 0x44</div>
+          </div>
+        </div>
+        <div class="sensor-row">
+          <div class="sensor-icon si-green">💨</div>
+          <div class="sensor-info">
+            <div class="sensor-name">SCD41 — CO₂</div>
+            <div class="sensor-desc">400-5000ppm ±40ppm &nbsp;·&nbsp; 競合全社未搭載</div>
+          </div>
+          <div class="sensor-new">NEW</div>
+        </div>
+        <div class="sensor-row">
+          <div class="sensor-icon si-amber">🌿</div>
+          <div class="sensor-info">
+            <div class="sensor-name">SGP41 — VOC + NOx</div>
+            <div class="sensor-desc">空気質インデックス + 二酸化窒素 &nbsp;·&nbsp; I2C 0x59</div>
+          </div>
+          <div class="sensor-new">↑UP</div>
+        </div>
+        <div class="sensor-row">
+          <div class="sensor-icon si-amber">💡</div>
+          <div class="sensor-info">
+            <div class="sensor-name">VEML7700 — 照度</div>
+            <div class="sensor-desc">0-167,772 lux オートゲイン &nbsp;·&nbsp; I2C 0x10</div>
+          </div>
+        </div>
+        <div class="sensor-row">
+          <div class="sensor-icon si-blue">📡</div>
+          <div class="sensor-info">
+            <div class="sensor-name">LD2410B — 60GHz mmWave</div>
+            <div class="sensor-desc">呼吸・静止人体検知 &nbsp;·&nbsp; UART + GPIO</div>
+          </div>
+          <div class="sensor-new">↑UP</div>
+        </div>
+        <div class="sensor-row">
+          <div class="sensor-icon si-blue">🎙️</div>
+          <div class="sensor-info">
+            <div class="sensor-name">INMP441 — MEMSマイク</div>
+            <div class="sensor-desc">dB値のみ記録 · TinyML音響イベント検知</div>
+          </div>
+        </div>
+        <div class="sensor-row">
+          <div class="sensor-icon si-purple">📳</div>
+          <div class="sensor-info">
+            <div class="sensor-name">LIS2DH12 — 加速度</div>
+            <div class="sensor-desc">±16g 3軸 · INT1割り込み(転倒/振動) &nbsp;·&nbsp; I2C 0x19</div>
+          </div>
+        </div>
+        <div class="sensor-row">
+          <div class="sensor-icon si-blue">🔵</div>
+          <div class="sensor-info">
+            <div class="sensor-name">BMP280 — 気圧</div>
+            <div class="sensor-desc">300-1100hPa · 窓開放検知 · 天気予報</div>
+          </div>
+        </div>
+        <div class="sensor-row">
+          <div class="sensor-icon si-red">🚪</div>
+          <div class="sensor-info">
+            <div class="sensor-name">MC-38 — ドア開閉</div>
+            <div class="sensor-desc">外付けリードスイッチ · JST PH J2</div>
+          </div>
+        </div>
+        <div class="sensor-row">
+          <div class="sensor-icon si-red">💧</div>
+          <div class="sensor-info">
+            <div class="sensor-name">水漏れセンサー</div>
+            <div class="sensor-desc">床置き抵抗式マット · JST PH J3 · ESD保護</div>
+          </div>
+          <div class="sensor-new">NEW</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== LIFECYCLE ========== -->
+<section class="lifecycle-section">
+  <div class="section-head">
+    <div class="section-eyebrow">Setup</div>
+    <h2 class="section-title">セットアップ、60秒</h2>
+  </div>
+  <div class="lifecycle-flow">
+    <div class="lf-step">
+      <div class="lf-num">01</div>
+      <div class="lf-title">挿すだけ</div>
+      <div class="lf-desc">USB-Cケーブルで電源を接続。自動起動。</div>
+    </div>
+    <div class="lf-step">
+      <div class="lf-num">02</div>
+      <div class="lf-title">QRでWiFi接続</div>
+      <div class="lf-desc">アプリのQRをかざすかNFCタップで自動設定。</div>
+    </div>
+    <div class="lf-step">
+      <div class="lf-num">03</div>
+      <div class="lf-title">センサー起動</div>
+      <div class="lf-desc">3分でSCD41 CO₂も含む全センサーが校正完了。</div>
+    </div>
+    <div class="lf-step">
+      <div class="lf-num">04</div>
+      <div class="lf-title">あとは自動</div>
+      <div class="lf-desc">60秒ごとにデータ送信。OTAで自動更新。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SPEC ========== -->
+<section class="spec-section">
+  <div class="section-head" style="margin-bottom:32px;">
+    <div class="section-eyebrow">Specifications</div>
+    <h2 class="section-title">スペック</h2>
+  </div>
+  <table class="spec-table">
+    <tr><td>MCU</td><td>ESP32-S3-MINI-1-N8 (WiFi + BLE 5.0, 8MB Flash)<br><span style="color:#555;font-size:11px;">技適認証済 201-220017</span></td></tr>
+    <tr><td>センサー数</td><td class="spec-highlight">10種類 (温湿度 / CO₂ / VOC+NOx / 照度 / mmWave / マイク / 加速度 / 気圧 / ドア / 水漏れ)</td></tr>
+    <tr><td>CO₂センサー</td><td class="spec-highlight">Sensirion SCD41 — 400-5000ppm ±40ppm<br><span style="color:#555;font-size:11px;">競合製品 (Nest / Aqara / Ecobee) 全社未搭載</span></td></tr>
+    <tr><td>在室検知</td><td>60GHz mmWave (LD2410B) — 呼吸・静止人体・6m</td></tr>
+    <tr><td>通信</td><td>WiFi 2.4GHz (AP+STAモード) + BLE 5.0</td></tr>
+    <tr><td>セキュリティ</td><td>ATECC608A セキュアエレメント<br><span style="color:#555;font-size:11px;">ECC P-256 mTLS · OTA署名検証 · 改ざん不能監査ログ</span></td></tr>
+    <tr><td>NFC</td><td>ST25DV04K — タップでゲストWiFi自動接続</td></tr>
+    <tr><td>アンビエントLED</td><td>WS2812B-2020 × 2 (前後360°) — 家スコアを色で表示</td></tr>
+    <tr><td>アラーム</td><td>ピエゾブザー (CO₂ / 水漏れ / 緊急)</td></tr>
+    <tr><td>電源</td><td>USB-C 5V (通常200mW / WiFiピーク600mW)</td></tr>
+    <tr><td>バックアップ</td><td>CR2032 + 470μF — 停電時BLE緊急通知</td></tr>
+    <tr><td>サイズ</td><td>55 × 55 × 25 mm</td></tr>
+    <tr><td>筐体</td><td>PA12 ナイロン SLS · 3色 (White / Midnight / Sand)</td></tr>
+    <tr><td>安全システム</td><td class="spec-highlight">オープンソース Safety Ladder<br><span style="color:#555;font-size:11px;">github.com/kacha-io/kagi-firmware — 全アルゴリズム公開・検証可能</span></td></tr>
+    <tr><td>BOM単価</td><td>$38.66 (10台) / $24.0 (1,000台)</td></tr>
+    <tr><td>価格</td><td>¥24,800</td></tr>
+  </table>
+</section>
+
+<div class="footer">KAGI Home v1.0 — Design Document · All specifications subject to change</div>
+
+</body>
+</html>

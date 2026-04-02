@@ -4,7 +4,7 @@ import UserNotifications
 
 // MARK: - KAGIService
 // KAGI APIクライアント + 定期ポーリングマネージャー
-// ベースURL: https://kacha-server.fly.dev (環境変数 KAGI_BASE_URL でオーバーライド可能)
+// ベースURL: https://kagi-server.fly.dev (環境変数 KAGI_BASE_URL でオーバーライド可能)
 
 @MainActor
 final class KAGIService: ObservableObject {
@@ -34,7 +34,7 @@ final class KAGIService: ObservableObject {
         if let url = ProcessInfo.processInfo.environment["IKI_BASE_URL"] {
             return url
         }
-        return "https://kacha-server.fly.dev"
+        return "https://kagi-server.fly.dev"
     }()
 
     // MARK: - Public API

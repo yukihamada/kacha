@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KAGI Sensor Hub - Product Lineup</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a12;color:#eaeaf2;font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif}
+.page{max-width:1200px;margin:0 auto;padding:40px 24px}
+
+/* Header */
+.header{text-align:center;margin-bottom:60px}
+.header h1{font-size:36px;color:#E8A838;margin-bottom:8px;letter-spacing:2px}
+.header p{color:#7a7a95;font-size:15px;line-height:1.8}
+.header .highlight{color:#E8A838;font-weight:700}
+
+/* Market Analysis */
+.market{background:rgba(232,168,56,0.04);border:1px solid rgba(232,168,56,0.12);border-radius:16px;padding:32px;margin-bottom:60px}
+.market h2{color:#E8A838;font-size:18px;margin-bottom:20px;text-align:center}
+.funnel{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.funnel-step{text-align:center;padding:12px 20px;border-radius:12px;min-width:120px}
+.funnel-step .num{font-size:28px;font-weight:800}
+.funnel-step .label{font-size:10px;color:#7a7a95;margin-top:4px}
+.funnel-arrow{font-size:20px;color:#7a7a95}
+.f1{background:rgba(59,159,232,0.1);border:1px solid rgba(59,159,232,0.2)}.f1 .num{color:#3B9FE8}
+.f2{background:rgba(232,168,56,0.1);border:1px solid rgba(232,168,56,0.2)}.f2 .num{color:#E8A838}
+.f3{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2)}.f3 .num{color:#10B981}
+.f4{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2)}.f4 .num{color:#EF4444}
+
+.recommend{text-align:center;margin-top:20px;padding:16px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:12px}
+.recommend strong{color:#10B981;font-size:20px}
+.recommend p{color:#7a7a95;font-size:12px;margin-top:4px}
+
+/* Product Cards */
+.products{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:60px}
+@media(max-width:900px){.products{grid-template-columns:1fr}}
+
+.product{border-radius:20px;padding:28px;position:relative;transition:transform 0.3s,box-shadow 0.3s}
+.product:hover{transform:translateY(-4px)}
+.product.lite{background:linear-gradient(160deg,rgba(59,159,232,0.08),rgba(59,159,232,0.02));border:1px solid rgba(59,159,232,0.2)}
+.product.standard{background:linear-gradient(160deg,rgba(232,168,56,0.1),rgba(232,168,56,0.03));border:2px solid rgba(232,168,56,0.4);box-shadow:0 0 40px rgba(232,168,56,0.08)}
+.product.pro{background:linear-gradient(160deg,rgba(168,85,247,0.08),rgba(168,85,247,0.02));border:1px solid rgba(168,85,247,0.2)}
+
+.badge{position:absolute;top:-12px;right:20px;padding:4px 16px;border-radius:20px;font-size:11px;font-weight:700}
+.badge.best{background:#E8A838;color:#000}
+.badge.new{background:#A855F7;color:#fff}
+
+.product-icon{width:80px;height:80px;border-radius:16px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:36px}
+.lite .product-icon{background:rgba(59,159,232,0.12)}
+.standard .product-icon{background:rgba(232,168,56,0.12)}
+.pro .product-icon{background:rgba(168,85,247,0.12)}
+
+.product h3{text-align:center;font-size:20px;margin-bottom:4px}
+.lite h3{color:#3B9FE8}
+.standard h3{color:#E8A838}
+.pro h3{color:#A855F7}
+
+.product .tagline{text-align:center;font-size:11px;color:#7a7a95;margin-bottom:16px}
+
+.price-row{text-align:center;margin-bottom:20px}
+.price{font-size:36px;font-weight:800}
+.lite .price{color:#3B9FE8}
+.standard .price{color:#E8A838}
+.pro .price{color:#A855F7}
+.price-unit{font-size:12px;color:#7a7a95}
+
+/* Device mockup in card */
+.device-mini{width:100px;height:100px;border-radius:12px;margin:0 auto 20px;position:relative}
+.lite .device-mini{background:linear-gradient(145deg,#1e2d3d,#162230);border:1px solid rgba(59,159,232,0.15)}
+.standard .device-mini{background:linear-gradient(145deg,#1a1a2e,#0f0f1e);border:1px solid rgba(232,168,56,0.2)}
+.pro .device-mini{background:linear-gradient(145deg,#1e1530,#150f25);border:1px solid rgba(168,85,247,0.2)}
+.device-mini .mini-logo{position:absolute;top:8px;left:50%;transform:translateX(-50%);font-size:9px;font-weight:800;letter-spacing:2px}
+.lite .mini-logo{color:#3B9FE8}
+.standard .mini-logo{color:#E8A838}
+.pro .mini-logo{color:#A855F7}
+.device-mini .mini-led{position:absolute;top:32px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:#10B981;box-shadow:0 0 6px #10B981}
+.device-mini .mini-pir{position:absolute;top:22px;left:50%;transform:translateX(-50%);width:16px;height:16px;border-radius:50%;border:1px solid rgba(255,255,255,0.08)}
+/* E-ink for Pro */
+.mini-eink{position:absolute;top:40px;left:50%;transform:translateX(-50%);width:50px;height:24px;border-radius:3px;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center}
+.mini-eink span{font-size:7px;color:#333;font-weight:600}
+
+.sensor-list{margin-bottom:20px}
+.sensor-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.sensor-item:last-child{border:none}
+.sensor-check{width:18px;height:18px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px}
+.check-yes{background:rgba(16,185,129,0.15);color:#10B981}
+.check-no{background:rgba(255,255,255,0.03);color:#333}
+.sensor-item .name{font-size:12px;flex:1}
+.sensor-item .chip{font-size:9px;padding:2px 6px;border-radius:4px;background:rgba(255,255,255,0.05);color:#7a7a95}
+
+.product .use-case{font-size:11px;color:#7a7a95;padding:12px;background:rgba(255,255,255,0.02);border-radius:8px;margin-bottom:16px;line-height:1.6}
+.use-case strong{color:#eaeaf2}
+
+.specs-mini{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:16px}
+.spec-m{text-align:center;padding:6px;background:rgba(255,255,255,0.02);border-radius:6px}
+.spec-m .v{font-size:14px;font-weight:700;color:#eaeaf2}
+.spec-m .l{font-size:9px;color:#7a7a95}
+
+/* Inventory Plan */
+.inventory{margin-bottom:60px}
+.inventory h2{color:#E8A838;font-size:18px;text-align:center;margin-bottom:24px}
+.inv-table{width:100%;border-collapse:collapse;background:rgba(255,255,255,0.02);border-radius:12px;overflow:hidden}
+.inv-table th{background:rgba(232,168,56,0.08);color:#E8A838;font-size:12px;padding:12px 16px;text-align:left}
+.inv-table td{padding:12px 16px;font-size:13px;border-bottom:1px solid rgba(255,255,255,0.04)}
+.inv-table tr:last-child td{border:none}
+.inv-table .num{font-weight:700;color:#E8A838;font-size:16px}
+.inv-table .total-row{background:rgba(16,185,129,0.06)}
+.inv-table .total-row td{color:#10B981;font-weight:700;font-size:14px}
+
+/* Timeline */
+.timeline{margin-bottom:60px}
+.timeline h2{color:#E8A838;font-size:18px;text-align:center;margin-bottom:24px}
+.tl-steps{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.tl-step{flex:1;min-width:200px;max-width:250px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:20px;text-align:center}
+.tl-step .week{font-size:24px;font-weight:800;color:#E8A838}
+.tl-step .title{font-size:13px;font-weight:600;margin:8px 0 4px;color:#eaeaf2}
+.tl-step .desc{font-size:10px;color:#7a7a95;line-height:1.5}
+
+/* Color scheme for each product */
+.lite .sensor-item .check-yes{background:rgba(59,159,232,0.15);color:#3B9FE8}
+.pro .sensor-item .check-yes{background:rgba(168,85,247,0.15);color:#A855F7}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="header">
+  <h1>KAGI Sensor Hub</h1>
+  <p>物件の「五感」をアプリに接続するIoTデバイス<br>
+  <span class="highlight">10,000人</span>のユーザーに向けた製品ラインナップと在庫計画</p>
+</div>
+
+<!-- Market Funnel -->
+<div class="market">
+  <h2>Conversion Funnel (10,000 Users)</h2>
+  <div class="funnel">
+    <div class="funnel-step f1"><div class="num">10,000</div><div class="label">App Users<br>アプリユーザー</div></div>
+    <div class="funnel-arrow">→</div>
+    <div class="funnel-step f2"><div class="num">2,000</div><div class="label">Interest (20%)<br>興味あり</div></div>
+    <div class="funnel-arrow">→</div>
+    <div class="funnel-step f3"><div class="num">500</div><div class="label">Purchase (5%)<br>購入</div></div>
+    <div class="funnel-arrow">→</div>
+    <div class="funnel-step f4"><div class="num">800+</div><div class="label">Total Devices<br>総デバイス数</div></div>
+  </div>
+  <div class="recommend">
+    <strong>初回生産: 300台 → 追加200台 → 計500台を3ヶ月で</strong>
+    <p>在庫リスクを抑えつつ、需要に応じてスケール。初回は3モデル混合で生産。</p>
+  </div>
+</div>
+
+<!-- 3 Product Tiers -->
+<div class="products">
+
+  <!-- Lite -->
+  <div class="product lite">
+    <div class="product-icon">🏠</div>
+    <h3>Sensor Lite</h3>
+    <div class="tagline">個人の家に。必要最小限のセンサー。</div>
+
+    <div class="device-mini">
+      <div class="mini-logo">KAGI</div>
+      <div class="mini-pir"></div>
+      <div class="mini-led"></div>
+    </div>
+
+    <div class="price-row">
+      <div class="price">¥7,980</div>
+      <div class="price-unit">税込 / 1台</div>
+    </div>
+
+    <div class="sensor-list">
+      <div class="sensor-item"><div class="sensor-check check-yes">✓</div><div class="name">温湿度</div><div class="chip">SHT45</div></div>
+      <div class="sensor-item"><div class="sensor-check check-yes">✓</div><div class="name">人感 (PIR)</div><div class="chip">EKMC</div></div>
+      <div class="sensor-item"><div class="sensor-check check-yes">✓</div><div class="name">ドア開閉</div><div class="chip">MC-38</div></div>
+      <div class="sensor-item"><div class="sensor-check check-yes">✓</div><div class="name">照度</div><div class="chip">BH1750</div></div>
+      <div class="sensor-item"><div class="sensor-check check-no">-</div><div class="name" style="color:#555">空気質 (VOC)</div><div class="chip">-</div></div>
+      <div class="sensor-item"><div class="sensor-check check-no">-</div><div class="name" style="color:#555">騒音レベル</div><div class="chip">-</div></div>
+      <div class="sensor-item"><div class="sensor-check check-no">-</div><div class="name" style="color:#555">加速度/振動</div><div class="chip">-</div></div>
+      <div class="sensor-item"><div class="sensor-check check-no">-</div><div class="name" style="color:#555">気圧</div><div class="chip">-</div></div>
+      <div class="sensor-item"><div class="sensor-check check-no">-</div><div class="name" style="color:#555">E-Ink表示</div><div class="chip">-</div></div>
+      <div class="sensor-item"><div class="sensor-check check-no">-</div><div class="name" style="color:#555">IR Blaster</div><div class="chip">-</div></div>
+    </div>
+
+    <div class="use-case">
+      <strong>こんな人に:</strong><br>
+      自宅のセキュリティ強化、エアコン消し忘れ防止、帰宅前の室温チェック
+    </div>
+
+    <div class="specs-mini">
+      <div class="spec-m"><div class="v">45mm</div><div class="l">サイズ</div></div>
+      <div class="spec-m"><div class="v">30g</div><div class="l">重量</div></div>
+      <div class="spec-m"><div class="v">USB-C</div><div class="l">電源</div></div>
+      <div class="spec-m"><div class="v">WiFi+BLE</div><div class="l">通信</div></div>
+    </div>
+  </div>
+
+  <!-- Standard (Recommended) -->
+  <div class="product standard">
+    <div class="badge best">BEST SELLER</div>
+    <div class="product-icon">🏢</div>
+    <h3>Sensor Hub</h3>
+    <div class="tagline">民泊・賃貸管理のスタンダード。</div>
+
+    <div class="device-mini">
+      <div class="mini-logo">KAGI</div>
+      <div class="mini-pir"></div>
+      <div class="mini-led"></div>
+    </div>
+
+    <div class="price-row">
+      <div class="price">¥14,800</div>
+      <div class="price-unit">税込 / 1台</div>
+    </div>
+
+    <div class="sensor-list">
+      <div class="sensor-item"><div class="sensor-check check-yes">✓</div><div class="name">温湿度</div><div class="chip">SHT45</div></div>
+      <div class="sensor-item"><div class="sensor-check check-yes">✓</div><div class="name">人感 (PIR)</div><div class="chip">EKMC</div></div>
+      <div class="sensor-item"><div class="sensor-check check-yes">✓</div><div class="name">ドア開閉</div><div class="chip">MC-38</div></div>
+      <div class="sensor-item"><div class="sensor-check check-yes">✓</div><div class="name">照度</div><div class="chip">BH1750</div></div>
+      <div class="sensor-item"><div class="sensor-check check-yes">✓</div><div class="name">空気質 (VOC)</div><div class="chip">SGP40</div></div>
+      <div class="sensor-item"><div class="sensor-check check-yes">✓</div><div class="name">騒音レベル</div><div class="chip">INMP441</div></div>
+      <div class="sensor-item"><div class="sensor-check check-yes">✓</div><div class="name">加速度/振動</div><div class="chip">LIS2DH12</div></div>
+      <div class="sensor-item"><div class="sensor-check check-yes">✓</div><div class="name">気圧</div><div class="chip">BMP280</div></div>
+      <div class="sensor-item"><div class="sensor-check check-no">-</div><div class="name" style="color:#555">E-Ink表示</div><div class="chip">-</div></div>
+      <div class="sensor-item"><div class="sensor-check check-no">-</div><div class="name" style="color:#555">IR Blaster</div><div class="chip">-</div></div>
+    </div>
+
+    <div class="use-case">
+      <strong>こんな人に:</strong><br>
+      Airbnb/民泊ホスト、複数物件管理、パーティー防止、喫煙検知、チェックアウト自動確認
+    </div>
+
+    <div class="specs-mini">
+      <div class="spec-m"><div class="v">60mm</div><div class="l">サイズ</div></div>
+      <div class="spec-m"><div class="v">45g</div><div class="l">重量</div></div>
+      <div class="spec-m"><div class="v">USB-C</div><div class="l">電源</div></div>
+      <div class="spec-m"><div class="v">WiFi+BLE</div><div class="l">通信</div></div>
+    </div>
+  </div>
+
+  <!-- Pro -->
+  <div class="product pro">
+    <div class="badge new">PRO</div>
+    <div class="product-icon">🏨</div>
+    <h3>Sensor Pro</h3>
+    <div class="tagline">プロ管理者のための究極デバイス。</div>
+
+    <div class="device-mini">
+      <div class="mini-logo">KAGI</div>
+      <div class="mini-pir"></div>
+      <div class="mini-led"></div>
+      <div class="mini-eink"><span>23°C 45% ●</span></div>
+    </div>
+
+    <div class="price-row">
+      <div class="price">¥24,800</div>
+      <div class="price-unit">税込 / 1台</div>
+    </div>
+
+    <div class="sensor-list">
+      <div class="sensor-item"><div class="sensor-check check-yes">✓</div><div class="name">温湿度</div><div class="chip">SHT45</div></div>
+      <div class="sensor-item"><div class="sensor-check check-yes">✓</div><div class="name">人感 (mmWave)</div><div class="chip" style="color:#A855F7">LD2410</div></div>
+      <div class="sensor-item"><div class="sensor-check check-yes">✓</div><div class="name">ドア開閉</div><div class="chip">MC-38</div></div>
+      <div class="sensor-item"><div class="sensor-check check-yes">✓</div><div class="name">照度</div><div class="chip">BH1750</div></div>
+      <div class="sensor-item"><div class="sensor-check check-yes">✓</div><div class="name">空気質 (VOC)</div><div class="chip">SGP40</div></div>
+      <div class="sensor-item"><div class="sensor-check check-yes">✓</div><div class="name">騒音レベル</div><div class="chip">INMP441</div></div>
+      <div class="sensor-item"><div class="sensor-check check-yes">✓</div><div class="name">加速度/振動</div><div class="chip">LIS2DH12</div></div>
+      <div class="sensor-item"><div class="sensor-check check-yes">✓</div><div class="name">気圧</div><div class="chip">BMP280</div></div>
+      <div class="sensor-item"><div class="sensor-check check-yes">✓</div><div class="name" style="font-weight:600">E-Ink表示</div><div class="chip" style="color:#A855F7">GDEW0154</div></div>
+      <div class="sensor-item"><div class="sensor-check check-yes">✓</div><div class="name" style="font-weight:600">IR Blaster</div><div class="chip" style="color:#A855F7">940nm</div></div>
+    </div>
+
+    <div class="use-case">
+      <strong>こんな人に:</strong><br>
+      プロ管理会社、10物件以上運用、Nature Remo置換、ゲスト向け室内表示、リモコン学習で全家電制御
+    </div>
+
+    <div class="specs-mini">
+      <div class="spec-m"><div class="v">70mm</div><div class="l">サイズ</div></div>
+      <div class="spec-m"><div class="v">65g</div><div class="l">重量</div></div>
+      <div class="spec-m"><div class="v">USB-C</div><div class="l">電源</div></div>
+      <div class="spec-m"><div class="v">WiFi+BLE</div><div class="l">通信</div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Inventory Plan -->
+<div class="inventory">
+  <h2>在庫計画 (10,000ユーザー想定)</h2>
+  <table class="inv-table">
+    <tr>
+      <th>モデル</th>
+      <th>原価/台</th>
+      <th>販売価格</th>
+      <th>粗利率</th>
+      <th>初回生産</th>
+      <th>追加生産</th>
+      <th>合計在庫</th>
+      <th>想定売上</th>
+    </tr>
+    <tr>
+      <td><strong style="color:#3B9FE8">Sensor Lite</strong></td>
+      <td>¥3,200 ($22)</td>
+      <td>¥7,980</td>
+      <td style="color:#10B981">60%</td>
+      <td class="num">80</td>
+      <td>50</td>
+      <td>130</td>
+      <td>¥1,037,400</td>
+    </tr>
+    <tr>
+      <td><strong style="color:#E8A838">Sensor Hub</strong> ⭐</td>
+      <td>¥5,100 ($35)</td>
+      <td>¥14,800</td>
+      <td style="color:#10B981">66%</td>
+      <td class="num">150</td>
+      <td>100</td>
+      <td>250</td>
+      <td>¥3,700,000</td>
+    </tr>
+    <tr>
+      <td><strong style="color:#A855F7">Sensor Pro</strong></td>
+      <td>¥8,500 ($58)</td>
+      <td>¥24,800</td>
+      <td style="color:#10B981">66%</td>
+      <td class="num">70</td>
+      <td>50</td>
+      <td>120</td>
+      <td>¥2,976,000</td>
+    </tr>
+    <tr class="total-row">
+      <td>合計</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+      <td>300台</td>
+      <td>200台</td>
+      <td>500台</td>
+      <td>¥7,713,400</td>
+    </tr>
+  </table>
+</div>
+
+<!-- Production Timeline -->
+<div class="timeline">
+  <h2>生産タイムライン</h2>
+  <div class="tl-steps">
+    <div class="tl-step">
+      <div class="week">Week 1-2</div>
+      <div class="title">基板設計</div>
+      <div class="desc">KiCad回路図 → PCBレイアウト<br>3モデル共通基板 + Pro拡張基板</div>
+    </div>
+    <div class="tl-step">
+      <div class="week">Week 3</div>
+      <div class="title">試作 10台</div>
+      <div class="desc">JLCPCB SMT Assembly<br>ファームウェア開発開始</div>
+    </div>
+    <div class="tl-step">
+      <div class="week">Week 4-5</div>
+      <div class="title">検証 + 筐体</div>
+      <div class="desc">センサー精度テスト<br>3Dプリント筐体 (SLS/MJF)</div>
+    </div>
+    <div class="tl-step">
+      <div class="week">Week 6-8</div>
+      <div class="title">量産 300台</div>
+      <div class="desc">JLCPCB/PCBWay量産<br>技適マーク貼付・梱包</div>
+    </div>
+  </div>
+</div>
+
+<!-- Initial Investment -->
+<div class="market" style="border-color:rgba(16,185,129,0.2);background:rgba(16,185,129,0.03)">
+  <h2 style="color:#10B981">初期投資と損益分岐点</h2>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;text-align:center">
+    <div>
+      <div style="font-size:28px;font-weight:800;color:#EF4444">¥1,530,000</div>
+      <div style="font-size:11px;color:#7a7a95;margin-top:4px">初回生産 300台 原価</div>
+    </div>
+    <div>
+      <div style="font-size:28px;font-weight:800;color:#E8A838">¥200,000</div>
+      <div style="font-size:11px;color:#7a7a95;margin-top:4px">筐体 3Dプリント</div>
+    </div>
+    <div>
+      <div style="font-size:28px;font-weight:800;color:#3B9FE8">¥100,000</div>
+      <div style="font-size:11px;color:#7a7a95;margin-top:4px">梱包・送料</div>
+    </div>
+    <div>
+      <div style="font-size:28px;font-weight:800;color:#10B981">130台</div>
+      <div style="font-size:11px;color:#7a7a95;margin-top:4px">損益分岐点</div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:16px;font-size:12px;color:#7a7a95">
+    初期投資 約183万円 → <strong style="color:#10B981">130台販売で回収</strong> → 残り170台は全て利益（約250万円）
+  </div>
+</div>
+
+</div>
+</body>
+</html>

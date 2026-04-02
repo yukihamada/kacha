@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Koe Device — 5 Models × 3 Design Patterns</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #080810; color: #fff; font-family: 'SF Pro Display', -apple-system, sans-serif; padding: 40px 20px; }
+  h1 { text-align: center; font-size: 32px; font-weight: 700; margin-bottom: 8px; letter-spacing: -1px; }
+  .tagline { text-align: center; color: #555; font-size: 14px; margin-bottom: 6px; letter-spacing: 2px; text-transform: uppercase; }
+  .subtitle { text-align: center; color: #777; font-size: 14px; margin-bottom: 60px; }
+  .section-title { font-size: 18px; font-weight: 600; color: #999; text-align: center; margin: 50px 0 10px; letter-spacing: 3px; text-transform: uppercase; }
+  .pattern-label { font-size: 12px; color: #444; text-align: center; margin-bottom: 28px; letter-spacing: 1px; }
+  .grid5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; max-width: 1300px; margin: 0 auto 70px; }
+
+  /* ===== PEBBLE PATTERN ===== */
+  .peb {
+    border-radius: 50px 50px 40px 40px;
+    padding: 20px 14px;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: space-between; position: relative; overflow: hidden;
+  }
+  .peb.pick { background: linear-gradient(160deg, #1c1c2e, #0d0d1a); aspect-ratio: 1/1.8; }
+  .peb.coin { background: linear-gradient(160deg, #1a1a2e, #0a0a18); aspect-ratio: 1/1; border-radius: 50%; }
+  .peb.stage { background: linear-gradient(160deg, #0d1a2e, #060d1a); aspect-ratio: 2/2.2; }
+  .peb.fill { background: linear-gradient(160deg, #0d2010, #060d08); aspect-ratio: 1/2.4; }
+  .peb.sub { background: linear-gradient(160deg, #1a0d1a, #0d060d); aspect-ratio: 1.2/1; border-radius: 20px 20px 10px 10px; }
+
+  .peb-badge {
+    font-size: 9px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+    padding: 3px 12px; border-radius: 20px; position: relative; z-index: 2;
+  }
+  .peb.pick .peb-badge { background: rgba(139,92,246,0.2); color: #8b5cf6; border: 1px solid rgba(139,92,246,0.3); }
+  .peb.coin .peb-badge { background: rgba(234,179,8,0.2); color: #eab308; border: 1px solid rgba(234,179,8,0.3); }
+  .peb.stage .peb-badge { background: rgba(59,130,246,0.2); color: #3b82f6; border: 1px solid rgba(59,130,246,0.3); }
+  .peb.fill .peb-badge { background: rgba(34,197,94,0.2); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+  .peb.sub .peb-badge { background: rgba(239,68,68,0.2); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+
+  .peb-body { display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 2; }
+  .peb-speaker {
+    border-radius: 50%; display: grid; place-items: center;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.06);
+  }
+  .peb.pick .peb-speaker { width: 50px; height: 50px; background: radial-gradient(circle, rgba(139,92,246,0.3), rgba(139,92,246,0.05)); box-shadow: 0 0 20px rgba(139,92,246,0.2); }
+  .peb.coin .peb-speaker { width: 64px; height: 64px; background: radial-gradient(circle, rgba(234,179,8,0.3), rgba(234,179,8,0.05)); box-shadow: 0 0 24px rgba(234,179,8,0.2); }
+  .peb.stage .peb-speaker { width: 70px; height: 70px; background: radial-gradient(circle, rgba(59,130,246,0.3), rgba(59,130,246,0.05)); box-shadow: 0 0 28px rgba(59,130,246,0.2); }
+  .peb.fill .peb-speaker { width: 56px; height: 56px; background: radial-gradient(circle, rgba(34,197,94,0.3), rgba(34,197,94,0.05)); box-shadow: 0 0 24px rgba(34,197,94,0.2); }
+  .peb.sub .peb-speaker { width: 80px; height: 80px; background: radial-gradient(circle, rgba(239,68,68,0.3), rgba(239,68,68,0.05)); box-shadow: 0 0 32px rgba(239,68,68,0.2); }
+
+  .peb-inner { width: 60%; height: 60%; border-radius: 50%; }
+  .peb.pick .peb-inner { background: radial-gradient(circle, rgba(139,92,246,0.6), transparent); }
+  .peb.coin .peb-inner { background: radial-gradient(circle, rgba(234,179,8,0.6), transparent); }
+  .peb.stage .peb-inner { background: radial-gradient(circle, rgba(59,130,246,0.6), transparent); }
+  .peb.fill .peb-inner { background: radial-gradient(circle, rgba(34,197,94,0.6), transparent); }
+  .peb.sub .peb-inner { background: radial-gradient(circle, rgba(239,68,68,0.6), transparent); }
+
+  .peb-led { width: 6px; height: 6px; border-radius: 50%; }
+  .peb.pick .peb-led { background: #8b5cf6; box-shadow: 0 0 8px #8b5cf6; }
+  .peb.coin .peb-led { background: #eab308; box-shadow: 0 0 8px #eab308; }
+  .peb.stage .peb-led { background: #3b82f6; box-shadow: 0 0 8px #3b82f6; }
+  .peb.fill .peb-led { background: #22c55e; box-shadow: 0 0 8px #22c55e; }
+  .peb.sub .peb-led { background: #ef4444; box-shadow: 0 0 8px #ef4444; }
+
+  .peb-name { font-size: 13px; font-weight: 700; text-align: center; z-index: 2; }
+  .peb-price { font-size: 11px; color: rgba(255,255,255,0.4); text-align: center; z-index: 2; }
+  .peb-spec { font-size: 9px; color: rgba(255,255,255,0.35); text-align: center; line-height: 1.8; z-index: 2; }
+
+  /* ===== CRYSTAL PATTERN ===== */
+  .cry {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(20px);
+    padding: 20px 14px;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: space-between; position: relative; overflow: hidden;
+  }
+  .cry.pick { border-radius: 16px; aspect-ratio: 1/1.8; }
+  .cry.coin { border-radius: 50%; aspect-ratio: 1/1; }
+  .cry.stage { border-radius: 20px; aspect-ratio: 2/2.2; }
+  .cry.fill { border-radius: 14px; aspect-ratio: 1/2.4; }
+  .cry.sub { border-radius: 16px 16px 8px 8px; aspect-ratio: 1.2/1; }
+
+  .cry::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 50%, rgba(255,255,255,0.02) 100%);
+    pointer-events: none;
+  }
+  .cry-accent {
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  }
+  .cry-badge {
+    font-size: 9px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 3px 12px; border-radius: 20px; position: relative; z-index: 2;
+    background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .cry-body { display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 2; }
+  .cry-hex {
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: grid; place-items: center;
+  }
+  .cry.pick .cry-hex { width: 52px; height: 60px; background: linear-gradient(135deg, rgba(168,85,247,0.4), rgba(139,92,246,0.2)); }
+  .cry.coin .cry-hex { width: 68px; height: 78px; background: linear-gradient(135deg, rgba(251,191,36,0.4), rgba(234,179,8,0.2)); }
+  .cry.stage .cry-hex { width: 74px; height: 86px; background: linear-gradient(135deg, rgba(96,165,250,0.4), rgba(59,130,246,0.2)); }
+  .cry.fill .cry-hex { width: 60px; height: 70px; background: linear-gradient(135deg, rgba(74,222,128,0.4), rgba(34,197,94,0.2)); }
+  .cry.sub .cry-hex { width: 88px; height: 102px; background: linear-gradient(135deg, rgba(252,165,165,0.4), rgba(239,68,68,0.2)); }
+
+  .cry-led-row { display: flex; gap: 4px; }
+  .cry-led { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.6); }
+  .cry.pick .cry-led { background: #a855f7; box-shadow: 0 0 6px #a855f7; }
+  .cry.coin .cry-led { background: #fbbf24; box-shadow: 0 0 6px #fbbf24; }
+  .cry.stage .cry-led { background: #60a5fa; box-shadow: 0 0 6px #60a5fa; }
+  .cry.fill .cry-led { background: #4ade80; box-shadow: 0 0 6px #4ade80; }
+  .cry.sub .cry-led { background: #fca5a5; box-shadow: 0 0 6px #fca5a5; }
+  .cry-name { font-size: 13px; font-weight: 600; text-align: center; color: rgba(255,255,255,0.9); z-index: 2; }
+  .cry-price { font-size: 11px; color: rgba(255,255,255,0.35); text-align: center; z-index: 2; }
+  .cry-spec { font-size: 9px; color: rgba(255,255,255,0.3); text-align: center; line-height: 1.8; z-index: 2; }
+
+  /* ===== WAVE PATTERN ===== */
+  .wav {
+    padding: 20px 14px;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: space-between; position: relative; overflow: hidden;
+    border-radius: 20px;
+  }
+  .wav.pick { background: #0f0a1e; aspect-ratio: 1/1.8; border-radius: 50px 50px 30px 30px; }
+  .wav.coin { background: #1a100a; aspect-ratio: 1/1; border-radius: 50%; }
+  .wav.stage { background: #0a0f1a; aspect-ratio: 2/2.2; border-radius: 16px; }
+  .wav.fill { background: #0a1a0f; aspect-ratio: 1/2.4; border-radius: 50px 50px 20px 20px; }
+  .wav.sub { background: #1a0a0a; aspect-ratio: 1.2/1; border-radius: 20px 20px 40px 40px; }
+
+  .wav-wave {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 60%;
+    opacity: 0.12;
+  }
+  .wav-badge {
+    font-size: 9px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+    padding: 3px 12px; border-radius: 4px; position: relative; z-index: 2; color: #fff;
+  }
+  .wav.pick .wav-badge { background: #6d28d9; }
+  .wav.coin .wav-badge { background: #92400e; }
+  .wav.stage .wav-badge { background: #1d4ed8; }
+  .wav.fill .wav-badge { background: #065f46; }
+  .wav.sub .wav-badge { background: #991b1b; }
+
+  .wav-body { display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 2; }
+  .wav-circle {
+    border-radius: 50%; display: grid; place-items: center; position: relative;
+  }
+  .wav.pick .wav-circle { width: 56px; height: 56px; background: conic-gradient(from 0deg, #8b5cf6, #6d28d9, #4c1d95, #8b5cf6); }
+  .wav.coin .wav-circle { width: 70px; height: 70px; background: conic-gradient(from 0deg, #f59e0b, #d97706, #92400e, #f59e0b); }
+  .wav.stage .wav-circle { width: 80px; height: 80px; background: conic-gradient(from 0deg, #3b82f6, #1d4ed8, #1e3a8a, #3b82f6); }
+  .wav.fill .wav-circle { width: 64px; height: 64px; background: conic-gradient(from 0deg, #22c55e, #16a34a, #14532d, #22c55e); }
+  .wav.sub .wav-circle { width: 90px; height: 90px; background: conic-gradient(from 0deg, #ef4444, #dc2626, #991b1b, #ef4444); }
+  .wav-circle-inner { border-radius: 50%; background: rgba(0,0,0,0.6); }
+  .wav.pick .wav-circle-inner { width: 40px; height: 40px; }
+  .wav.coin .wav-circle-inner { width: 52px; height: 52px; }
+  .wav.stage .wav-circle-inner { width: 60px; height: 60px; }
+  .wav.fill .wav-circle-inner { width: 46px; height: 46px; }
+  .wav.sub .wav-circle-inner { width: 68px; height: 68px; }
+
+  .wav-eq { display: flex; gap: 2px; align-items: flex-end; height: 24px; }
+  .wav-b { width: 3px; border-radius: 1px 1px 0 0; }
+  .wav.pick .wav-b { background: #8b5cf6; }
+  .wav.coin .wav-b { background: #f59e0b; }
+  .wav.stage .wav-b { background: #3b82f6; }
+  .wav.fill .wav-b { background: #22c55e; }
+  .wav.sub .wav-b { background: #ef4444; }
+  .wav-name { font-size: 13px; font-weight: 700; text-align: center; z-index: 2; }
+  .wav-price { font-size: 11px; color: rgba(255,255,255,0.4); text-align: center; z-index: 2; }
+  .wav-spec { font-size: 9px; color: rgba(255,255,255,0.35); text-align: center; line-height: 1.8; z-index: 2; }
+
+  .model-info { display: flex; gap: 3px; flex-wrap: wrap; justify-content: center; z-index: 2; }
+  .tag { font-size: 8px; padding: 2px 6px; border-radius: 3px; background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.4); }
+</style>
+</head>
+<body>
+
+<h1>Koe Device</h1>
+<p class="tagline">声で世界と繋がる · Sound as Connection</p>
+<p class="subtitle">5 Models × 3 Design Patterns — Hardware Concept Design 2026</p>
+
+<!-- model summary bar -->
+<div style="display:flex;gap:20px;justify-content:center;margin-bottom:50px;flex-wrap:wrap">
+  <div style="text-align:center">
+    <div style="font-size:11px;color:#8b5cf6;font-weight:600;letter-spacing:1px">PICK</div>
+    <div style="font-size:10px;color:#444;margin-top:2px">イヤホン型 · $65</div>
+  </div>
+  <div style="text-align:center">
+    <div style="font-size:11px;color:#eab308;font-weight:600;letter-spacing:1px">COIN</div>
+    <div style="font-size:10px;color:#444;margin-top:2px">コイン型 · $65</div>
+  </div>
+  <div style="text-align:center">
+    <div style="font-size:11px;color:#3b82f6;font-weight:600;letter-spacing:1px">STAGE</div>
+    <div style="font-size:10px;color:#444;margin-top:2px">ステージ · $800</div>
+  </div>
+  <div style="text-align:center">
+    <div style="font-size:11px;color:#22c55e;font-weight:600;letter-spacing:1px">FILL</div>
+    <div style="font-size:10px;color:#444;margin-top:2px">壁掛け · $1,500</div>
+  </div>
+  <div style="text-align:center">
+    <div style="font-size:11px;color:#ef4444;font-weight:600;letter-spacing:1px">SUB</div>
+    <div style="font-size:10px;color:#444;margin-top:2px">サブウーファー · $1,200</div>
+  </div>
+</div>
+
+<!-- ===== PATTERN A: PEBBLE ===== -->
+<div class="section-title">Pattern A — Pebble</div>
+<div class="pattern-label">有機的な丸みフォルム · 手になじむ曲線美 · 石のような存在感</div>
+<div class="grid5">
+  <!-- Pick -->
+  <div class="peb pick">
+    <span class="peb-badge">PICK</span>
+    <div class="peb-body">
+      <div class="peb-speaker"><div class="peb-inner"></div></div>
+      <div class="peb-led"></div>
+    </div>
+    <div>
+      <div class="peb-name">Koe Pick</div>
+      <div class="peb-price">$65</div>
+      <div class="peb-spec">ESP32-S3<br>INMP441 × 2<br>イヤホン + NTP</div>
+    </div>
+  </div>
+  <!-- Coin -->
+  <div class="peb coin">
+    <span class="peb-badge">COIN</span>
+    <div class="peb-body">
+      <div class="peb-speaker"><div class="peb-inner"></div></div>
+      <div class="peb-led"></div>
+    </div>
+    <div>
+      <div class="peb-name">Koe Coin</div>
+      <div class="peb-price">$65</div>
+      <div class="peb-spec">φ26mm 基板<br>GPS不要 NTP同期</div>
+    </div>
+  </div>
+  <!-- Stage -->
+  <div class="peb stage">
+    <span class="peb-badge">STAGE</span>
+    <div class="peb-body">
+      <div class="peb-speaker"><div class="peb-inner"></div></div>
+      <div class="peb-led"></div>
+      <div class="model-info">
+        <span class="tag">Pi5</span><span class="tag">4K HDMI</span>
+      </div>
+    </div>
+    <div>
+      <div class="peb-name">Koe Stage</div>
+      <div class="peb-price">$800</div>
+      <div class="peb-spec">Pi CM5 + ESP32-S3<br>4K Display · WiFi7</div>
+    </div>
+  </div>
+  <!-- Fill -->
+  <div class="peb fill">
+    <span class="peb-badge">FILL</span>
+    <div class="peb-body">
+      <div class="peb-speaker"><div class="peb-inner"></div></div>
+      <div class="peb-led"></div>
+      <div class="model-info">
+        <span class="tag">8"+1"</span>
+      </div>
+    </div>
+    <div>
+      <div class="peb-name">Koe Fill</div>
+      <div class="peb-price">$1,500</div>
+      <div class="peb-spec">8" + 1" ホーン<br>Pi5 + WiFi7</div>
+    </div>
+  </div>
+  <!-- Sub -->
+  <div class="peb sub">
+    <span class="peb-badge">SUB</span>
+    <div class="peb-body">
+      <div class="peb-speaker"><div class="peb-inner"></div></div>
+      <div class="peb-led"></div>
+      <div class="model-info">
+        <span class="tag">15"</span><span class="tag">1000W</span>
+      </div>
+    </div>
+    <div>
+      <div class="peb-name">Koe Sub</div>
+      <div class="peb-price">$1,200</div>
+      <div class="peb-spec">15" · 1000W<br>UDP P2P同期</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PATTERN B: CRYSTAL ===== -->
+<div class="section-title">Pattern B — Crystal</div>
+<div class="pattern-label">クリスタルガラス質感 · ジオメトリックフォルム · 光の屈折美</div>
+<div class="grid5">
+  <div class="cry pick">
+    <div class="cry-accent"></div>
+    <span class="cry-badge">PICK</span>
+    <div class="cry-body">
+      <div class="cry-hex"></div>
+      <div class="cry-led-row">
+        <div class="cry-led"></div><div class="cry-led"></div><div class="cry-led"></div>
+      </div>
+    </div>
+    <div>
+      <div class="cry-name">Koe Pick</div>
+      <div class="cry-price">$65</div>
+      <div class="cry-spec">ESP32-S3<br>INMP441 × 2<br>イヤホン型</div>
+    </div>
+  </div>
+  <div class="cry coin">
+    <div class="cry-accent"></div>
+    <span class="cry-badge">COIN</span>
+    <div class="cry-body">
+      <div class="cry-hex"></div>
+      <div class="cry-led-row">
+        <div class="cry-led"></div><div class="cry-led"></div>
+      </div>
+    </div>
+    <div>
+      <div class="cry-name">Koe Coin</div>
+      <div class="cry-price">$65</div>
+      <div class="cry-spec">φ26mm · NTP</div>
+    </div>
+  </div>
+  <div class="cry stage">
+    <div class="cry-accent"></div>
+    <span class="cry-badge">STAGE</span>
+    <div class="cry-body">
+      <div class="cry-hex"></div>
+      <div class="cry-led-row">
+        <div class="cry-led"></div><div class="cry-led"></div><div class="cry-led"></div><div class="cry-led"></div>
+      </div>
+      <div class="model-info">
+        <span class="tag">Pi CM5</span><span class="tag">4K</span>
+      </div>
+    </div>
+    <div>
+      <div class="cry-name">Koe Stage</div>
+      <div class="cry-price">$800</div>
+      <div class="cry-spec">Pi CM5 · 4K HDMI<br>WiFi7 · マルチキャスト</div>
+    </div>
+  </div>
+  <div class="cry fill">
+    <div class="cry-accent"></div>
+    <span class="cry-badge">FILL</span>
+    <div class="cry-body">
+      <div class="cry-hex"></div>
+      <div class="cry-led-row">
+        <div class="cry-led"></div><div class="cry-led"></div><div class="cry-led"></div>
+      </div>
+    </div>
+    <div>
+      <div class="cry-name">Koe Fill</div>
+      <div class="cry-price">$1,500</div>
+      <div class="cry-spec">8"+1" ホーン<br>Pi5 + MAX98357A</div>
+    </div>
+  </div>
+  <div class="cry sub">
+    <div class="cry-accent"></div>
+    <span class="cry-badge">SUB</span>
+    <div class="cry-body">
+      <div class="cry-hex"></div>
+      <div class="cry-led-row">
+        <div class="cry-led"></div><div class="cry-led"></div><div class="cry-led"></div><div class="cry-led"></div><div class="cry-led"></div>
+      </div>
+    </div>
+    <div>
+      <div class="cry-name">Koe Sub</div>
+      <div class="cry-price">$1,200</div>
+      <div class="cry-spec">15" woofer · 1000W<br>UDP 239.42.42.1:4242</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PATTERN C: WAVE ===== -->
+<div class="section-title">Pattern C — Wave</div>
+<div class="pattern-label">音の波形をビジュアル化 · コニカルフォルム · 音響工学的美しさ</div>
+<div class="grid5">
+  <div class="wav pick">
+    <span class="wav-badge">PICK</span>
+    <div class="wav-body">
+      <div class="wav-circle"><div class="wav-circle-inner"></div></div>
+      <div class="wav-eq">
+        <div class="wav-b" style="height:6px"></div>
+        <div class="wav-b" style="height:14px"></div>
+        <div class="wav-b" style="height:20px"></div>
+        <div class="wav-b" style="height:24px"></div>
+        <div class="wav-b" style="height:20px"></div>
+        <div class="wav-b" style="height:14px"></div>
+        <div class="wav-b" style="height:6px"></div>
+      </div>
+    </div>
+    <div>
+      <div class="wav-name">Koe Pick</div>
+      <div class="wav-price">$65</div>
+      <div class="wav-spec">INMP441 × 2 マイク<br>ESP32-S3 · NTP同期<br>イヤホン + LED</div>
+    </div>
+  </div>
+  <div class="wav coin">
+    <span class="wav-badge">COIN</span>
+    <div class="wav-body">
+      <div class="wav-circle"><div class="wav-circle-inner"></div></div>
+      <div class="wav-eq">
+        <div class="wav-b" style="height:8px"></div>
+        <div class="wav-b" style="height:16px"></div>
+        <div class="wav-b" style="height:22px"></div>
+        <div class="wav-b" style="height:16px"></div>
+        <div class="wav-b" style="height:8px"></div>
+      </div>
+    </div>
+    <div>
+      <div class="wav-name">Koe Coin</div>
+      <div class="wav-price">$65</div>
+      <div class="wav-spec">φ26mm · 最初の製品<br>BOM $24 · 技適済み</div>
+    </div>
+  </div>
+  <div class="wav stage">
+    <span class="wav-badge">STAGE</span>
+    <div class="wav-body">
+      <div class="wav-circle"><div class="wav-circle-inner"></div></div>
+      <div class="wav-eq">
+        <div class="wav-b" style="height:4px"></div>
+        <div class="wav-b" style="height:10px"></div>
+        <div class="wav-b" style="height:18px"></div>
+        <div class="wav-b" style="height:24px"></div>
+        <div class="wav-b" style="height:24px"></div>
+        <div class="wav-b" style="height:18px"></div>
+        <div class="wav-b" style="height:10px"></div>
+        <div class="wav-b" style="height:4px"></div>
+      </div>
+    </div>
+    <div>
+      <div class="wav-name">Koe Stage</div>
+      <div class="wav-price">$800</div>
+      <div class="wav-spec">Raspberry Pi CM5<br>4K Display · WiFi7<br>フェス会場向け</div>
+    </div>
+  </div>
+  <div class="wav fill">
+    <span class="wav-badge">FILL</span>
+    <div class="wav-body">
+      <div class="wav-circle"><div class="wav-circle-inner"></div></div>
+      <div class="wav-eq">
+        <div class="wav-b" style="height:5px"></div>
+        <div class="wav-b" style="height:12px"></div>
+        <div class="wav-b" style="height:20px"></div>
+        <div class="wav-b" style="height:24px"></div>
+        <div class="wav-b" style="height:20px"></div>
+        <div class="wav-b" style="height:12px"></div>
+        <div class="wav-b" style="height:5px"></div>
+      </div>
+    </div>
+    <div>
+      <div class="wav-name">Koe Fill</div>
+      <div class="wav-price">$1,500</div>
+      <div class="wav-spec">8" + 1" ホーン<br>Pi5 + WiFi7<br>壁掛けスピーカー</div>
+    </div>
+  </div>
+  <div class="wav sub">
+    <span class="wav-badge">SUB</span>
+    <div class="wav-body">
+      <div class="wav-circle"><div class="wav-circle-inner"></div></div>
+      <div class="wav-eq">
+        <div class="wav-b" style="height:3px"></div>
+        <div class="wav-b" style="height:8px"></div>
+        <div class="wav-b" style="height:15px"></div>
+        <div class="wav-b" style="height:22px"></div>
+        <div class="wav-b" style="height:24px"></div>
+        <div class="wav-b" style="height:22px"></div>
+        <div class="wav-b" style="height:15px"></div>
+        <div class="wav-b" style="height:8px"></div>
+        <div class="wav-b" style="height:3px"></div>
+      </div>
+    </div>
+    <div>
+      <div class="wav-name">Koe Sub</div>
+      <div class="wav-price">$1,200</div>
+      <div class="wav-spec">15" · 1000W ウーファー<br>UDP P2P マルチキャスト<br>10K フェス対応</div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;color:#2a2a3a;font-size:11px;padding:20px 0 40px">
+  © 2026 Koe Device — "群衆を楽器にするデバイス" — Hardware Design Concepts. koe.live
+</div>
+</body>
+</html>

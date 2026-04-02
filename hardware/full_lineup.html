@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Enabler Hardware - Full Product Lineup</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a12;color:#eaeaf2;font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif}
+.page{max-width:1300px;margin:0 auto;padding:40px 20px}
+h1{text-align:center;font-size:32px;margin-bottom:4px}
+.sub{text-align:center;color:#7a7a95;font-size:14px;margin-bottom:48px}
+.brand{color:#E8A838}
+.brand2{color:#A855F7}
+
+/* Section Headers */
+.section{margin-bottom:56px}
+.section-head{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.section-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px}
+.section-head h2{font-size:22px}
+.section-head p{font-size:12px;color:#7a7a95}
+
+/* Product Grid */
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+
+.card{border-radius:20px;padding:24px;position:relative;transition:all 0.3s}
+.card:hover{transform:translateY(-3px)}
+
+/* Color themes */
+.kagi-lite{background:linear-gradient(160deg,rgba(59,159,232,0.08),rgba(59,159,232,0.01));border:1px solid rgba(59,159,232,0.2)}
+.kagi-hub{background:linear-gradient(160deg,rgba(232,168,56,0.1),rgba(232,168,56,0.02));border:2px solid rgba(232,168,56,0.35);box-shadow:0 0 30px rgba(232,168,56,0.06)}
+.kagi-pro{background:linear-gradient(160deg,rgba(168,85,247,0.08),rgba(168,85,247,0.01));border:1px solid rgba(168,85,247,0.2)}
+.koe-coin{background:linear-gradient(160deg,rgba(16,185,129,0.08),rgba(16,185,129,0.01));border:1px solid rgba(16,185,129,0.2)}
+.koe-pick{background:linear-gradient(160deg,rgba(236,72,153,0.08),rgba(236,72,153,0.01));border:1px solid rgba(236,72,153,0.2)}
+.koe-stage{background:linear-gradient(160deg,rgba(251,146,60,0.08),rgba(251,146,60,0.01));border:1px solid rgba(251,146,60,0.2)}
+.koe-fill{background:linear-gradient(160deg,rgba(14,165,233,0.08),rgba(14,165,233,0.01));border:1px solid rgba(14,165,233,0.2)}
+.koe-sub{background:linear-gradient(160deg,rgba(239,68,68,0.08),rgba(239,68,68,0.01));border:1px solid rgba(239,68,68,0.2)}
+
+.badge{position:absolute;top:-10px;right:16px;padding:3px 12px;border-radius:16px;font-size:10px;font-weight:700}
+.badge-best{background:#E8A838;color:#000}
+.badge-new{background:#A855F7;color:#fff}
+.badge-hot{background:#EF4444;color:#fff}
+.badge-eco{background:#10B981;color:#000}
+
+/* Device visual */
+.dev-visual{width:90px;height:90px;border-radius:14px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;position:relative}
+.dev-visual .emoji{font-size:40px}
+.dev-visual .mini-label{position:absolute;bottom:4px;font-size:7px;font-weight:700;letter-spacing:1px}
+
+.card h3{text-align:center;font-size:18px;margin-bottom:2px}
+.card .tagline{text-align:center;font-size:11px;color:#7a7a95;margin-bottom:14px}
+
+.price-box{text-align:center;margin-bottom:14px}
+.price{font-size:32px;font-weight:800}
+.price-note{font-size:10px;color:#7a7a95}
+
+/* Feature pills */
+.features{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px;justify-content:center}
+.feat{font-size:9px;padding:3px 8px;border-radius:10px;background:rgba(255,255,255,0.04);color:#999;border:1px solid rgba(255,255,255,0.06)}
+.feat.on{border-color:rgba(16,185,129,0.3);color:#10B981;background:rgba(16,185,129,0.06)}
+
+/* Specs row */
+.specs-row{display:grid;grid-template-columns:repeat(2,1fr);gap:4px;margin-bottom:12px}
+.spec{text-align:center;padding:4px;background:rgba(255,255,255,0.02);border-radius:6px}
+.spec .v{font-size:13px;font-weight:700}
+.spec .l{font-size:8px;color:#7a7a95}
+
+.use-case{font-size:10px;color:#7a7a95;line-height:1.6;padding:10px;background:rgba(255,255,255,0.015);border-radius:8px}
+.use-case strong{color:#ddd}
+
+/* Inventory Section */
+.inv-section{margin-top:60px}
+.inv-section h2{color:#E8A838;font-size:20px;text-align:center;margin-bottom:24px}
+
+.inv-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px}
+@media(max-width:768px){.inv-grid{grid-template-columns:1fr}}
+
+.inv-box{border-radius:16px;padding:24px}
+.inv-box h3{font-size:16px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,0.08);color:#7a7a95;font-size:10px;text-transform:uppercase}
+td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,0.03)}
+.n{font-weight:700;font-size:14px}
+.total td{border-top:2px solid rgba(232,168,56,0.3);font-weight:700;color:#E8A838}
+
+/* Summary boxes */
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:32px}
+.sum-card{text-align:center;padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02)}
+.sum-card .big{font-size:24px;font-weight:800}
+.sum-card .label{font-size:10px;color:#7a7a95;margin-top:4px}
+
+/* Sensor comparison */
+.compare{margin-top:48px}
+.compare h2{text-align:center;color:#E8A838;font-size:18px;margin-bottom:20px}
+.compare-note{text-align:center;font-size:11px;color:#7a7a95;margin-bottom:16px}
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1><span class="brand">KAGI</span> + <span class="brand2">Koe</span> Hardware</h1>
+<p class="sub">スマートホーム + 音声デバイス — 統合プロダクトライン</p>
+
+<!-- ==================== KAGI Sensor Hub ==================== -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-icon" style="background:rgba(232,168,56,0.12)">🏠</div>
+    <div>
+      <h2 style="color:#E8A838">KAGI Sensor Hub</h2>
+      <p>物件の「五感」をアプリに接続。民泊・スマートホーム監視デバイス。</p>
+    </div>
+  </div>
+
+  <div class="products">
+    <!-- KAGI Lite -->
+    <div class="card kagi-lite">
+      <div class="dev-visual" style="background:rgba(59,159,232,0.1)">
+        <div class="emoji">🔑</div>
+        <div class="mini-label" style="color:#3B9FE8">LITE</div>
+      </div>
+      <h3 style="color:#3B9FE8">Sensor Lite</h3>
+      <div class="tagline">個人の家に。エッセンシャル。</div>
+      <div class="price-box"><div class="price" style="color:#3B9FE8">¥7,980</div><div class="price-note">税込</div></div>
+      <div class="features">
+        <div class="feat on">温湿度</div><div class="feat on">人感PIR</div>
+        <div class="feat on">ドア開閉</div><div class="feat on">照度</div>
+        <div class="feat">VOC</div><div class="feat">騒音</div>
+        <div class="feat">振動</div><div class="feat">気圧</div>
+      </div>
+      <div class="specs-row">
+        <div class="spec"><div class="v">45mm</div><div class="l">サイズ</div></div>
+        <div class="spec"><div class="v">30g</div><div class="l">重量</div></div>
+        <div class="spec"><div class="v">USB-C</div><div class="l">電源</div></div>
+        <div class="spec"><div class="v">WiFi+BLE</div><div class="l">通信</div></div>
+      </div>
+      <div class="use-case"><strong>自宅のセキュリティ</strong>、エアコン消し忘れ、不在時モニタリング</div>
+    </div>
+
+    <!-- KAGI Hub -->
+    <div class="card kagi-hub">
+      <div class="badge badge-best">BEST SELLER</div>
+      <div class="dev-visual" style="background:rgba(232,168,56,0.1)">
+        <div class="emoji">🏢</div>
+        <div class="mini-label" style="color:#E8A838">HUB</div>
+      </div>
+      <h3 style="color:#E8A838">Sensor Hub</h3>
+      <div class="tagline">民泊管理のスタンダード。8センサー搭載。</div>
+      <div class="price-box"><div class="price" style="color:#E8A838">¥14,800</div><div class="price-note">税込</div></div>
+      <div class="features">
+        <div class="feat on">温湿度</div><div class="feat on">人感PIR</div>
+        <div class="feat on">ドア開閉</div><div class="feat on">照度</div>
+        <div class="feat on">VOC</div><div class="feat on">騒音</div>
+        <div class="feat on">振動</div><div class="feat on">気圧</div>
+      </div>
+      <div class="specs-row">
+        <div class="spec"><div class="v">60mm</div><div class="l">サイズ</div></div>
+        <div class="spec"><div class="v">45g</div><div class="l">重量</div></div>
+        <div class="spec"><div class="v">USB-C</div><div class="l">電源</div></div>
+        <div class="spec"><div class="v">WiFi+BLE</div><div class="l">通信</div></div>
+      </div>
+      <div class="use-case"><strong>Airbnb/民泊ホスト</strong>、パーティー防止、喫煙検知、チェックアウト確認、BLEゲートウェイ</div>
+    </div>
+
+    <!-- KAGI Pro -->
+    <div class="card kagi-pro">
+      <div class="badge badge-new">PRO</div>
+      <div class="dev-visual" style="background:rgba(168,85,247,0.1)">
+        <div class="emoji">🏨</div>
+        <div class="mini-label" style="color:#A855F7">PRO</div>
+      </div>
+      <h3 style="color:#A855F7">Sensor Pro</h3>
+      <div class="tagline">E-Ink + IR + mmWave。これ1台で完結。</div>
+      <div class="price-box"><div class="price" style="color:#A855F7">¥24,800</div><div class="price-note">税込</div></div>
+      <div class="features">
+        <div class="feat on">温湿度</div><div class="feat on">mmWave</div>
+        <div class="feat on">ドア開閉</div><div class="feat on">照度</div>
+        <div class="feat on">VOC</div><div class="feat on">騒音</div>
+        <div class="feat on">振動</div><div class="feat on">気圧</div>
+        <div class="feat on" style="border-color:rgba(168,85,247,0.4);color:#A855F7">E-Ink</div>
+        <div class="feat on" style="border-color:rgba(168,85,247,0.4);color:#A855F7">IRブラスター</div>
+      </div>
+      <div class="specs-row">
+        <div class="spec"><div class="v">70mm</div><div class="l">サイズ</div></div>
+        <div class="spec"><div class="v">65g</div><div class="l">重量</div></div>
+        <div class="spec"><div class="v">USB-C</div><div class="l">電源</div></div>
+        <div class="spec"><div class="v">WiFi+BLE</div><div class="l">通信</div></div>
+      </div>
+      <div class="use-case"><strong>プロ管理会社</strong>、Nature Remo置換、ゲスト向け室温表示、全家電制御、静止人物検知</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Koe Device ==================== -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-icon" style="background:rgba(168,85,247,0.12)">🎵</div>
+    <div>
+      <h2 style="color:#A855F7">Koe Device</h2>
+      <p>群衆を楽器にするデバイス。1台は記憶、100台はオーケストラ。</p>
+    </div>
+  </div>
+
+  <div class="products">
+    <!-- Koe Pick -->
+    <div class="card koe-pick">
+      <div class="dev-visual" style="background:rgba(236,72,153,0.1)">
+        <div class="emoji">📿</div>
+        <div class="mini-label" style="color:#EC4899">PICK</div>
+      </div>
+      <h3 style="color:#EC4899">Koe Pick</h3>
+      <div class="tagline">ペンダント型。声の記憶デバイス。</div>
+      <div class="price-box"><div class="price" style="color:#EC4899">¥3,980</div><div class="price-note">税込</div></div>
+      <div class="features">
+        <div class="feat on">マイクx1</div><div class="feat on">BLE 5.0</div>
+        <div class="feat on">LED</div><div class="feat on">200mAh</div>
+        <div class="feat">スピーカー</div><div class="feat">P2P同期</div>
+      </div>
+      <div class="specs-row">
+        <div class="spec"><div class="v">30mm</div><div class="l">サイズ</div></div>
+        <div class="spec"><div class="v">5g</div><div class="l">重量</div></div>
+        <div class="spec"><div class="v">USB-C</div><div class="l">充電</div></div>
+        <div class="spec"><div class="v">17h</div><div class="l">バッテリー</div></div>
+      </div>
+      <div class="use-case"><strong>常時録音ペンダント</strong>。「あのレストラン何だっけ？」を音声検索。会議メモ、日記。</div>
+    </div>
+
+    <!-- Koe Coin -->
+    <div class="card koe-coin">
+      <div class="badge badge-eco">PRIMARY</div>
+      <div class="dev-visual" style="background:rgba(16,185,129,0.1)">
+        <div class="emoji">🪙</div>
+        <div class="mini-label" style="color:#10B981">COIN</div>
+      </div>
+      <h3 style="color:#10B981">Koe Coin</h3>
+      <div class="tagline">ポケットサイズ。P2P音声同期。</div>
+      <div class="price-box"><div class="price" style="color:#10B981">¥9,800</div><div class="price-note">税込</div></div>
+      <div class="features">
+        <div class="feat on">マイクx2</div><div class="feat on">スピーカー</div>
+        <div class="feat on">WiFi+BLE</div><div class="feat on">LED</div>
+        <div class="feat on">P2P同期</div><div class="feat on">800mAh</div>
+      </div>
+      <div class="specs-row">
+        <div class="spec"><div class="v">26mm⌀</div><div class="l">サイズ</div></div>
+        <div class="spec"><div class="v">12g</div><div class="l">重量</div></div>
+        <div class="spec"><div class="v">USB-C</div><div class="l">充電</div></div>
+        <div class="spec"><div class="v">12h</div><div class="l">バッテリー</div></div>
+      </div>
+      <div class="use-case"><strong>フェスで1000人の声を同期</strong>。ハミング→AIハーモニー生成。ポケットPA。ピッチシフト。</div>
+    </div>
+
+    <!-- Koe Stage -->
+    <div class="card koe-stage">
+      <div class="badge badge-hot">BRAIN</div>
+      <div class="dev-visual" style="background:rgba(251,146,60,0.1)">
+        <div class="emoji">🧠</div>
+        <div class="mini-label" style="color:#FB923C">STAGE</div>
+      </div>
+      <h3 style="color:#FB923C">Koe Stage</h3>
+      <div class="tagline">システムの頭脳。Pi 5 + WiFi 7。</div>
+      <div class="price-box"><div class="price" style="color:#FB923C">¥120,000</div><div class="price-note">税込</div></div>
+      <div class="features">
+        <div class="feat on">Pi 5 4GB</div><div class="feat on">WiFi 7</div>
+        <div class="feat on">GPS 1PPS</div><div class="feat on">DAC ES9038</div>
+        <div class="feat on">XLR出力</div><div class="feat on">4G LTE</div>
+      </div>
+      <div class="specs-row">
+        <div class="spec"><div class="v">100mm</div><div class="l">サイズ</div></div>
+        <div class="spec"><div class="v">350g</div><div class="l">重量</div></div>
+        <div class="spec"><div class="v">PoE</div><div class="l">電源</div></div>
+        <div class="spec"><div class="v">μsec</div><div class="l">同期精度</div></div>
+      </div>
+      <div class="use-case"><strong>フェス/イベントのコントロールユニット</strong>。500台のCOINを統括。GPS同期でμ秒精度。PA出力。</div>
+    </div>
+
+    <!-- Koe Fill -->
+    <div class="card koe-fill">
+      <div class="dev-visual" style="background:rgba(14,165,233,0.1)">
+        <div class="emoji">🔊</div>
+        <div class="mini-label" style="color:#0EA5E9">FILL</div>
+      </div>
+      <h3 style="color:#0EA5E9">Koe Fill</h3>
+      <div class="tagline">8"+1"ホーン。分散PAスピーカー。</div>
+      <div class="price-box"><div class="price" style="color:#0EA5E9">¥228,000</div><div class="price-note">税込</div></div>
+      <div class="features">
+        <div class="feat on">8"ウーファー</div><div class="feat on">1"CDホーン</div>
+        <div class="feat on">125Wx2</div><div class="feat on">Pi 5</div>
+        <div class="feat on">WiFi 7</div><div class="feat on">GPS</div>
+      </div>
+      <div class="specs-row">
+        <div class="spec"><div class="v">65Hz-20kHz</div><div class="l">周波数</div></div>
+        <div class="spec"><div class="v">118dB</div><div class="l">最大SPL</div></div>
+        <div class="spec"><div class="v">PoE</div><div class="l">電源</div></div>
+        <div class="spec"><div class="v">12kg</div><div class="l">重量</div></div>
+      </div>
+      <div class="use-case"><strong>L-Acoustics KARAの1/8価格</strong>。GPS同期で位相完璧なPA。フェス/教会/会場。</div>
+    </div>
+
+    <!-- Koe Sub -->
+    <div class="card koe-sub">
+      <div class="dev-visual" style="background:rgba(239,68,68,0.1)">
+        <div class="emoji">💥</div>
+        <div class="mini-label" style="color:#EF4444">SUB</div>
+      </div>
+      <h3 style="color:#EF4444">Koe Sub</h3>
+      <div class="tagline">15"ウーファー。1000Wサブベース。</div>
+      <div class="price-box"><div class="price" style="color:#EF4444">¥180,000</div><div class="price-note">税込</div></div>
+      <div class="features">
+        <div class="feat on">15"ウーファー</div><div class="feat on">ICEpower 1kW</div>
+        <div class="feat on">30-80Hz</div><div class="feat on">GPS同期</div>
+      </div>
+      <div class="specs-row">
+        <div class="spec"><div class="v">30Hz</div><div class="l">-3dB</div></div>
+        <div class="spec"><div class="v">130dB</div><div class="l">最大SPL</div></div>
+        <div class="spec"><div class="v">AC電源</div><div class="l">電源</div></div>
+        <div class="spec"><div class="v">35kg</div><div class="l">重量</div></div>
+      </div>
+      <div class="use-case"><strong>L-Acoustics SB28の1/7価格</strong>。体を揺らすサブベース。フェス必須。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Inventory Plan ==================== -->
+<div class="inv-section">
+  <h2>10,000人に向けた在庫計画</h2>
+
+  <div class="inv-grid">
+    <!-- KAGI -->
+    <div class="inv-box" style="background:rgba(232,168,56,0.03);border:1px solid rgba(232,168,56,0.12);border-radius:16px">
+      <h3><span style="color:#E8A838">🏠 KAGI Sensor</span></h3>
+      <table>
+        <tr><th>モデル</th><th>原価</th><th>小売</th><th>初回</th><th>追加</th><th>計</th></tr>
+        <tr><td style="color:#3B9FE8">Lite</td><td>¥3,200</td><td>¥7,980</td><td class="n">80</td><td>50</td><td>130</td></tr>
+        <tr><td style="color:#E8A838">Hub</td><td>¥5,100</td><td>¥14,800</td><td class="n">150</td><td>100</td><td>250</td></tr>
+        <tr><td style="color:#A855F7">Pro</td><td>¥8,500</td><td>¥24,800</td><td class="n">70</td><td>50</td><td>120</td></tr>
+        <tr class="total"><td>合計</td><td></td><td></td><td>300</td><td>200</td><td>500台</td></tr>
+      </table>
+    </div>
+
+    <!-- Koe -->
+    <div class="inv-box" style="background:rgba(168,85,247,0.03);border:1px solid rgba(168,85,247,0.12);border-radius:16px">
+      <h3><span style="color:#A855F7">🎵 Koe Device</span></h3>
+      <table>
+        <tr><th>モデル</th><th>原価</th><th>小売</th><th>初回</th><th>追加</th><th>計</th></tr>
+        <tr><td style="color:#EC4899">Pick</td><td>¥1,200</td><td>¥3,980</td><td class="n">100</td><td>100</td><td>200</td></tr>
+        <tr><td style="color:#10B981">Coin</td><td>¥3,400</td><td>¥9,800</td><td class="n">200</td><td>300</td><td>500</td></tr>
+        <tr><td style="color:#FB923C">Stage</td><td>¥38,000</td><td>¥120,000</td><td class="n">5</td><td>5</td><td>10</td></tr>
+        <tr><td style="color:#0EA5E9">Fill</td><td>¥72,000</td><td>¥228,000</td><td class="n">10</td><td>10</td><td>20</td></tr>
+        <tr><td style="color:#EF4444">Sub</td><td>¥58,000</td><td>¥180,000</td><td class="n">5</td><td>5</td><td>10</td></tr>
+        <tr class="total"><td>合計</td><td></td><td></td><td>320</td><td>420</td><td>740台</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary">
+    <div class="sum-card">
+      <div class="big" style="color:#E8A838">1,240台</div>
+      <div class="label">総デバイス数 (KAGI + Koe)</div>
+    </div>
+    <div class="sum-card">
+      <div class="big" style="color:#EF4444">¥6,850,000</div>
+      <div class="label">初期投資 (初回生産分)</div>
+    </div>
+    <div class="sum-card">
+      <div class="big" style="color:#10B981">¥19,200,000</div>
+      <div class="label">全数売上 (想定)</div>
+    </div>
+    <div class="sum-card">
+      <div class="big" style="color:#A855F7">¥12,350,000</div>
+      <div class="label">粗利 (64%)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Sensor Comparison ==================== -->
+<div class="compare">
+  <h2>KAGI + Koe センサー比較</h2>
+  <div class="compare-note">共通基板 ESP32-S3-MINI-1 (技適認証済み 201-220017)</div>
+  <table style="max-width:1000px;margin:0 auto">
+    <tr>
+      <th>センサー / 機能</th>
+      <th style="color:#3B9FE8">KAGI Lite</th>
+      <th style="color:#E8A838">KAGI Hub</th>
+      <th style="color:#A855F7">KAGI Pro</th>
+      <th style="color:#EC4899">Koe Pick</th>
+      <th style="color:#10B981">Koe Coin</th>
+    </tr>
+    <tr><td>温湿度 (SHT45)</td><td style="color:#10B981">✓</td><td style="color:#10B981">✓</td><td style="color:#10B981">✓</td><td>-</td><td>-</td></tr>
+    <tr><td>人感 (PIR/mmWave)</td><td style="color:#10B981">PIR</td><td style="color:#10B981">PIR</td><td style="color:#A855F7">mmWave</td><td>-</td><td>-</td></tr>
+    <tr><td>ドア開閉</td><td style="color:#10B981">✓</td><td style="color:#10B981">✓</td><td style="color:#10B981">✓</td><td>-</td><td>-</td></tr>
+    <tr><td>照度 (BH1750)</td><td style="color:#10B981">✓</td><td style="color:#10B981">✓</td><td style="color:#10B981">✓</td><td>-</td><td>-</td></tr>
+    <tr><td>空気質 VOC (SGP40)</td><td>-</td><td style="color:#10B981">✓</td><td style="color:#10B981">✓</td><td>-</td><td>-</td></tr>
+    <tr><td>マイク (INMP441)</td><td>-</td><td style="color:#10B981">dBのみ</td><td style="color:#10B981">dBのみ</td><td style="color:#10B981">録音</td><td style="color:#10B981">ステレオ</td></tr>
+    <tr><td>加速度 (LIS2DH12)</td><td>-</td><td style="color:#10B981">✓</td><td style="color:#10B981">✓</td><td>-</td><td>-</td></tr>
+    <tr><td>気圧 (BMP280)</td><td>-</td><td style="color:#10B981">✓</td><td style="color:#10B981">✓</td><td>-</td><td>-</td></tr>
+    <tr><td>E-Ink表示</td><td>-</td><td>-</td><td style="color:#A855F7">1.54"</td><td>-</td><td>-</td></tr>
+    <tr><td>IRブラスター</td><td>-</td><td>-</td><td style="color:#A855F7">✓</td><td>-</td><td>-</td></tr>
+    <tr><td>スピーカー</td><td>-</td><td>-</td><td>-</td><td>-</td><td style="color:#10B981">0.5W</td></tr>
+    <tr><td>P2P音声同期</td><td>-</td><td>-</td><td>-</td><td>-</td><td style="color:#10B981">UDP</td></tr>
+    <tr><td>LED (WS2812B)</td><td style="color:#10B981">1</td><td style="color:#10B981">1</td><td style="color:#10B981">1</td><td style="color:#10B981">1</td><td style="color:#10B981">1</td></tr>
+    <tr><td>BLEゲートウェイ</td><td>-</td><td style="color:#10B981">✓</td><td style="color:#10B981">✓</td><td>-</td><td>-</td></tr>
+  </table>
+</div>
+
+<div style="text-align:center;margin-top:60px;padding:24px;color:#555;font-size:10px;border-top:1px solid rgba(255,255,255,0.04)">
+  Enabler DAO | KAGI + Koe Hardware Division | All devices: ESP32-S3, 技適認証済み | 2026
+</div>
+
+</div>
+</body>
+</html>

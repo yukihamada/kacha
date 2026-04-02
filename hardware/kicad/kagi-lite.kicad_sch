@@ -1,0 +1,586 @@
+(kicad_sch (version 20231120) (generator "eeschema") (generator_version "8.0")
+  (uuid "b2000000-0000-0000-0000-000000000001")
+  (paper "A2")
+
+  (title_block
+    (title "KAGI Lite - 安否確認センサーハブ")
+    (date "2026-03-26")
+    (rev "1.0")
+    (company "EnablerDAO / KAGI Project")
+    (comment 1 "ESP32-S3 + LD2410B mmWave + SHT40 + ATECC608A")
+    (comment 2 "55x55mm 4-layer PCB, BOM ~$14/unit")
+    (comment 3 "ミッション: 人が一人で死んでいく世界を、テクノロジーで終わらせる")
+  )
+
+  ;; ============================================================
+  ;; Power Symbols
+  ;; ============================================================
+
+  (symbol (lib_id "power:+3V3") (at 60 30 0) (unit 1)
+    (in_bom no) (on_board yes) (dnp no)
+    (uuid "pw-3v3-01")
+    (property "Reference" "#PWR01" (at 60 27 0) (effects (font (size 1.27 1.27)) hide))
+    (property "Value" "+3V3" (at 60 27 0) (effects (font (size 1.27 1.27))))
+  )
+
+  (symbol (lib_id "power:+5V") (at 30 30 0) (unit 1)
+    (in_bom no) (on_board yes) (dnp no)
+    (uuid "pw-5v-01")
+    (property "Reference" "#PWR02" (at 30 27 0) (effects (font (size 1.27 1.27)) hide))
+    (property "Value" "+5V" (at 30 27 0) (effects (font (size 1.27 1.27))))
+  )
+
+  (symbol (lib_id "power:GND") (at 60 200 0) (unit 1)
+    (in_bom no) (on_board yes) (dnp no)
+    (uuid "pw-gnd-01")
+    (property "Reference" "#PWR03" (at 60 202 0) (effects (font (size 1.27 1.27)) hide))
+    (property "Value" "GND" (at 60 202 0) (effects (font (size 1.27 1.27))))
+  )
+
+  (symbol (lib_id "power:VBAT") (at 45 30 0) (unit 1)
+    (in_bom no) (on_board yes) (dnp no)
+    (uuid "pw-vbat-01")
+    (property "Reference" "#PWR04" (at 45 27 0) (effects (font (size 1.27 1.27)) hide))
+    (property "Value" "VBAT_CR2032" (at 45 27 0) (effects (font (size 1.27 1.27))))
+  )
+
+  ;; ============================================================
+  ;; U1: ESP32-S3-MINI-1-N8 (Main MCU)
+  ;; GPIO assignments per firmware/src/main.rs
+  ;; ============================================================
+
+  (symbol (lib_id "RF_Module:ESP32-S3-MINI-1") (at 140 100 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "u1-esp32s3")
+    (property "Reference" "U1" (at 140 65 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ESP32-S3-MINI-1-N8" (at 140 67.5 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "RF_Module:ESP32-S3-MINI-1" (at 140 100 0) (effects (font (size 1.27 1.27)) hide))
+    (property "Datasheet" "https://www.espressif.com/sites/default/files/documentation/esp32-s3-mini-1_mini-1u_datasheet_en.pdf" (at 140 100 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C2913206" (at 140 100 0) (effects (font (size 1.27 1.27)) hide))
+    ;; Active GPIO pin assignments (KAGI Lite firmware):
+    ;; GPIO1  → VBUS_ADC (USB停電検知, 100K分圧)
+    ;; GPIO2  → BUTTON_OK (SW2 I'm OK ボタン, プルアップ)
+    ;; GPIO3  → DOOR_SW (MC-38磁気センサー, プルアップ)
+    ;; GPIO4  → RADAR_OUT (LD2410B OUT HIGH=在室)
+    ;; GPIO8  → I2C_SDA (SHT40 + ATECC608A)
+    ;; GPIO9  → I2C_SCL (SHT40 + ATECC608A)
+    ;; GPIO14 → RADAR_TX (UART1 TX → LD2410B RX)
+    ;; GPIO15 → RADAR_RX (UART1 RX ← LD2410B TX)
+    ;; GPIO17 → BUZZER (BZ1 active buzzer HIGH=ON)
+    ;; GPIO19 → USB_D- (ファームウェア書き込み)
+    ;; GPIO20 → USB_D+ (ファームウェア書き込み)
+    ;; GPIO38 → WS2812_DATA (D1 → D1b デイジーチェーン)
+  )
+
+  ;; ============================================================
+  ;; U2: SHT40-AD1B-R2 (Temperature & Humidity Sensor)
+  ;; I2C address 0x44
+  ;; ============================================================
+
+  (symbol (lib_id "Sensor_Temperature:SHT4x") (at 40 100 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "u2-sht40")
+    (property "Reference" "U2" (at 40 90 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "SHT40-AD1B-R2" (at 40 92.5 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_DFN_QFN:DFN-4_1.5x1.5mm_P0.5mm" (at 40 100 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C5765842" (at 40 100 0) (effects (font (size 1.27 1.27)) hide))
+    ;; Pin 1 (SDA)  → I2C_SDA (GPIO8)
+    ;; Pin 2 (GND)  → GND
+    ;; Pin 3 (SCL)  → I2C_SCL (GPIO9)
+    ;; Pin 4 (VDD)  → +3V3 (100nF decoupling)
+  )
+
+  ;; ============================================================
+  ;; U3: LD2410B (60GHz mmWave Radar)
+  ;; UART 256000bps + OUT digital pin
+  ;; 5V powered (separate from 3.3V MCU)
+  ;; ============================================================
+
+  (symbol (lib_id "Device:Module") (at 40 150 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "u3-ld2410b")
+    (property "Reference" "U3" (at 40 140 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "LD2410B" (at 40 142.5 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical" (at 40 150 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C2827856" (at 40 150 0) (effects (font (size 1.27 1.27)) hide))
+    ;; Pin 1 (VCC)  → +5V
+    ;; Pin 2 (GND)  → GND
+    ;; Pin 3 (RX)   → RADAR_TX (GPIO14)
+    ;; Pin 4 (TX)   → RADAR_RX (GPIO15)
+    ;; Pin 5 (OUT)  → RADAR_OUT (GPIO4)
+    ;; Note: 3.3V logic compatible. 5V power required.
+    ;; Breathing detection at 0.3-6m, static at 0.5-8m
+  )
+
+  ;; ============================================================
+  ;; U4: ATECC608A-MAHDA-T (Secure Element)
+  ;; I2C address 0x60, ECC P-256, audit log signing
+  ;; ============================================================
+
+  (symbol (lib_id "Security:ATECC608A") (at 40 120 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "u4-atecc608a")
+    (property "Reference" "U4" (at 40 110 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "ATECC608A-MAHDA-T" (at 40 112.5 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_DFN_QFN:UDFN-8_2x3mm_P0.65mm" (at 40 120 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C2653306" (at 40 120 0) (effects (font (size 1.27 1.27)) hide))
+    ;; Pin 1 (NC)   → NC
+    ;; Pin 2 (NC)   → NC
+    ;; Pin 3 (NC)   → NC
+    ;; Pin 4 (GND)  → GND
+    ;; Pin 5 (SDA)  → I2C_SDA (GPIO8)
+    ;; Pin 6 (SCL)  → I2C_SCL (GPIO9)
+    ;; Pin 7 (WAKE) → +3V3 (always awake mode)
+    ;; Pin 8 (VCC)  → +3V3 (100nF decoupling)
+  )
+
+  ;; ============================================================
+  ;; U5: RT9013-33GB (3.3V LDO Regulator, 500mA)
+  ;; USB 5V → 3.3V for all logic
+  ;; ============================================================
+
+  (symbol (lib_id "Regulator_Linear:RT9013-33GB") (at 240 50 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "u5-ldo")
+    (property "Reference" "U5" (at 240 40 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "RT9013-33GB" (at 240 42.5 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_SMD:SOT-23-5" (at 240 50 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C145239" (at 240 50 0) (effects (font (size 1.27 1.27)) hide))
+    ;; Pin 1 (IN)   → +5V
+    ;; Pin 2 (GND)  → GND
+    ;; Pin 3 (EN)   → +5V (always enabled)
+    ;; Pin 4 (NC)   → NC
+    ;; Pin 5 (OUT)  → +3V3
+  )
+
+  ;; ============================================================
+  ;; U6: USBLC6-2SC6 (USB ESD Protection)
+  ;; ============================================================
+
+  (symbol (lib_id "Protection:USBLC6-2SC6") (at 240 80 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "u6-esd")
+    (property "Reference" "U6" (at 240 70 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "USBLC6-2SC6" (at 240 72.5 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_SMD:SOT-23-6" (at 240 80 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C7519" (at 240 80 0) (effects (font (size 1.27 1.27)) hide))
+    ;; USB D+/D- ESD clamp, placed as close to J1 as possible
+  )
+
+  ;; ============================================================
+  ;; J1: USB-C Connector (TYPE-C-31-M-12)
+  ;; Power input + firmware flashing
+  ;; ============================================================
+
+  (symbol (lib_id "Connector_USB:USB_C_Receptacle_USB2.0") (at 270 50 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "j1-usbc")
+    (property "Reference" "J1" (at 270 35 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "TYPE-C-31-M-12" (at 270 37.5 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12" (at 270 50 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C165948" (at 270 50 0) (effects (font (size 1.27 1.27)) hide))
+    ;; VBUS   → +5V (through FB polyfuse recommended)
+    ;; CC1    → R4 (5.1K) → GND  (5V/500mA USB-C negotiation)
+    ;; CC2    → R5 (5.1K) → GND
+    ;; D-     → U6 → USB_D- (GPIO19)
+    ;; D+     → U6 → USB_D+ (GPIO20)
+    ;; GND    → GND
+    ;; SHIELD → GND
+  )
+
+  ;; ============================================================
+  ;; J2: JST PH 2P (Door Sensor Connector)
+  ;; MC-38 magnetic reed switch
+  ;; ============================================================
+
+  (symbol (lib_id "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical") (at 240 130 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "j2-door")
+    (property "Reference" "J2" (at 240 120 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "JST PH 2P Door Sensor" (at 240 122.5 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical" (at 240 130 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C131337" (at 240 130 0) (effects (font (size 1.27 1.27)) hide))
+    ;; Pin 1 → DOOR_SW (GPIO3, 10K pull-up R3)
+    ;; Pin 2 → GND
+    ;; MC-38: normally closed, opens when magnet removed
+    ;; GPIO3 HIGH = door open (magnet removed)
+  )
+
+  ;; ============================================================
+  ;; BT1: CR2032 Battery Holder (Backup Power)
+  ;; Provides ~5min BLE beacon on power loss
+  ;; ============================================================
+
+  (symbol (lib_id "Device:Battery_Cell") (at 240 160 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "bt1-cr2032")
+    (property "Reference" "BT1" (at 245 160 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "CR2032 SMD Holder" (at 245 162.5 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Battery:BatteryHolder_Keystone_3034_1x20mm" (at 240 160 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C75811" (at 240 160 0) (effects (font (size 1.27 1.27)) hide))
+    ;; (+) → VBAT_CR2032 → D2(1N5819W) → +3V3 (backup ORing)
+    ;; (-) → GND
+    ;; D2 prevents 3.3V from charging CR2032 when USB present
+  )
+
+  ;; ============================================================
+  ;; SW1: Reset Button (3x4x2mm tact)
+  ;; ============================================================
+
+  (symbol (lib_id "Switch:SW_Push") (at 200 170 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "sw1-reset")
+    (property "Reference" "SW1" (at 200 162 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "PTS636 Reset" (at 200 164.5 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Button_Switch_SMD:SW_SPST_TL3342" (at 200 170 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C2837610" (at 200 170 0) (effects (font (size 1.27 1.27)) hide))
+    ;; Pin 1 → EN (ESP32-S3 enable)
+    ;; Pin 2 → GND
+  )
+
+  ;; ============================================================
+  ;; SW2: I'm OK Button (12x12x4.3mm tactile, large for elderly)
+  ;; ============================================================
+
+  (symbol (lib_id "Switch:SW_Push") (at 220 170 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "sw2-imok")
+    (property "Reference" "SW2" (at 220 162 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "PTS125 12mm I'm OK" (at 220 164.5 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Button_Switch_SMD:SW_SPST_PTS125" (at 220 170 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C92584" (at 220 170 0) (effects (font (size 1.27 1.27)) hide))
+    ;; Pin 1 → BUTTON_OK (GPIO2, 10K internal pull-up)
+    ;; Pin 2 → GND
+    ;; Active LOW: pressed = GPIO2 goes LOW
+  )
+
+  ;; ============================================================
+  ;; D1: WS2812B-2020 (RGB Status LED #1)
+  ;; ============================================================
+
+  (symbol (lib_id "LED:WS2812B") (at 200 140 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "d1-ws2812-a")
+    (property "Reference" "D1" (at 200 130 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "WS2812B-2020" (at 200 132.5 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "LED_SMD:LED_WS2812B_PLCC4_2.0x2.0mm" (at 200 140 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C965555" (at 200 140 0) (effects (font (size 1.27 1.27)) hide))
+    ;; VDD → +3V3
+    ;; GND → GND
+    ;; DIN → WS2812_DATA (GPIO38, through R8 33Ω)
+    ;; DOUT → D1b.DIN (daisy chain 2nd LED)
+    ;; Status: Green=Normal, Yellow=Caution, Red=Alert, Blue=BLE
+  )
+
+  ;; D1b: WS2812B-2020 (RGB Status LED #2, daisy chained)
+  (symbol (lib_id "LED:WS2812B") (at 215 140 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "d1b-ws2812-b")
+    (property "Reference" "D1b" (at 215 130 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "WS2812B-2020" (at 215 132.5 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "LED_SMD:LED_WS2812B_PLCC4_2.0x2.0mm" (at 215 140 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C965555" (at 215 140 0) (effects (font (size 1.27 1.27)) hide))
+    ;; DIN → D1.DOUT
+    ;; DOUT → NC (end of chain)
+  )
+
+  ;; ============================================================
+  ;; D2: 1N5819W Schottky (CR2032 Power ORing)
+  ;; ============================================================
+
+  (symbol (lib_id "Device:D_Schottky") (at 260 160 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "d2-schottky")
+    (property "Reference" "D2" (at 260 152 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "1N5819W" (at 260 154.5 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Diode_SMD:D_SOD-123" (at 260 160 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C191023" (at 260 160 0) (effects (font (size 1.27 1.27)) hide))
+    ;; Anode → BT1(+) / VBAT_CR2032
+    ;; Cathode → +3V3 (ORing with LDO output)
+  )
+
+  ;; ============================================================
+  ;; D3: PRTR5V0U2X (TVS ESD Protection for Door Sensor)
+  ;; ============================================================
+
+  (symbol (lib_id "Protection:PRTR5V0U2X") (at 240 110 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "d3-tvs")
+    (property "Reference" "D3" (at 240 102 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "PRTR5V0U2X" (at 240 104.5 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Package_TO_SOT_SMD:SOT-363_SC-70-6" (at 240 110 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C2827654" (at 240 110 0) (effects (font (size 1.27 1.27)) hide))
+    ;; Protects GPIO3 (door sensor) from outdoor cable ESD
+  )
+
+  ;; ============================================================
+  ;; BZ1: Active Piezo Buzzer (Tier1 Alert + OK Confirm)
+  ;; ============================================================
+
+  (symbol (lib_id "Device:Buzzer") (at 200 110 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "bz1-buzzer")
+    (property "Reference" "BZ1" (at 200 102 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "MLT-8530 Active 3V" (at 200 104.5 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Audio:Buzzer_TDK_PS1240P02BT" (at 200 110 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C96044" (at 200 110 0) (effects (font (size 1.27 1.27)) hide))
+    ;; (+) → GPIO17 (HIGH=鳴動 / LOW=停止)
+    ;; (-) → GND
+    ;; Active type: drives at 3.3V directly, no transistor needed
+  )
+
+  ;; ============================================================
+  ;; Passive Components
+  ;; ============================================================
+
+  ;; R1: 4.7K I2C SDA Pull-up
+  (symbol (lib_id "Device:R") (at 75 90 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "r1-i2c-sda")
+    (property "Reference" "R1" (at 77.5 87.5 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "4.7K" (at 77.5 90 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 75 90 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C25900" (at 75 90 0) (effects (font (size 1.27 1.27)) hide))
+    ;; I2C SDA pull-up to +3V3
+  )
+
+  ;; R2: 4.7K I2C SCL Pull-up
+  (symbol (lib_id "Device:R") (at 75 95 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "r2-i2c-scl")
+    (property "Reference" "R2" (at 77.5 92.5 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "4.7K" (at 77.5 95 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 75 95 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C25900" (at 75 95 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; R3: 10K Door Sensor Pull-up
+  (symbol (lib_id "Device:R") (at 75 100 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "r3-door-pu")
+    (property "Reference" "R3" (at 77.5 97.5 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "10K" (at 77.5 100 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 75 100 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C25744" (at 75 100 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; R4: 5.1K USB CC1
+  (symbol (lib_id "Device:R") (at 255 55 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "r4-cc1")
+    (property "Reference" "R4" (at 257.5 52.5 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "5.1K" (at 257.5 55 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 255 55 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C25905" (at 255 55 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; R5: 5.1K USB CC2
+  (symbol (lib_id "Device:R") (at 255 60 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "r5-cc2")
+    (property "Reference" "R5" (at 257.5 57.5 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "5.1K" (at 257.5 60 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 255 60 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C25905" (at 255 60 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; R6: 100K VBUS Divider Top
+  (symbol (lib_id "Device:R") (at 75 75 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "r6-vbus-top")
+    (property "Reference" "R6" (at 77.5 72.5 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "100K" (at 77.5 75 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 75 75 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C25741" (at 75 75 0) (effects (font (size 1.27 1.27)) hide))
+    ;; VBUS divider: 5V → R6(100K) → midpoint(GPIO1 ADC) → R7(100K) → GND
+    ;; Midpoint voltage: 2.5V @ 5V input (within ESP32 ADC range)
+  )
+
+  ;; R7: 100K VBUS Divider Bottom
+  (symbol (lib_id "Device:R") (at 75 80 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "r7-vbus-bot")
+    (property "Reference" "R7" (at 77.5 77.5 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "100K" (at 77.5 80 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 75 80 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C25741" (at 75 80 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; R8: 33Ω WS2812B Data Series Resistor
+  (symbol (lib_id "Device:R") (at 185 140 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "r8-ws2812")
+    (property "Reference" "R8" (at 187.5 137.5 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "33R" (at 187.5 140 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 185 140 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C25900" (at 185 140 0) (effects (font (size 1.27 1.27)) hide))
+    ;; Reduces ringing on WS2812B data line
+  )
+
+  ;; Decoupling capacitors (0.1uF x8 for all IC power pins)
+  (symbol (lib_id "Device:C") (at 90 100 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "c-dec-array")
+    (property "Reference" "C2a-C2h" (at 92.5 97.5 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "100nF x8" (at 92.5 100 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Capacitor_SMD:C_0402_1005Metric" (at 90 100 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C1525" (at 90 100 0) (effects (font (size 1.27 1.27)) hide))
+    ;; Place one 100nF at each IC power pin: U1x2, U2, U3, U4, U5, BZ1, D1, D1b
+  )
+
+  ;; C1a/C1b: 10uF ESP32 VDD bulk (x2 for adequate current)
+  (symbol (lib_id "Device:C") (at 90 110 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "c1-bulk-esp")
+    (property "Reference" "C1a C1b" (at 92.5 107.5 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "10uF x2 0805" (at 92.5 110 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Capacitor_SMD:C_0805_2012Metric" (at 90 110 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C15850" (at 90 110 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; C3: 22uF LDO Output bulk
+  (symbol (lib_id "Device:C") (at 235 55 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "c3-ldo-out")
+    (property "Reference" "C3" (at 237.5 52.5 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "22uF 0805" (at 237.5 55 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Capacitor_SMD:C_0805_2012Metric" (at 235 55 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C45783" (at 235 55 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; C4: 22uF LDO Input bulk
+  (symbol (lib_id "Device:C") (at 235 60 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "c4-ldo-in")
+    (property "Reference" "C4" (at 237.5 57.5 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "22uF 0805" (at 237.5 60 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Capacitor_SMD:C_0805_2012Metric" (at 235 60 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C45783" (at 235 60 0) (effects (font (size 1.27 1.27)) hide))
+  )
+
+  ;; C5: 470uF CR2032 Burst Buffer (WiFi TX peak current)
+  (symbol (lib_id "Device:C") (at 265 165 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "c5-cr2032-buf")
+    (property "Reference" "C5" (at 267.5 162.5 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "470uF 6.3V SMD" (at 267.5 165 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Capacitor_SMD:CP_Elec_6.3x7.7" (at 265 165 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C330803" (at 265 165 0) (effects (font (size 1.27 1.27)) hide))
+    ;; On +3V3 rail, absorbs WiFi TX peak (300mA) when on CR2032 backup
+  )
+
+  ;; C6: 10uF LD2410B Power Bypass
+  (symbol (lib_id "Device:C") (at 30 155 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "c6-radar-pwr")
+    (property "Reference" "C6" (at 32.5 152.5 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "10uF 0805" (at 32.5 155 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Capacitor_SMD:C_0805_2012Metric" (at 30 155 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C15850" (at 30 155 0) (effects (font (size 1.27 1.27)) hide))
+    ;; LD2410B 5V power decoupling
+  )
+
+  ;; FB1: Ferrite Bead (EMI filter between LDO out and 3.3V rail)
+  (symbol (lib_id "Device:Ferrite_Bead") (at 230 55 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "fb1-ferrite")
+    (property "Reference" "FB1" (at 232.5 52.5 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "BLM18PG601SN1D 0402" (at 232.5 55 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Inductor_SMD:L_0402_1005Metric" (at 230 55 0) (effects (font (size 1.27 1.27)) hide))
+    (property "LCSC" "C1015" (at 230 55 0) (effects (font (size 1.27 1.27)) hide))
+    ;; 600Ω @ 100MHz. Reduces mmWave + WiFi noise on sensor power line
+  )
+
+  ;; ============================================================
+  ;; Net Labels (signal names)
+  ;; ============================================================
+
+  ;; I2C Bus
+  (net_label "I2C_SDA" (at 70 100 0) (effects (font (size 1.27 1.27))))
+  (net_label "I2C_SCL" (at 70 95 0) (effects (font (size 1.27 1.27))))
+
+  ;; UART (LD2410B)
+  (net_label "RADAR_TX" (at 70 150 0) (effects (font (size 1.27 1.27))))
+  (net_label "RADAR_RX" (at 70 155 0) (effects (font (size 1.27 1.27))))
+  (net_label "RADAR_OUT" (at 70 160 0) (effects (font (size 1.27 1.27))))
+
+  ;; Digital I/O
+  (net_label "DOOR_SW" (at 70 130 0) (effects (font (size 1.27 1.27))))
+  (net_label "BUTTON_OK" (at 70 135 0) (effects (font (size 1.27 1.27))))
+  (net_label "BUZZER" (at 185 110 0) (effects (font (size 1.27 1.27))))
+  (net_label "WS2812_DATA" (at 175 140 0) (effects (font (size 1.27 1.27))))
+  (net_label "VBUS_ADC" (at 70 75 0) (effects (font (size 1.27 1.27))))
+
+  ;; USB
+  (net_label "USB_DP" (at 260 88 0) (effects (font (size 1.27 1.27))))
+  (net_label "USB_DN" (at 260 91 0) (effects (font (size 1.27 1.27))))
+
+  ;; ============================================================
+  ;; Key Net Wires
+  ;; ============================================================
+
+  ;; Power: J1.VBUS → U5.IN → (FB1) → +3V3
+  (wire (pts (xy 270 45) (xy 255 45)))     ;; VBUS → U5 in
+  (wire (pts (xy 245 55) (xy 230 55)))     ;; U5 out → FB1
+  (wire (pts (xy 225 55) (xy 60 55)))      ;; FB1 → +3V3 rail
+
+  ;; CR2032 backup: BT1 → D2 → +3V3
+  (wire (pts (xy 240 160) (xy 255 160)))
+  (wire (pts (xy 265 160) (xy 270 160)))   ;; D2 cathode → +3V3
+
+  ;; I2C bus: ESP32 GPIO8/9 → R1/R2 → U2/U4
+  (wire (pts (xy 120 100) (xy 75 100)))    ;; GPIO8 → SDA net
+  (wire (pts (xy 120 95) (xy 75 95)))      ;; GPIO9 → SCL net
+  (wire (pts (xy 45 98) (xy 70 100)))      ;; U2 SDA → net
+  (wire (pts (xy 45 102) (xy 70 95)))      ;; U2 SCL → net
+  (wire (pts (xy 45 118) (xy 70 100)))     ;; U4 SDA → net
+  (wire (pts (xy 45 122) (xy 70 95)))      ;; U4 SCL → net
+
+  ;; UART: ESP32 GPIO14/15 → U3 LD2410B
+  (wire (pts (xy 120 120) (xy 70 150)))    ;; GPIO14 → RADAR_TX
+  (wire (pts (xy 120 125) (xy 70 155)))    ;; GPIO15 → RADAR_RX
+  (wire (pts (xy 120 130) (xy 70 160)))    ;; GPIO4 → RADAR_OUT
+  (wire (pts (xy 45 150) (xy 70 150)))     ;; U3.RX → RADAR_TX
+  (wire (pts (xy 45 155) (xy 70 155)))     ;; U3.TX → RADAR_RX
+  (wire (pts (xy 45 160) (xy 70 160)))     ;; U3.OUT → RADAR_OUT
+
+  ;; Door: J2.pin1 → D3 → R3 → GPIO3
+  (wire (pts (xy 245 130) (xy 240 130)))   ;; J2.pin1 → D3
+  (wire (pts (xy 240 115) (xy 240 110)))   ;; D3 → R3
+  (wire (pts (xy 80 100) (xy 70 130)))     ;; R3 → GPIO3
+
+  ;; Buzzer: GPIO17 → BZ1+
+  (wire (pts (xy 160 120) (xy 190 110)))   ;; GPIO17 → BUZZER net
+
+  ;; WS2812: GPIO38 → R8 → D1.DIN
+  (wire (pts (xy 160 140) (xy 183 140)))   ;; GPIO38 → R8
+  (wire (pts (xy 187 140) (xy 197 140)))   ;; R8 → D1
+  (wire (pts (xy 203 140) (xy 212 140)))   ;; D1.DOUT → D1b.DIN
+
+  ;; USB: GPIO19/20 → U6 → J1
+  (wire (pts (xy 120 115) (xy 260 88)))    ;; GPIO19 → USB_DN
+  (wire (pts (xy 120 118) (xy 260 91)))    ;; GPIO20 → USB_DP
+
+  ;; ============================================================
+  ;; Text Annotations
+  ;; ============================================================
+
+  (text "電源回路\nUSB-C (J1) → RT9013-33GB (U5) → 3.3V\nCR2032 (BT1) → 1N5819W (D2) → 3.3V (停電バックアップ)"
+    (at 220 35 0) (effects (font (size 2.54 2.54) bold)))
+
+  (text "MCU\nESP32-S3-MINI-1-N8 (U1)\nWiFi + BLE5.0, 8MB Flash, 技適認証済"
+    (at 130 65 0) (effects (font (size 2.54 2.54) bold)))
+
+  (text "センサー群\nSHT40 (U2): 温湿度 I2C 0x44\nATECC608A (U4): 署名 I2C 0x60\nLD2410B (U3): 60GHz mmWave UART"
+    (at 20 80 0) (effects (font (size 2.54 2.54) bold)))
+
+  (text "UI\nSW2 12mm I'm OKボタン (高齢者向け)\n2× WS2812B-2020 RGB LED\nBZ1 Active Buzzer"
+    (at 185 120 0) (effects (font (size 2.54 2.54) bold)))
+
+  (text "Safety Ladder\nTier1: デバイスアラート (LED黄+ブザー)\nTier2: 家族通知 (クラウドPush)\nTier3: 緊急連絡先 (opt-in)"
+    (at 20 175 0) (effects (font (size 2.54 2.54) bold)))
+
+  (text "KAGI Lite v1.0 — BOM ~$14/unit @ qty10\nPCB: 55×55mm 4層 黒 HASL JLCPCB"
+    (at 130 185 0) (effects (font (size 2.54 2.54) italic)))
+
+)

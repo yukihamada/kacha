@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 // MARK: - Chat Message Model
 
@@ -16,13 +17,21 @@ struct GuestChatView: View {
     let booking: Booking
     let home: Home
 
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
+    @Query private var sentMessages: [SentMessage]
+
     @State private var messages: [ChatMessage] = []
     @State private var inputText = ""
     @State private var isLoading = true
     @State private var isSending = false
     @State private var errorMessage: String?
-    @State private var showTemplates = false
-    @Environment(\.dismiss) private var dismiss
+    @State private var suggestions: [ReplySuggestion] = []
+    @State private var showSuggestions = false
+    @State private var isGeneratingSuggestions = false
+    @State private var showSubscriptionPrompt = false
+    @ObservedObject private var subscription = SubscriptionManager.shared
+    @AppStorage("geminiApiKey") private var geminiApiKey = ""
 
     private let dateFormatter: DateFormatter = {
         let f = DateFormatter()
@@ -39,12 +48,9 @@ struct GuestChatView: View {
         return Int(raw) ?? 0
     }
 
-    private var quickReplies: [(label: String, message: String)] {
-        [
-            ("チェックイン案内", buildCheckInMessage()),
-            ("Wi-Fi情報", buildWiFiMessage()),
-            ("チェックアウト案内", buildCheckOutMessage()),
-        ]
+    /// Past sent messages for this home (used for suggestion generation)
+    private var homeSentMessages: [SentMessage] {
+        sentMessages.filter { $0.homeId == home.id }
     }
 
     var body: some View {
@@ -77,7 +83,11 @@ struct GuestChatView: View {
                     } else {
                         messageListView
                         Divider().background(Color.kachaCardBorder)
-                        quickReplyBar
+
+                        if showSuggestions && (isGeneratingSuggestions || !suggestions.isEmpty) {
+                            suggestionBar
+                        }
+
                         inputBar
                     }
                 }
@@ -101,6 +111,9 @@ struct GuestChatView: View {
                 }
             }
             .task { await loadMessages() }
+            .sheet(isPresented: $showSubscriptionPrompt) {
+                SubscriptionView()
+            }
         }
     }
 
@@ -141,7 +154,7 @@ struct GuestChatView: View {
             Text("メッセージはまだありません")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
-            Text("下のテンプレートからメッセージを送信できます")
+            Text("下の入力欄からメッセージを送信できます")
                 .font(.caption)
                 .foregroundColor(.secondary.opacity(0.7))
         }
@@ -150,14 +163,29 @@ struct GuestChatView: View {
     // MARK: - Message Bubble
 
     private func messageBubble(_ message: ChatMessage) -> some View {
-        HStack {
-            if message.isSent { Spacer(minLength: 60) }
+        HStack(alignment: .top, spacing: 8) {
+            if message.isSent {
+                Spacer(minLength: 60)
+            } else {
+                // Guest avatar
+                Text(String(booking.guestName.prefix(1)))
+                    .font(.caption2.bold())
+                    .foregroundColor(.white)
+                    .frame(width: 28, height: 28)
+                    .background(Color.kachaAccent.opacity(0.7))
+                    .clipShape(Circle())
+            }
 
-            VStack(alignment: message.isSent ? .trailing : .leading, spacing: 4) {
+            VStack(alignment: message.isSent ? .trailing : .leading, spacing: 3) {
+                // Sender label
+                Text(message.isSent ? "あなた" : booking.guestName)
+                    .font(.caption2.bold())
+                    .foregroundColor(message.isSent ? .kacha.opacity(0.7) : .kachaAccent.opacity(0.7))
+
                 if let subject = message.subject, !subject.isEmpty {
                     Text(subject)
-                        .font(.caption2.bold())
-                        .foregroundColor(message.isSent ? .black.opacity(0.6) : .secondary)
+                        .font(.caption2)
+                        .foregroundColor(message.isSent ? .kacha.opacity(0.5) : .secondary)
                 }
 
                 Text(message.text)
@@ -175,47 +203,145 @@ struct GuestChatView: View {
                     )
                     .clipShape(RoundedRectangle(cornerRadius: 18))
 
-                Text(dateFormatter.string(from: message.timestamp))
-                    .font(.caption2)
-                    .foregroundColor(.secondary.opacity(0.6))
+                // Timestamp + sent indicator
+                HStack(spacing: 4) {
+                    Text(dateFormatter.string(from: message.timestamp))
+                    if message.isSent {
+                        Image(systemName: "checkmark")
+                            .font(.system(size: 8, weight: .bold))
+                    }
+                }
+                .font(.caption2)
+                .foregroundColor(.secondary.opacity(0.6))
             }
 
-            if !message.isSent { Spacer(minLength: 60) }
+            if !message.isSent {
+                Spacer(minLength: 60)
+            } else {
+                // Host avatar
+                Image(systemName: "person.circle.fill")
+                    .font(.system(size: 28))
+                    .foregroundColor(.kacha.opacity(0.6))
+            }
         }
     }
 
-    // MARK: - Quick Reply Bar
+    // MARK: - Smart Reply Suggestions
 
-    private var quickReplyBar: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                ForEach(quickReplies, id: \.label) { reply in
-                    Button {
-                        inputText = reply.message
-                    } label: {
-                        Text(reply.label)
-                            .font(.caption.bold())
-                            .foregroundColor(.kacha)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(Color.kacha.opacity(0.12))
-                            .clipShape(Capsule())
-                            .overlay(
-                                Capsule().stroke(Color.kacha.opacity(0.3), lineWidth: 1)
-                            )
+    private var suggestionBar: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Image(systemName: "sparkles")
+                    .font(.caption2)
+                    .foregroundColor(.kacha)
+                Text("返信候補")
+                    .font(.caption2.bold())
+                    .foregroundColor(.secondary)
+                Spacer()
+                Button {
+                    withAnimation(.easeOut(duration: 0.2)) {
+                        showSuggestions = false
                     }
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.caption)
+                        .foregroundColor(.secondary.opacity(0.5))
                 }
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
+            .padding(.horizontal, 14)
+            .padding(.top, 8)
+            .padding(.bottom, 4)
+
+            if isGeneratingSuggestions {
+                HStack(spacing: 8) {
+                    ProgressView()
+                        .tint(.kacha)
+                        .scaleEffect(0.8)
+                    Text("AI生成中...")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                .padding(.horizontal, 14)
+                .padding(.bottom, 8)
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        ForEach(suggestions) { suggestion in
+                            suggestionCard(suggestion)
+                        }
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.bottom, 8)
+                }
+            }
         }
         .background(Color.kachaBg)
+        .transition(.move(edge: .bottom).combined(with: .opacity))
+    }
+
+    private func suggestionCard(_ suggestion: ReplySuggestion) -> some View {
+        Button {
+            withAnimation(.easeOut(duration: 0.15)) {
+                inputText = suggestion.text
+                showSuggestions = false
+            }
+        } label: {
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: 4) {
+                    if suggestion.source == .history {
+                        Image(systemName: "clock.arrow.circlepath")
+                            .font(.system(size: 8))
+                            .foregroundColor(.kacha.opacity(0.8))
+                    } else if suggestion.source == .ai {
+                        Image(systemName: "sparkle")
+                            .font(.system(size: 8))
+                            .foregroundColor(.kacha.opacity(0.8))
+                    }
+                    Text(suggestion.label)
+                        .font(.caption2.bold())
+                        .foregroundColor(.kacha)
+                }
+
+                Text(suggestion.text)
+                    .font(.caption)
+                    .foregroundColor(.white.opacity(0.8))
+                    .lineLimit(3)
+                    .multilineTextAlignment(.leading)
+            }
+            .padding(10)
+            .frame(width: 180, alignment: .leading)
+            .background(Color.kacha.opacity(0.08))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color.kacha.opacity(0.25), lineWidth: 1)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
     }
 
     // MARK: - Input Bar
 
     private var inputBar: some View {
         HStack(spacing: 10) {
+            // Suggestion toggle button
+            Button {
+                if showSuggestions {
+                    withAnimation(.easeOut(duration: 0.2)) {
+                        showSuggestions = false
+                    }
+                } else {
+                    withAnimation(.easeOut(duration: 0.2)) {
+                        showSuggestions = true
+                    }
+                    Task { await generateSuggestions() }
+                }
+            } label: {
+                Image(systemName: "sparkles")
+                    .font(.system(size: 18))
+                    .foregroundColor(showSuggestions ? .kacha : .secondary)
+                    .frame(width: 32, height: 32)
+            }
+
             TextField("メッセージを入力...", text: $inputText, axis: .vertical)
                 .font(.subheadline)
                 .foregroundColor(.white)
@@ -247,6 +373,49 @@ struct GuestChatView: View {
         !inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !isSending
     }
 
+    // MARK: - Suggestion Generation
+
+    private func generateSuggestions() async {
+        // Find the last guest (non-sent) message to base suggestions on
+        let lastGuestMessage = messages.last(where: { !$0.isSent })?.text ?? ""
+
+        // AI返信はProプラン以上で利用可能（Freeプランではキーワード候補のみ）
+        if !geminiApiKey.isEmpty && !subscription.isPro {
+            await MainActor.run { showSubscriptionPrompt = true }
+            // Fall back to keyword-based suggestions
+            suggestions = ReplySuggestionService.suggest(
+                incomingMessage: lastGuestMessage,
+                guestName: booking.guestName,
+                booking: (checkIn: booking.checkIn, checkOut: booking.checkOut, nights: booking.nights),
+                pastMessages: homeSentMessages
+            )
+            return
+        }
+
+        // Try Gemini AI first if API key is configured
+        if !geminiApiKey.isEmpty {
+            isGeneratingSuggestions = true
+            let aiSuggestions = await GeminiReplyService.generateReplies(
+                guestMessage: lastGuestMessage,
+                guestName: booking.guestName,
+                home: home,
+                booking: booking,
+                pastMessages: homeSentMessages,
+                apiKey: geminiApiKey
+            )
+            isGeneratingSuggestions = false
+            suggestions = aiSuggestions
+        } else {
+            // Fall back to keyword-based suggestions
+            suggestions = ReplySuggestionService.suggest(
+                incomingMessage: lastGuestMessage,
+                guestName: booking.guestName,
+                booking: (checkIn: booking.checkIn, checkOut: booking.checkOut, nights: booking.nights),
+                pastMessages: homeSentMessages
+            )
+        }
+    }
+
     // MARK: - API Actions
 
     private func loadMessages() async {
@@ -272,6 +441,14 @@ struct GuestChatView: View {
                 parseMessage(dict, index: index)
             }
             .sorted { $0.timestamp < $1.timestamp }
+
+            // Auto-show suggestions if the last message is from guest
+            if let last = messages.last, !last.isSent {
+                withAnimation(.easeOut(duration: 0.3)) {
+                    showSuggestions = true
+                }
+                await generateSuggestions()
+            }
         } catch {
             errorMessage = "メッセージの読み込みに失敗しました"
             #if DEBUG
@@ -290,6 +467,11 @@ struct GuestChatView: View {
         let sentText = text
         inputText = ""
 
+        // Hide suggestions after sending
+        withAnimation(.easeOut(duration: 0.2)) {
+            showSuggestions = false
+        }
+
         do {
             let token = try await Beds24Client.shared.getToken(refreshToken: home.beds24RefreshToken)
             try await Beds24Client.shared.sendBookingMessage(
@@ -306,6 +488,20 @@ struct GuestChatView: View {
                 subject: nil
             )
             messages.append(newMsg)
+
+            // Save to SentMessage history for future suggestions
+            let lastGuestMessage = messages.last(where: { !$0.isSent })?.text ?? ""
+            let category = ReplySuggestionService.categorize(lastGuestMessage)
+            let record = SentMessage(
+                homeId: home.id,
+                bookingId: booking.id,
+                guestName: booking.guestName,
+                text: sentText,
+                inReplyTo: lastGuestMessage,
+                category: category
+            )
+            modelContext.insert(record)
+            try? modelContext.save()
 
             try? await Task.sleep(for: .seconds(1))
             await loadMessages()
@@ -365,60 +561,5 @@ struct GuestChatView: View {
             ?? "\(index)-\(text.prefix(20).hashValue)"
 
         return ChatMessage(id: id, text: text, isSent: isSent, timestamp: timestamp, subject: subject)
-    }
-
-    // MARK: - Template Builders
-
-    private func buildCheckInMessage() -> String {
-        let fmt = DateFormatter()
-        fmt.locale = Locale(identifier: "ja_JP")
-        fmt.dateStyle = .medium
-
-        let address = home.address.isEmpty ? "" : "\n住所: \(home.address)"
-        let doorCode = home.doorCode.isEmpty ? "" : "\nドアコード: \(home.doorCode)"
-
-        return """
-        \(booking.guestName) 様
-
-        チェックインのご案内です。
-
-        チェックイン: \(fmt.string(from: booking.checkIn))
-        チェックアウト: \(fmt.string(from: booking.checkOut))\(address)\(doorCode)
-
-        ご不明な点がございましたらお気軽にご連絡ください。
-        """
-    }
-
-    private func buildWiFiMessage() -> String {
-        let pw = home.wifiPassword.isEmpty ? "(未設定)" : home.wifiPassword
-        return """
-        \(booking.guestName) 様
-
-        Wi-Fi情報をお知らせします。
-
-        パスワード: \(pw)
-
-        接続にお困りの場合はご連絡ください。
-        """
-    }
-
-    private func buildCheckOutMessage() -> String {
-        let fmt = DateFormatter()
-        fmt.locale = Locale(identifier: "ja_JP")
-        fmt.dateStyle = .medium
-
-        return """
-        \(booking.guestName) 様
-
-        ご滞在ありがとうございました。
-        チェックアウトは \(fmt.string(from: booking.checkOut)) です。
-
-        お帰りの際は以下をお願いします:
-        ・ドアの施錠
-        ・ゴミは所定の場所へ
-        ・忘れ物のご確認
-
-        またのご利用をお待ちしております。
-        """
     }
 }

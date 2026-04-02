@@ -1,0 +1,35 @@
+Reference,Value,Package,Manufacturer,MPN,Description,Quantity,Unit Price (USD),Source,Mission Role
+U1,ESP32-S3-MINI-1-N8,ESP32-S3-MINI,Espressif,ESP32-S3-MINI-1-N8,WiFi+BLE5.0 MCU 8MB Flash 技適認証済(201-220017),1,3.20,LCSC (C2913206),通知送信・アルゴリズム実行
+U2,SHT40-AD1B-R2,DFN-4 (1.5x1.5mm),Sensirion,SHT40-AD1B-R2,Temperature & Humidity Sensor ±0.2°C ±1.8%RH I2C 0x44,1,2.20,Digi-Key,体調悪化・熱中症検知 (極端な温湿度)
+U3,LD2410B,SMD Module (35x7mm),Hi-Link,LD2410B,60GHz mmWave Radar Presence+Breathing Sensor UART+OUT 5V,1,2.00,AliExpress/LCSC,呼吸・在室検知 ← コア機能
+U4,ATECC608A-MAHDA-T,UDFN-8 (2x3mm),Microchip,ATECC608A-MAHDA-T,Secure Element I2C 0x60 ECC P-256 — 安否ログ署名・改ざん防止,1,0.60,Digi-Key,監査ログの法的証跡
+U5,RT9013-33GB,SOT-23-5,Richtek,RT9013-33GB,3.3V LDO 500mA SOT-23-5 Iq=55uA,1,0.05,LCSC (C145239),安定電源
+U6,USBLC6-2SC6,SOT-23-6,STMicroelectronics,USBLC6-2SC6,USB ESD Protection Diode,1,0.25,LCSC (C7519),耐久性
+J1,USB-C Receptacle,USB-C SMD 16pin,Korean Hroparts Elec,TYPE-C-31-M-12,USB Type-C Connector 16Pin SMD,1,0.30,LCSC (C165948),電源
+J2,JST PH 2Pin,JST PH 2.0mm,JST,B2B-PH-K-S(LF)(SN),Door Sensor Cable Connector (MC-38),1,0.08,LCSC (C131337),ドア開閉検知
+BT1,CR2032 Holder,SMD Battery Holder,Linx Technologies,BAT-HLD-001-SMT,CR2032 SMD Battery Holder (停電時BLE緊急通知),1,0.60,LCSC (C75811),停電でも動く
+SW1,Tactile Switch,SMD 3x4x2mm,C&K,PTS636 SM25F SMTR LFS,Reset Button → EN Pin,1,0.10,LCSC (C2837610),工場リセット
+SW2,Tactile Switch 12mm,SMD 12x12x4.3mm,C&K,PTS125 SM43 SMTR2 LFS,"I'm OK ボタン (GPIO2) — 最重要UI。1日1回押すと家族に通知 / 未押3日→Tier2",1,0.15,LCSC,★ 生存確認の最後の砦 ★
+D1,WS2812B-2020,2020 (2.0x2.0mm),Worldsemi,WS2812B-2020,RGB LED (緑=正常 / 赤=異常 / 黄=確認待ち / 青=通信中),1,0.08,LCSC (C965555),一目で状態確認
+D2,1N5819W,SOD-123,MDD,1N5819W,Schottky Diode 40V 1A (CR2032 ORing),1,0.03,LCSC (C191023),停電対策
+D3,PRTR5V0U2X,SOT-363,Nexperia,PRTR5V0U2X,TVS Diode ESD Protection — Door Sensor GPIO3,1,0.10,LCSC (C2827654),外部ケーブル保護
+R1,4.7K,0402,Yageo,RC0402JR-074K7L,I2C SDA Pull-up,1,0.002,LCSC (C25900),
+R2,4.7K,0402,Yageo,RC0402JR-074K7L,I2C SCL Pull-up,1,0.002,LCSC (C25900),
+R3,10K,0402,Yageo,RC0402JR-0710KL,Pull-up for Door Sensor GPIO3,1,0.002,LCSC (C25744),
+R4,5.1K,0402,Yageo,RC0402JR-075K1L,USB-C CC1,1,0.002,LCSC (C25905),
+R5,5.1K,0402,Yageo,RC0402JR-075K1L,USB-C CC2,1,0.002,LCSC (C25905),
+R6,100K,0402,Yageo,RC0402JR-07100KL,VBUS Voltage Divider High (停電検知),1,0.002,LCSC (C25741),停電検知
+R7,100K,0402,Yageo,RC0402JR-07100KL,VBUS Voltage Divider Low,1,0.002,LCSC (C25741),
+R8,33,0402,Yageo,RC0402JR-0733RL,WS2812B Data Series Resistor,1,0.002,LCSC (C25900),
+C1,10uF,0805,Samsung,CL21A106KAYNNNE,ESP32-S3 VDD3P3 Bypass Cap,2,0.02,LCSC (C15850),
+C2,100nF,0402,Samsung,CL05B104KO5NNNC,IC Decoupling Cap (x6: U2/U3/U4/U5/U6/EN),6,0.005,LCSC (C1525),
+C3,22uF,0805,Samsung,CL21A226MAQNNNE,LDO 3.3V Output Bypass,1,0.03,LCSC (C45783),
+C4,22uF,0805,Samsung,CL21A226MAQNNNE,LDO 5V Input Bypass,1,0.03,LCSC (C45783),
+C5,470uF 6.3V,SMD 6.3x7.7mm,Nichicon,UWT1C471MNL1GS,CR2032 Backup Burst Current Buffer,1,0.12,LCSC (C330803),停電対策
+C6,10uF,0805,Samsung,CL21A106KAYNNNE,LD2410B 5V Bulk Bypass Cap,1,0.02,LCSC (C15850),
+FB1,600R@100MHz,0402,Murata,BLM18PG601SN1D,Ferrite Bead EMI Filter,1,0.05,LCSC (C1015),
+BZ1,Active Piezo Buzzer 3V,SMD 9x6mm,Jiangsu Huaneng,MLT-8530,Active Buzzer — Tier1ブザー・I'm OK確認音,1,0.10,LCSC (C96044),本人への気づき促し
+TP1,Test Point 3.3V,1mm pad,-,-,Factory Test Point,1,0,LCSC,
+TP2,Test Point GND,1mm pad,-,-,Factory Test Point,1,0,LCSC,
+TP3,Test Point GPIO0,1mm pad,-,-,BOOT pin — Flash専用,1,0,LCSC,
+DOOR1,MC-38,Wired Reed Switch,Generic,MC-38,Door/Window Magnetic Reed Switch,1,1.20,AliExpress,ドア48時間未開=生存確認アラート

@@ -59,6 +59,10 @@ final class Home {
     // Empty or "owner" = this is the user's own home
     var sharedRole: String
 
+    // LINE Messaging API
+    var lineChannelToken: String
+    var lineGroupId: String
+
     // Background image (stored as JPEG data)
     var backgroundImageData: Data?
     var backgroundImageURL: String
@@ -96,6 +100,8 @@ final class Home {
         self.minpakuNights = 0
         self.permitProgress = ""
         self.sharedRole = ""
+        self.lineChannelToken = ""
+        self.lineGroupId = ""
         self.backgroundImageData = nil
         self.backgroundImageURL = ""
     }

@@ -268,7 +268,7 @@ struct HomeShareView: View {
                                     .clipShape(RoundedRectangle(cornerRadius: 13))
                                 }
 
-                                ShareLink(item: link, subject: Text("カチャ - ホームをシェア"),
+                                ShareLink(item: link, subject: Text("KAGI - ホームをシェア"),
                                           message: Text("「\(home.name)」のスマートホームを一緒に操作しよう！")) {
                                     HStack(spacing: 8) {
                                         Image(systemName: "square.and.arrow.up")
@@ -363,10 +363,10 @@ struct HomeShareView: View {
             )
             try? context.save()
 
-            // Universal Link: https://kacha.pasha.run/join?t=TOKEN#KEY
+            // Universal Link: https://kagi.pasha.run/join?t=TOKEN#KEY
             // The #fragment is never sent to the server
             let key = result.encryptionKey.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? result.encryptionKey
-            createdLink = "https://kacha.pasha.run/join?t=\(result.token)#\(key)"
+            createdLink = "https://kagi.pasha.run/join?t=\(result.token)#\(key)"
 
             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         } catch {

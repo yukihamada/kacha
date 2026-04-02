@@ -90,7 +90,7 @@ struct LockDoorIntent: AppIntent {
         // TODO: SwitchBot credentials are stored in SwiftData (per-Home), not UserDefaults.
         // Intents cannot directly access SwiftData ModelContext yet.
         // For now, return a guidance message until App Intents + SwiftData integration is implemented.
-        return .result(dialog: "SwitchBotの設定が必要です。カチャアプリから操作してください。")
+        return .result(dialog: "SwitchBotの設定が必要です。KAGIアプリから操作してください。")
     }
 }
 
@@ -104,7 +104,7 @@ struct UnlockDoorIntent: AppIntent {
         // TODO: SwitchBot credentials are stored in SwiftData (per-Home), not UserDefaults.
         // Intents cannot directly access SwiftData ModelContext yet.
         // For now, return a guidance message until App Intents + SwiftData integration is implemented.
-        return .result(dialog: "SwitchBotの設定が必要です。カチャアプリから操作してください。")
+        return .result(dialog: "SwitchBotの設定が必要です。KAGIアプリから操作してください。")
     }
 }
 
@@ -115,7 +115,7 @@ struct KachaShortcuts: AppShortcutsProvider {
         AppShortcut(
             intent: LockDoorIntent(),
             phrases: [
-                "カチャで施錠",
+                "KAGIで施錠",
                 "ドアを施錠して",
                 "Lock the door with \(.applicationName)"
             ],
@@ -125,7 +125,7 @@ struct KachaShortcuts: AppShortcutsProvider {
         AppShortcut(
             intent: UnlockDoorIntent(),
             phrases: [
-                "カチャで解錠",
+                "KAGIで解錠",
                 "ドアを解錠して",
                 "Unlock the door with \(.applicationName)"
             ],

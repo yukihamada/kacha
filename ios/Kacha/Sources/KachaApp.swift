@@ -39,7 +39,7 @@ struct KachaApp: App {
             Home.self, Booking.self, SmartDevice.self, DeviceIntegration.self, ShareRecord.self,
             ChecklistItem.self, UtilityRecord.self, MaintenanceTask.self, NearbyPlace.self,
             ActivityLog.self, HouseManual.self, SecureItem.self, PropertyExpense.self,
-            GuestReview.self,
+            GuestReview.self, SentMessage.self,
         ]
         do {
             container = try ModelContainer(for: Schema(models), configurations: ModelConfiguration())
@@ -105,7 +105,7 @@ struct KachaApp: App {
 
                     var homes = (try? container.mainContext.fetch(FetchDescriptor<Home>())) ?? []
 
-                    // Auto-detect new Beds24 properties
+                    // Auto-detect new Beds24 properties & enable inquiry import
                     var checkedTokens = Set<String>()
                     for home in homes where !home.beds24RefreshToken.isEmpty {
                         if !checkedTokens.contains(home.beds24RefreshToken) {
@@ -113,6 +113,28 @@ struct KachaApp: App {
                             let created = await BookingPoller.autoDetectProperties(context: container.mainContext, home: home)
                             if created > 0 {
                                 homes = (try? container.mainContext.fetch(FetchDescriptor<Home>())) ?? []
+                            }
+
+                            // Enable Airbnb inquiry import (once per token)
+                            let inquiryKey = "beds24_inquiry_enabled_\(home.beds24RefreshToken.prefix(16))"
+                            if !UserDefaults.standard.bool(forKey: inquiryKey) {
+                                do {
+                                    let token = try await Beds24Client.shared.getToken(refreshToken: home.beds24RefreshToken)
+                                    let props = try await Beds24Client.shared.fetchProperties(token: token, includePhotos: false)
+                                    for prop in props {
+                                        if let propId = prop["id"] as? Int {
+                                            try await Beds24Client.shared.enableAirbnbInquiryImport(propertyId: propId, token: token)
+                                        }
+                                    }
+                                    UserDefaults.standard.set(true, forKey: inquiryKey)
+                                    #if DEBUG
+                                    print("[Beds24] Airbnb inquiry import enabled for \(props.count) properties")
+                                    #endif
+                                } catch {
+                                    #if DEBUG
+                                    print("[Beds24] Failed to enable inquiry import: \(error)")
+                                    #endif
+                                }
                             }
                         }
                     }
@@ -123,6 +145,9 @@ struct KachaApp: App {
                         if !home.beds24RefreshToken.isEmpty && !polledTokens.contains(home.beds24RefreshToken) {
                             polledTokens.insert(home.beds24RefreshToken)
                             let _ = await BookingPoller.pollAndNotify(context: container.mainContext, home: home, allHomes: homes)
+                            // Initialize message tracking for first run, then poll for new messages
+                            await MessagePoller.initializeLastSeen(context: container.mainContext, home: home, allHomes: homes)
+                            let _ = await MessagePoller.pollNewMessages(context: container.mainContext, home: home, allHomes: homes)
                         }
                         GuestMessenger.scheduleMessages(context: container.mainContext, home: home)
                         CleanerNotifier.scheduleCleaningNotifications(context: container.mainContext, home: home)
@@ -154,11 +179,11 @@ struct KachaApp: App {
     }
 
     // MARK: - Deep Link (E2E encrypted only)
-    // Universal Link: https://kacha.pasha.run/join?t=TOKEN#ENCRYPTION_KEY
+    // Universal Link: https://kagi.pasha.run/join?t=TOKEN#ENCRYPTION_KEY
     // Custom scheme:  kacha://join?t=TOKEN#ENCRYPTION_KEY
 
     private func handleDeepLink(_ url: URL) {
-        let isUniversalLink = url.scheme == "https" && url.host == "kacha.pasha.run" && url.path == "/join"
+        let isUniversalLink = url.scheme == "https" && url.host == "kagi.pasha.run" && url.path == "/join"
         let isCustomScheme = url.scheme == "kacha" && url.host == "join"
         guard isUniversalLink || isCustomScheme else { return }
         let components = URLComponents(url: url, resolvingAgainstBaseURL: false)

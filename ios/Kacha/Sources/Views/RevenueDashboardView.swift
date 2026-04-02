@@ -6,6 +6,7 @@ struct RevenueDashboardView: View {
     @Query(sort: \Booking.checkIn) private var allBookings: [Booking]
     @Query(sort: \Home.sortOrder) private var homes: [Home]
     @State private var selectedDate = Date()
+    @ObservedObject private var subscription = SubscriptionManager.shared
 
     private var calendar: Calendar { Calendar.current }
 
@@ -68,6 +69,12 @@ struct RevenueDashboardView: View {
                     }
                     .padding(.horizontal, 16)
                     .padding(.bottom, 40)
+                }
+                .blur(radius: subscription.isPro ? 0 : 6)
+                .allowsHitTesting(subscription.isPro)
+
+                if !subscription.isPro {
+                    ProFeatureOverlay(featureName: "収益ダッシュボード")
                 }
             }
             .navigationTitle("収益ダッシュボード")

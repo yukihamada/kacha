@@ -18,6 +18,7 @@ struct BookingDetailView: View {
     @State private var showAlert = false
     @State private var alertMessage = ""
     @State private var showMessageSheet = false
+    @State private var showChatSheet = false
 
     private let checklistItems = [
         "タオル交換",
@@ -56,6 +57,11 @@ struct BookingDetailView: View {
         .sheet(isPresented: $showMessageSheet) {
             GuestMessageView(booking: booking)
         }
+        .sheet(isPresented: $showChatSheet) {
+            if let h = home {
+                GuestChatView(booking: booking, home: h)
+            }
+        }
         .alert("操作結果", isPresented: $showAlert) {
             Button("OK") {}
         } message: {
@@ -66,23 +72,48 @@ struct BookingDetailView: View {
     // MARK: - Sections
 
     private var messageButton: some View {
-        Button {
-            showMessageSheet = true
-        } label: {
-            HStack {
-                Image(systemName: "bubble.left.and.bubble.right.fill")
-                Text("メッセージを送る")
-                    .bold()
+        HStack(spacing: 10) {
+            // Chat button (Beds24 messaging with smart replies)
+            if let h = home, !h.beds24RefreshToken.isEmpty, !booking.externalId.isEmpty {
+                Button {
+                    showChatSheet = true
+                } label: {
+                    HStack {
+                        Image(systemName: "bubble.left.and.bubble.right.fill")
+                        Text("チャット")
+                            .bold()
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(Color.kachaAccent.opacity(0.15))
+                    .foregroundColor(.kachaAccent)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 14)
+                            .stroke(Color.kachaAccent.opacity(0.3), lineWidth: 1)
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                }
             }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 14)
-            .background(Color.kachaSuccess.opacity(0.15))
-            .foregroundColor(.kachaSuccess)
-            .overlay(
-                RoundedRectangle(cornerRadius: 14)
-                    .stroke(Color.kachaSuccess.opacity(0.3), lineWidth: 1)
-            )
-            .clipShape(RoundedRectangle(cornerRadius: 14))
+
+            // Template message button
+            Button {
+                showMessageSheet = true
+            } label: {
+                HStack {
+                    Image(systemName: "text.bubble.fill")
+                    Text("テンプレート")
+                        .bold()
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 14)
+                .background(Color.kachaSuccess.opacity(0.15))
+                .foregroundColor(.kachaSuccess)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 14)
+                        .stroke(Color.kachaSuccess.opacity(0.3), lineWidth: 1)
+                )
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+            }
         }
     }
 

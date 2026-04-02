@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Koe Coin — Favorites Extended</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #06060e; color: #fff; font-family: -apple-system, sans-serif; padding: 40px 20px; }
+  h1 { text-align: center; font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+  .sub { text-align: center; color: #333; font-size: 11px; margin-bottom: 50px; letter-spacing: 2px; text-transform: uppercase; }
+  .sec { max-width: 1280px; margin: 0 auto 60px; }
+  .sec-title { font-size: 11px; font-weight: 700; color: #444; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #0f0f1e; }
+  .g5 { display: grid; grid-template-columns: repeat(5,1fr); gap: 10px; }
+  .g3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+  .g2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; }
+  .card { border-radius: 10px; overflow: hidden; background: #0a0a16; }
+  .card img { width: 100%; display: block; aspect-ratio: 1/1; object-fit: cover; transition: transform .3s; }
+  .card:hover img { transform: scale(1.03); }
+  .info { padding: 10px 12px 14px; }
+  .name { font-size: 12px; font-weight: 600; color: #ddd; }
+  .desc { font-size: 10px; color: #333; margin-top: 2px; }
+  .card.wide img { aspect-ratio: 4/3; }
+  .card.tall img { aspect-ratio: 3/4; }
+  .card.cinema img { aspect-ratio: 21/9; }
+</style>
+</head>
+<body>
+<h1>Koe Coin — Favorites</h1>
+<p class="sub">Hand Scale · Flat Lay · Orchestral · 16 renders</p>
+
+<!-- HAND SCALE -->
+<div class="sec">
+  <div class="sec-title">Hand Scale — φ26mm の存在感</div>
+  <div class="g5">
+    <div class="card">
+      <img src="coin_hand_purple.png">
+      <div class="info"><div class="name">Purple LED</div><div class="desc">マクロ · 指先クローズアップ</div></div>
+    </div>
+    <div class="card">
+      <img src="coin_hand_green.png">
+      <div class="info"><div class="name">Green LED</div><div class="desc">手のひら · 浅い被写界深度</div></div>
+    </div>
+    <div class="card">
+      <img src="coin_hand_blue.png">
+      <div class="info"><div class="name">Ice Blue LED</div><div class="desc">ピンチグリップ · ブラック背景</div></div>
+    </div>
+    <div class="card">
+      <img src="coin_hand_white_bg.png">
+      <div class="info"><div class="name">Amber · White BG</div><div class="desc">Apple風 · マーブル台</div></div>
+    </div>
+    <div class="card">
+      <img src="coin_hand_compare.png">
+      <div class="info"><div class="name">Scale Compare</div><div class="desc">100円玉 · USB-C比較</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- FLAT LAY -->
+<div class="sec">
+  <div class="sec-title">Flat Lay — Multiple Coins</div>
+  <div class="g3" style="margin-bottom:14px">
+    <div class="card">
+      <img src="flatlay_rainbow.png">
+      <div class="info"><div class="name">Rainbow 3×3</div><div class="desc">9色 · スレートグリッド配置</div></div>
+    </div>
+    <div class="card">
+      <img src="flatlay_scatter.png">
+      <div class="info"><div class="name">Scatter · Walnut</div><div class="desc">ランダム散布 · ウォールナット材</div></div>
+    </div>
+    <div class="card">
+      <img src="flatlay_lineup.png">
+      <div class="info"><div class="name">5-Color Lineup</div><div class="desc">紫→青→緑→金→赤 · アクリル鏡面</div></div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card wide">
+      <img src="flatlay_hand_pour.png">
+      <div class="info"><div class="name">Pour Shot — Mid-Air</div><div class="desc">落下する複数Coin · ダイナミックアクション</div></div>
+    </div>
+    <div class="card wide">
+      <img src="flatlay_packaging.png">
+      <div class="info"><div class="name">Unboxing</div><div class="desc">パッケージ開封 · USB-C同梱 · プレミアム感</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ORCHESTRAL -->
+<div class="sec">
+  <div class="sec-title">Orchestral Concept — 群衆を楽器にする</div>
+  <div class="g3" style="margin-bottom:14px">
+    <div class="card">
+      <img src="orchestral_topdown.png">
+      <div class="info"><div class="name">Vinyl Record Pattern</div><div class="desc">200台 · 同心円 · レインボーグラデーション</div></div>
+    </div>
+    <div class="card">
+      <img src="orchestral_wave.png">
+      <div class="info"><div class="name">Sound Wave Installation</div><div class="desc">サインウェーブ配置 · 音を視覚化</div></div>
+    </div>
+    <div class="card">
+      <img src="orchestral_close.png">
+      <div class="info"><div class="name">LED Cluster Close-up</div><div class="desc">密集 · 多色グロー · 抽象アート</div></div>
+    </div>
+  </div>
+  <div class="g2" style="margin-bottom:14px">
+    <div class="card wide">
+      <img src="orchestral_crowd.png">
+      <div class="info"><div class="name">Festival Crowd · Hawaii</div><div class="desc">ハワイ野外 · 観客全員がデバイス保持 · 夜空</div></div>
+    </div>
+    <div class="card wide">
+      <img src="orchestral_stage.png">
+      <div class="info"><div class="name">Concert Stage · LED Ocean</div><div class="desc">ステージ+観客LEDの海 · ヤシの木 · Hawaii</div></div>
+    </div>
+  </div>
+  <div class="card cinema">
+    <img src="orchestral_floor_art.png" style="aspect-ratio:21/9">
+    <div class="info"><div class="name">Gallery Floor Installation</div><div class="desc">500台 · ミュージアム · ポリッシュドコンクリートに映り込み · 壁面反射</div></div>
+  </div>
+</div>
+
+<div style="text-align:center;color:#111;font-size:10px;padding-bottom:30px">
+  Gemini 3.1 Flash Image · © 2026 Koe Device — koe.live
+</div>
+</body>
+</html>
