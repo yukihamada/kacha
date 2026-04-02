@@ -426,6 +426,8 @@ struct HomeView: View {
     private var quickActionsGrid: some View {
         // Core features only — tested and stable
         var actions: [(String, String, Color, () -> Void)] = []
+        // 鍵管理は常に表示
+        actions.append(("key.fill", "鍵・パスワード", .kacha, { showVault = true }))
         if minpakuModeEnabled {
             actions.append(("wifi", "ゲストカード", .kachaAccent, { showGuestCard = true }))
             actions.append(("checklist", "チェックリスト", .kachaSuccess, { showChecklist = true }))
