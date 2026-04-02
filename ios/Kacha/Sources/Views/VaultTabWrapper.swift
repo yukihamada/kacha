@@ -1,11 +1,14 @@
 import SwiftUI
 import SwiftData
+import LocalAuthentication
 
-// MARK: - Vault Tab (no Face ID — crashes on some devices)
+// MARK: - Vault Tab
 
 struct VaultTabWrapper: View {
     @Environment(\.modelContext) private var context
+    @Environment(\.scenePhase) private var scenePhase
     @Query(sort: \SecureItem.sortOrder) private var items: [SecureItem]
+    @AppStorage("vaultAutoLockSeconds") private var autoLockSeconds = 60
     @State private var searchText = ""
     @State private var selectedCategory = "all"
     @State private var showAdd = false
@@ -13,6 +16,9 @@ struct VaultTabWrapper: View {
     @State private var editingItem: SecureItem?
     @State private var revealedIds = Set<String>()
     @State private var copiedId: String?
+    @State private var isLocked = true
+    @State private var lastActiveDate = Date()
+    @State private var showSettings = false
 
     private var filtered: [SecureItem] {
         var list = items
@@ -46,39 +52,121 @@ struct VaultTabWrapper: View {
     }
 
     var body: some View {
-        NavigationStack {
-            ZStack {
-                Color(.systemGroupedBackground).ignoresSafeArea()
-                if items.isEmpty && searchText.isEmpty {
-                    emptyView
-                } else {
-                    mainContent
-                }
-            }
-            .navigationTitle("鍵管理")
-            .searchable(text: $searchText, prompt: "検索")
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Menu {
-                        Button { showAdd = true } label: {
-                            Label("新規追加", systemImage: "plus")
+        Group {
+            if isLocked {
+                lockView
+            } else {
+                NavigationStack {
+                    ZStack {
+                        Color(.systemGroupedBackground).ignoresSafeArea()
+                        if items.isEmpty && searchText.isEmpty {
+                            emptyView
+                        } else {
+                            mainContent
                         }
-                        Button { showImport = true } label: {
-                            Label("1Password / CSVからインポート", systemImage: "square.and.arrow.down")
-                        }
-                    } label: {
-                        Image(systemName: "plus")
                     }
+                    .navigationTitle("鍵管理")
+                    .searchable(text: $searchText, prompt: "検索")
+                    .toolbar {
+                        ToolbarItem(placement: .topBarLeading) {
+                            Menu {
+                                Button { withAnimation { isLocked = true; revealedIds.removeAll() } } label: {
+                                    Label("ロック", systemImage: "lock.fill")
+                                }
+                                Button { showSettings = true } label: {
+                                    Label("セキュリティ設定", systemImage: "gearshape")
+                                }
+                            } label: {
+                                Image(systemName: "lock.open.fill").font(.caption)
+                            }
+                        }
+                        ToolbarItem(placement: .primaryAction) {
+                            Menu {
+                                Button { showAdd = true } label: {
+                                    Label("新規追加", systemImage: "plus")
+                                }
+                                Button { showImport = true } label: {
+                                    Label("1Password / CSVからインポート", systemImage: "square.and.arrow.down")
+                                }
+                            } label: {
+                                Image(systemName: "plus")
+                            }
+                        }
+                    }
+                    .sheet(isPresented: $showAdd) { VaultItemSheet(item: nil) }
+                    .sheet(isPresented: $showImport) { VaultImportView() }
+                    .sheet(isPresented: $showSettings) { VaultSecuritySettings(autoLockSeconds: $autoLockSeconds) }
+                    .sheet(item: $editingItem) { item in VaultItemSheet(item: item) }
                 }
             }
-            .sheet(isPresented: $showAdd) {
-                VaultItemSheet(item: nil)
+        }
+        // Auto-lock on background
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .background || phase == .inactive {
+                lastActiveDate = Date()
+                // Immediately clear revealed values
+                revealedIds.removeAll()
             }
-            .sheet(isPresented: $showImport) {
-                VaultImportView()
+            if phase == .active && isLocked == false {
+                let elapsed = Date().timeIntervalSince(lastActiveDate)
+                if elapsed > Double(autoLockSeconds) {
+                    withAnimation { isLocked = true }
+                }
             }
-            .sheet(item: $editingItem) { item in
-                VaultItemSheet(item: item)
+        }
+        .task {
+            // Initial unlock with Face ID
+            try? await Task.sleep(for: .milliseconds(300))
+            unlock()
+        }
+    }
+
+    // MARK: - Lock
+
+    private var lockView: some View {
+        ZStack {
+            Color(.systemGroupedBackground).ignoresSafeArea()
+            VStack(spacing: 24) {
+                Spacer()
+                Image(systemName: "lock.shield.fill")
+                    .font(.system(size: 48)).foregroundStyle(.orange)
+                Text("鍵管理").font(.title2).bold()
+                Text("Face ID で解除").font(.subheadline).foregroundColor(.secondary)
+                Button { unlock() } label: {
+                    Label("解除する", systemImage: "faceid")
+                        .font(.headline).foregroundColor(.black)
+                        .padding(.horizontal, 32).padding(.vertical, 14)
+                        .background(Color.orange).clipShape(Capsule())
+                }
+                Spacer()
+                Text("\(items.count) 件を保護中 · \(autoLockText)")
+                    .font(.caption).foregroundColor(.secondary)
+                    .padding(.bottom, 20)
+            }
+        }
+    }
+
+    private var autoLockText: String {
+        switch autoLockSeconds {
+        case 0: return "即時ロック"
+        case 60: return "1分でロック"
+        case 300: return "5分でロック"
+        case 600: return "10分でロック"
+        default: return "\(autoLockSeconds)秒でロック"
+        }
+    }
+
+    private func unlock() {
+        let ctx = LAContext()
+        var error: NSError?
+        if !ctx.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            // No biometrics — unlock directly
+            withAnimation { isLocked = false; lastActiveDate = Date() }
+            return
+        }
+        ctx.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "鍵管理にアクセス") { ok, _ in
+            DispatchQueue.main.async {
+                if ok { withAnimation { isLocked = false; lastActiveDate = Date() } }
             }
         }
     }
@@ -396,5 +484,76 @@ struct VaultItemSheet: View {
         t.updatedAt = Date()
         if item == nil { context.insert(t) }
         dismiss()
+    }
+}
+
+// MARK: - Security Settings
+
+struct VaultSecuritySettings: View {
+    @Binding var autoLockSeconds: Int
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section("オートロック") {
+                    Picker("バックグラウンド後にロック", selection: $autoLockSeconds) {
+                        Text("即時").tag(0)
+                        Text("30秒").tag(30)
+                        Text("1分").tag(60)
+                        Text("5分").tag(300)
+                        Text("10分").tag(600)
+                    }
+                }
+
+                Section("暗号化") {
+                    HStack {
+                        Image(systemName: "checkmark.shield.fill").foregroundColor(.green)
+                        VStack(alignment: .leading) {
+                            Text("AES-256-GCM").font(.subheadline).bold()
+                            Text("業界最高水準の暗号化").font(.caption).foregroundColor(.secondary)
+                        }
+                    }
+                    HStack {
+                        Image(systemName: "checkmark.shield.fill").foregroundColor(.green)
+                        VStack(alignment: .leading) {
+                            Text("Keychain保護").font(.subheadline).bold()
+                            Text("暗号鍵はApple Keychainに保存").font(.caption).foregroundColor(.secondary)
+                        }
+                    }
+                    HStack {
+                        Image(systemName: "checkmark.shield.fill").foregroundColor(.green)
+                        VStack(alignment: .leading) {
+                            Text("クリップボード自動消去").font(.subheadline).bold()
+                            Text("コピー後30秒で自動クリア").font(.caption).foregroundColor(.secondary)
+                        }
+                    }
+                }
+
+                Section("データ") {
+                    HStack {
+                        Image(systemName: "iphone").foregroundColor(.blue)
+                        VStack(alignment: .leading) {
+                            Text("ローカル保存").font(.subheadline).bold()
+                            Text("すべてのデータは端末内に暗号化保存").font(.caption).foregroundColor(.secondary)
+                        }
+                    }
+                    HStack {
+                        Image(systemName: "key.fill").foregroundColor(.orange)
+                        VStack(alignment: .leading) {
+                            Text("Keychainバックアップ").font(.subheadline).bold()
+                            Text("アプリ削除後も復元可能").font(.caption).foregroundColor(.secondary)
+                        }
+                    }
+                }
+            }
+            .navigationTitle("セキュリティ")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("完了") { dismiss() }
+                }
+            }
+        }
     }
 }

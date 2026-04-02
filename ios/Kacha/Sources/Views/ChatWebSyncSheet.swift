@@ -159,7 +159,7 @@ struct ChatWebSyncSheet: View {
             let itemsData = apiKeys.map { item in
                 SecureItemData(
                     keyName: item.title.uppercased().replacingOccurrences(of: " ", with: "_"),
-                    encryptedValue: VaultEncryption.decrypt(item.encryptedValue),
+                    encryptedValue: item.encryptedValue,  // Send encrypted — server never sees plaintext
                     category: "apikey"
                 )
             }
